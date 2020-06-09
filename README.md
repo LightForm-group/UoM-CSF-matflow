@@ -24,6 +24,10 @@ Included are:
     
 5. Now run `matflow validate` again. This time there should be no warnings.
 
+## Submitting a workflow
+
+Run the command `matflow go workflow.yml` where `workflow.yml` is the name of the workflow file.
+
 ## Setting up Dropbox archiving
 
 We can get MatFlow to copy (a subset) of the workflow files to a Dropbox account after the workflow completes. 
