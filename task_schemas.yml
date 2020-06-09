@@ -403,9 +403,7 @@
 - name: dummy_task_5
   inputs:
     - parameter_8[alias=parameter_8_group]
-    - parameter_10  
-  input_groups:
-    parameter_8: my_group
+    - parameter_10
   outputs:
     - parameter_11
   methods:
@@ -433,8 +431,6 @@
     - parameter_4[context=uniaxial,alias=parameter_4_uniaxial]
     - parameter_4[context=multiaxial,group=multiaxial,alias=parameter_4_multiaxial]
     - parameter_5
-  input_groups:
-    parameter_8: my_group
   outputs:
     - parameter_8
   methods:
