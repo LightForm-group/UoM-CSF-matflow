@@ -11,3 +11,5 @@ Included are:
 2. Now install MatFlow and some extensions, using `pip`: 
     
     `pip install --user matflow matflow-damask matflow-formable matflow-mtex`
+
+3. Run `matflow validate` to check the installation (you may get an warning about the MTEX extension - this is fine)
