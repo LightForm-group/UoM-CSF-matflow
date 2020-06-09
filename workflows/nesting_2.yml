@@ -1,0 +1,23 @@
+# This example demonstrates using sequences with different `nest_idx` values to generate
+# nested elements (like that produced by a loop).
+
+name: nesting_example_1
+stats: false
+run_options:
+  l: short
+tasks:
+  - name: generate_microstructure_seeds
+    method: random
+    software: damask
+    sequences:
+      - name: grid_size
+        nest_idx: 0
+        vals:
+          - [8, 8, 8]
+          - [16, 16, 16]
+      - name: num_grains
+        nest_idx: 1
+        vals:
+          - 100
+          - 200
+
