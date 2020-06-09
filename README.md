@@ -29,7 +29,7 @@ Included are:
 We can get MatFlow to copy (a subset) of the workflow files to a Dropbox account after the workflow completes. 
 
 1. Firstly, you'll need to generate a Dropbox access token by creating an "app" here: https://www.dropbox.com/developers/apps
-2. Then you can add this token to the MatFlow configuration file (in `~/.matflow.config.yml') as a new key called `dropbox_token`.
+2. Then you can add this token to the MatFlow configuration file (in `~/.matflow.config.yml`) as a new key called `dropbox_token`.
 3. Finally, you need to add one or more "archive locations" to the MatFlow config file. An archive location looks like this:
 
     ```yaml
