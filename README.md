@@ -13,3 +13,11 @@ Included are:
     `pip install --user matflow matflow-damask matflow-formable matflow-mtex`
 
 3. Run `matflow validate` to check the installation (you may get an warning about the MTEX extension - this is fine)
+
+4. Add the `software.yml` and `task_schemas.yml` files from this repository to your MatFlow software sources and task schemas sources respectively. These files are already in the `jf01` group shared RDS space under the path `/mnt/eps01-rds/jf01-home01/shared/matflow`. To register them with MatFlow, edit the MatFlow `config.yml` file, which, after running `matflow validate` for the first time), resides here: `~/.matflow/config.yml` (i.e. in your home directory). Add the following path to the `task_schema_sources` list in the config file:
+
+    `mnt/eps01-rds/jf01-home01/shared/matflow/task_schemas.yml`
+
+    ...and add the following path to the `software_sources` list in the config file:
+
+    `mnt/eps01-rds/jf01-home01/shared/matflow/software.yml`.
