@@ -31,6 +31,20 @@ Included are:
     
 7. Now run `matflow validate` again. This time there should be no warnings.
 
+## Setting default scheduler options for preparation/processing jobs
+
+Often, preparation and processing jobs are not computationally expensive, and can be run as serial jobs in the short queue on the CSF. We can set default scheduler options for the preparation and processing jobs by adding this to the MatFlow config file:
+
+```yaml
+default_preparation_run_options:
+  l: short
+
+default_processing_run_options:
+  l: short
+```
+
+In this case, all preparation and processing jobs will use the short queue by default. This can be overidden from within a workflow if necessary.
+
 ## Submitting a workflow
 
 Run the command `matflow go workflow.yml` where `workflow.yml` is the name of the workflow file.
