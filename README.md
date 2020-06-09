@@ -9,7 +9,7 @@ Included are:
 
 1. Add `export HDF5_USE_FILE_LOCKING=FALSE` to your `.bash_profile`. This is to allow MatFlow to work on the scratch filesystem. See [this issue](https://github.com/LightForm-group/UoM-CSF-matflow/issues/3).
 2. To allow access to the internet so we can install [MatFlow](https://github.com/LightForm-group/matflow), first load the [proxy module](http://ri.itservices.manchester.ac.uk/csf3/software/tools/proxy/): `module load tools/env/proxy2`. We only need to do this once, when installing Python packages from the web. However, if you want to use MatFlow's cloud archiving facility (i.e. copying your workflow results to Dropbox), you will need to make sure the proxy module is always loaded. You can do this by adding the module load line to a file `.modules` in your home directory.
-3. Load Anaconda to give us access to `pip`:
+3. Load [Anaconda](http://ri.itservices.manchester.ac.uk/csf3/software/applications/anaconda-python/) to give us access to `pip`:
 
     `module load apps/binapps/anaconda3/2019.07`
 
