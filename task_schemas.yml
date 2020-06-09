@@ -1,0 +1,294 @@
+- name: get_model_texture
+  outputs:
+    - ODF
+  inputs:
+    - crystal_symmetry
+    - specimen_symmetry
+  methods:
+    - name: unimodal
+      inputs: 
+        - modal_orientation
+        - halfwidth
+      implementations:
+        - name: mtex
+          commands:
+            - command: <<executable>>
+              options:
+                - [crystal_symmetry]
+                - [specimen_symmetry]
+                - [modal_orientation]
+                - [halfwidth]
+          output_map:
+            - files: 
+              - name: ODF.txt
+                save: true
+              output: ODF
+
+- name: estimate_ODF
+  outputs:
+    - ODF
+  methods:
+    - name: from_CTF_file
+      inputs: 
+        - CTF_file_path[file=True]
+        - specimen_symmetry
+        - phase
+      implementations:
+        - name: mtex
+          commands:
+            - command: <<executable>>
+              options:
+                - [CTF_file_path]
+                - [specimen_symmetry]                
+                - [phase]
+          output_map:
+            - files:
+                - name: ODF.txt
+                  save: true
+              output: ODF
+            
+- name: sample_texture
+  inputs:
+    - num_orientations
+  outputs:
+    - orientations
+  methods:
+    - name: from_ODF
+      inputs:
+        - ODF
+      implementations:
+        - name: mtex
+          inputs:
+            - crystal_symmetry
+            - specimen_symmetry        
+          input_map:
+            - inputs:
+                - ODF
+              file: ODF.txt
+          commands:
+            - command: <<executable>>
+              options:
+                - [crystal_symmetry]
+                - [specimen_symmetry]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.txt
+                  save: true
+              output: orientations
+        
+- name: generate_microstructure_seeds
+  outputs:
+    - microstructure_seeds
+  methods:
+    - name: random    
+      inputs:
+        - grid_size
+        - num_grains          
+      implementations:
+        - name: damask
+          outputs:
+            - microstructure_seeds
+          commands:
+            - command: seeds_fromRandom
+              stdout: positions.txt
+              stderr: stderr.log
+              options: 
+                - [-N, num_grains]
+                - [-g, grid_size]       
+          output_map:
+            - files: 
+                - name: positions.txt
+                  save: true
+              output: microstructure_seeds
+
+- name: generate_volume_element
+  outputs:
+    - volume_element
+  methods:
+    - name: random_voronoi
+      notes: >
+        In this method we use the random orientations that already exist in
+        microstructure_seeds.
+      inputs:
+        - microstructure_seeds
+        - size
+      implementations:
+        - name: damask
+          inputs:
+            - rescale_size
+            - rescale_grid
+          input_map:
+            - inputs:
+                - microstructure_seeds
+              file: orientation.seeds
+          output_map:
+            - files:
+                - name: volume_element.geom
+                  save: true
+              output: volume_element
+          commands:
+            - command: geom_fromVoronoiTessellation
+              stdin: orientation.seeds
+              stdout: volume_element_initial.geom 
+              stderr: stderr.log
+              options:
+                - [-s, size]
+            - command: geom_rescale
+              stdin: volume_element_initial.geom
+              stdout: volume_element.geom
+              stderr: stderr.log
+              options:
+                - [-g, rescale_grid]
+                - [-s, rescale_size]
+
+    - name: random_voronoi_from_orientations      
+      notes: >
+        In this method we replace the orientations in microstructure_seeds
+        with orientations computed from a previous task.        
+      inputs:
+        - microstructure_seeds
+        - orientations
+        - size
+      implementations:
+        - name: damask
+          inputs:
+            - rescale_size
+            - rescale_grid
+          input_map:
+            - inputs:
+                - microstructure_seeds
+                - orientations
+              file: orientation.seeds
+          output_map:
+            - files:
+                - name: volume_element.geom
+                  save: true
+              output: volume_element
+          commands:
+            - command: geom_fromVoronoiTessellation
+              stdin: orientation.seeds
+              stdout: volume_element_initial.geom 
+              stderr: stderr.log
+              options:
+                - [-s, size]
+            - command: geom_rescale
+              stdin: volume_element_initial.geom
+              stdout: volume_element.geom
+              stderr: stderr.log
+              options:
+                - [-g, rescale_grid]
+                - [-s, rescale_size]
+
+- name: visualise_volume_element
+  inputs:
+    - volume_element
+  methods:
+    - name: VTK
+      outputs:
+        - __file__VTR_file
+      implementations:
+        - name: damask
+          input_map: 
+            - inputs:
+                - volume_element
+              file: geom.geom
+          commands:
+            - command: geom_check
+              parameters: [geom.geom]
+              stderr: stderr.log
+
+- name: generate_load_case
+  inputs:
+    - total_times
+    - num_increments
+    - target_strains
+  methods:
+    - name: uniaxial      
+      implementations:
+        - name: formable
+          inputs:
+            - target_strain_rates
+            - rotations            
+            - directions # x, y or z
+    - name: biaxial
+      implementations:
+        - name: formable
+          inputs:
+            - target_strain_rates              
+            - directions # xy, xz or yz        
+    - name: plane_strain
+      implementations:
+        - name: formable
+          inputs:
+            - target_strain_rates              
+            - directions # xy, xz or yz
+    - name: random_2D
+      implementations:      
+        - name: formable
+          inputs:
+            - target_strain_rates                  
+            - normal_directions # x, y, or z (i.e. load in yz, xz or xy planes)
+    - name: random_3D
+      implementations:
+        - name: formable
+          inputs:              
+            - rotation
+            - rotation_max_angle
+            - rotation_load_case
+            - non_random_rotation      
+  outputs:
+    - load_case
+
+- name: simulate_volume_element_loading
+  inputs: 
+    - volume_element
+    - material_properties
+    - load_case
+  outputs:
+    - volume_element_response      
+  methods:
+    - name: CP_FFT
+      implementations:
+        - name: damask
+          input_map:
+            - inputs:
+                - material_properties
+                - volume_element
+              file: material.config
+            - inputs:
+                - volume_element
+              file: geom.geom
+            - inputs:
+                - load_case
+              file: load.load
+          commands:
+            - command: <<executable>>
+              parallel_mode: MPI
+              options:
+                - [--load, load.load]
+                - [--geom, geom.geom]
+              stdout: stdout.log
+              stderr: stderr.log
+          output_map:
+            - files: 
+                - name: geom_load.hdf5
+                  save: false
+              output: volume_element_response
+              options:
+                required: [incremental_data]
+                optional: [operations]
+          archive_excludes: ['geom_load.hdf5', '*.spectralOut']
+
+- name: fit_yield_function
+  outputs:
+    - fitted_yield_functions
+  methods:
+    - name: formable
+      implementations:
+        - name: formable
+          inputs:
+            - yield_function_name
+            - yield_point_criteria                        
+            - volume_element_response[context=uniaxial,alias=uniaxial_response]
+            - volume_element_response[context=multiaxial,alias=multiaxial_responses,group=multiaxial_responses]
