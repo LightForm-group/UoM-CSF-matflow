@@ -38,6 +38,6 @@ We can get MatFlow to copy (a subset) of the workflow files to a Dropbox account
         cloud_provider: dropbox
         path: /sims
     ```
-    In this case, this tells Matflow to use the path `/sims` inside your dropbox directory structure.
+    In this case, this tells MatFlow to use the path `/sims` inside your Dropbox directory structure.
 4. You can then add a extra key to any of your workflows to tell MatFlow to use this archive location: `archive: dropbox`. If you want to exclude certain files, you can also add a key `archive_excludes` to your workflow, which is a list of glob-style patterns to exclude.
 
