@@ -3,7 +3,7 @@ This repository contains information about running MatFlow on the [Computational
 Included are:
 - A [software definition file](https://github.com/LightForm-group/UoM-CSF-matflow/blob/master/software.yml)
 - A set of [example task schemas](https://github.com/LightForm-group/UoM-CSF-matflow/blob/master/task_schemas.yml)
-- Some example workflows
+- Some [example workflows](https://github.com/LightForm-group/UoM-CSF-matflow/tree/master/workflows)
 
 ## Installation of MatFlow on the CSF
 
