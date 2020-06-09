@@ -65,3 +65,4 @@ MTEX:
       sources_preparation:
         commands: |
           mcc -d <<sources_dir>> -m <<sources_dir>>/<<script>>.m $(cat $MTEX_INCLUDE)
+
