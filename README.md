@@ -20,4 +20,4 @@ Included are:
 
     ...and add the following path to the `software_sources` list in the config file:
 
-    `/mnt/eps01-rds/jf01-home01/shared/matflow/software.yml`.
+    `/mnt/eps01-rds/jf01-home01/shared/matflow/software.yml`
