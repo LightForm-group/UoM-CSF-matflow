@@ -1,0 +1,67 @@
+formable:
+  instances:
+    - num_cores: 1
+
+DAMASK:
+  instance_defaults:
+    env: |
+      module purge
+      module load compilers/gcc/8.2.0
+      SHARED_RDS=/mnt/eps01-rds/jf01-home01/shared
+      export PETSC_DIR=$SHARED_RDS/petsc-3.12.2
+      export PETSC_ARCH=gcc-opt
+      export DAMASK_ROOT=$SHARED_RDS/DAMASK
+      source $DAMASK_ROOT/env/DAMASK.sh
+      PATH=$PETSC_DIR/$PETSC_ARCH/bin:$HOME/bin:$PATH
+      LD_LIBRARY_PATH=$PETSC_DIR/$PETSC_ARCH/lib:$LD_LIBRARY_PATH
+      module load apps/anaconda3/5.2.0/bin
+      source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_env
+      export HDF5_USE_FILE_LOCKING=FALSE
+    executable: DAMASK_spectral
+    task_preparation:
+      env: |
+        module purge
+        module load compilers/gcc/8.2.0
+        SHARED_RDS=/mnt/eps01-rds/jf01-home01/shared
+        export PETSC_DIR=$SHARED_RDS/petsc-3.12.2
+        export PETSC_ARCH=gcc-opt
+        export DAMASK_ROOT=$SHARED_RDS/DAMASK
+        source $DAMASK_ROOT/env/DAMASK.sh
+        PATH=$PETSC_DIR/$PETSC_ARCH/bin:$HOME/bin:$PATH
+        LD_LIBRARY_PATH=$PETSC_DIR/$PETSC_ARCH/lib:$LD_LIBRARY_PATH
+    task_processing:
+      env: |
+        export HDF5_USE_FILE_LOCKING=FALSE 
+  instances:
+    - num_cores: 1
+    - num_cores: [2, 32, 1]
+      required_scheduler_options:
+        pe: smp.pe
+
+MTEX:
+  instance_defaults:
+    env: |
+      module load apps/binapps/matlab/R2019a
+      module load apps/binapps/matlab/third-party-toolboxes/mtex/5.3
+    executable: <<sources_dir>>/run_<<script>>.sh $MATLAB_HOME
+    version_info:
+      MATLAB:
+        version: R2018a (9.4.0.813654) 64-bit (glnxa64)
+      MTEX:
+        version: '5.3'
+    sources_preparation:
+      env: |
+        module load apps/binapps/matlab/R2019a
+        module load apps/binapps/matlab/third-party-toolboxes/mtex/5.3
+  instances:
+    - num_cores: 1
+      sources_preparation:
+        commands: |
+          mcc -d <<sources_dir>> -R -singleCompThread -m <<sources_dir>>/<<script>>.m $(cat $MTEX_INCLUDE)
+    - num_cores: 16
+      required_scheduler_options:
+        pe: smp.pe
+        l: ivybridge      
+      sources_preparation:
+        commands: |
+          mcc -d <<sources_dir>> -m <<sources_dir>>/<<script>>.m $(cat $MTEX_INCLUDE)
