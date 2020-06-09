@@ -293,167 +293,167 @@
             - volume_element_response[context=uniaxial,alias=uniaxial_response]
             - volume_element_response[context=multiaxial,alias=multiaxial_responses,group=multiaxial_responses]
 
-  - name: dummy_task_1
-    outputs:
-      - parameter_2
-    methods:
-      - name: method_1
-        inputs:
-          - parameter_1
-        implementations:
-          - name: dummy_software
-            input_map:
-              - inputs:
-                  - parameter_1
-                file: t1_m1_infile_1
-            output_map:
-              - files:
-                  - name: outfile.txt
-                    save: true
-                output: parameter_2
-            commands:
-              - command: <<executable>>
-                options:
-                  - [--infile1, t1_m1_infile_1]
-                  - [--infile2, t1_m1_infile_1]
-                  - [--value, parameter_1]
+- name: dummy_task_1
+  outputs:
+    - parameter_2
+  methods:
+    - name: method_1
+      inputs:
+        - parameter_1
+      implementations:
+        - name: dummy_software
+          input_map:
+            - inputs:
+                - parameter_1
+              file: t1_m1_infile_1
+          output_map:
+            - files:
+                - name: outfile.txt
+                  save: true
+              output: parameter_2
+          commands:
+            - command: <<executable>>
+              options:
+                - [--infile1, t1_m1_infile_1]
+                - [--infile2, t1_m1_infile_1]
+                - [--value, parameter_1]
 
-  - name: dummy_task_2
-    outputs:
-      - parameter_4
-    methods:
-      - name: method_1
-        inputs:
-          - parameter_2
-          - parameter_3
-        implementations:
-          - name: dummy_software
-            input_map:
-              - inputs:
-                  - parameter_2
-                  - parameter_3
-                file: t2_m1_infile_1
-            output_map:
-              - files:
-                  - name: outfile.txt
-                    save: true
-                output: parameter_4                
-            commands:
-              - command: hpcflow dummy doSomething
-                options:
-                  - [--infile1, t2_m1_infile_1]
-                  - [--infile2, t2_m1_infile_1]
-                  - [--value, parameter_2]
-
-  - name: dummy_task_3
-    outputs:
-      - parameter_6
-    methods:
-      - name: method_1
-        inputs:
-          - parameter_5
-        implementations:
-          - name: dummy_software
-            input_map:
-              - inputs:
-                  - parameter_5
-                file: t3_m1_infile_1
-            output_map:
-              - files:
-                  - name: outfile.txt
-                    save: true
-                output: parameter_6                
-            commands:
-              - command: hpcflow dummy doSomething
-                options:
-                  - [--infile1, t3_m1_infile_1]
-                  - [--infile2, t3_m1_infile_1]
-                  - [--value, parameter_5]
-
-  - name: dummy_task_4
-    outputs:
-      - parameter_8
-    methods:
-      - name: method_1
-        inputs:
-          - parameter_2[group=group_A]
-          - parameter_6
-          - parameter_7
-          - parameter_9
-        implementations:
-          - name: dummy_software
-            input_map:
-              - inputs:
+- name: dummy_task_2
+  outputs:
+    - parameter_4
+  methods:
+    - name: method_1
+      inputs:
+        - parameter_2
+        - parameter_3
+      implementations:
+        - name: dummy_software
+          input_map:
+            - inputs:
                 - parameter_2
-                - parameter_6
-                - parameter_7
-                - parameter_9
-                file: t4_m1_infile_1
-            output_map:
-              - files:
-                  - name: outfile.txt
-                    save: true
-                output: parameter_8                
-            commands:
-              - command: hpcflow dummy doSomething
-                options:
-                  - [--infile1, t4_m1_infile_1]
-                  - [--infile2, t4_m1_infile_1]
+                - parameter_3
+              file: t2_m1_infile_1
+          output_map:
+            - files:
+                - name: outfile.txt
+                  save: true
+              output: parameter_4                
+          commands:
+            - command: hpcflow dummy doSomething
+              options:
+                - [--infile1, t2_m1_infile_1]
+                - [--infile2, t2_m1_infile_1]
+                - [--value, parameter_2]
 
-  - name: dummy_task_5
-    inputs:
-      - parameter_8[alias=parameter_8_group]
-      - parameter_10  
-    input_groups:
-      parameter_8: my_group
-    outputs:
-      - parameter_11
-    methods:
-      - name: method_1
-        implementations:
-          - name: dummy_software
-            input_map:
-              - inputs:
-                - parameter_8_group
-                - parameter_10
-                file: t5_m1_infile_1
-            output_map:
-              - files:
-                  - name: outfile.txt
-                    save: true
-                output: parameter_11
-            commands:
-              - command: hpcflow dummy doSomething
-                options:
-                  - [--infile1, t5_m1_infile_1]
-                  - [--infile2, t5_m1_infile_1]
-
-  - name: dummy_task_6b
-    inputs:
-      - parameter_4[context=uniaxial,alias=parameter_4_uniaxial]
-      - parameter_4[context=multiaxial,group=multiaxial,alias=parameter_4_multiaxial]
-      - parameter_5
-    input_groups:
-      parameter_8: my_group
-    outputs:
-      - parameter_8
-    methods:
-      - name: method_1
-        implementations:
-          - name: dummy_software
-            input_map:
-              - inputs:
-                - parameter_4_multiaxial
-                - parameter_4_uniaxial
+- name: dummy_task_3
+  outputs:
+    - parameter_6
+  methods:
+    - name: method_1
+      inputs:
+        - parameter_5
+      implementations:
+        - name: dummy_software
+          input_map:
+            - inputs:
                 - parameter_5
-                file: t6b_m1_infile_1
-            output_map:
-              - files:
-                  - name: outfile.txt
-                    save: true
-                output: parameter_8
-            commands:
-              - command: hpcflow dummy doSomething
-                options:
-                  - [--infile1, t6b_m1_infile_1]
-                  - [--infile2, t6b_m1_infile_1]
+              file: t3_m1_infile_1
+          output_map:
+            - files:
+                - name: outfile.txt
+                  save: true
+              output: parameter_6                
+          commands:
+            - command: hpcflow dummy doSomething
+              options:
+                - [--infile1, t3_m1_infile_1]
+                - [--infile2, t3_m1_infile_1]
+                - [--value, parameter_5]
+
+- name: dummy_task_4
+  outputs:
+    - parameter_8
+  methods:
+    - name: method_1
+      inputs:
+        - parameter_2[group=group_A]
+        - parameter_6
+        - parameter_7
+        - parameter_9
+      implementations:
+        - name: dummy_software
+          input_map:
+            - inputs:
+              - parameter_2
+              - parameter_6
+              - parameter_7
+              - parameter_9
+              file: t4_m1_infile_1
+          output_map:
+            - files:
+                - name: outfile.txt
+                  save: true
+              output: parameter_8                
+          commands:
+            - command: hpcflow dummy doSomething
+              options:
+                - [--infile1, t4_m1_infile_1]
+                - [--infile2, t4_m1_infile_1]
+
+- name: dummy_task_5
+  inputs:
+    - parameter_8[alias=parameter_8_group]
+    - parameter_10  
+  input_groups:
+    parameter_8: my_group
+  outputs:
+    - parameter_11
+  methods:
+    - name: method_1
+      implementations:
+        - name: dummy_software
+          input_map:
+            - inputs:
+              - parameter_8_group
+              - parameter_10
+              file: t5_m1_infile_1
+          output_map:
+            - files:
+                - name: outfile.txt
+                  save: true
+              output: parameter_11
+          commands:
+            - command: hpcflow dummy doSomething
+              options:
+                - [--infile1, t5_m1_infile_1]
+                - [--infile2, t5_m1_infile_1]
+
+- name: dummy_task_6b
+  inputs:
+    - parameter_4[context=uniaxial,alias=parameter_4_uniaxial]
+    - parameter_4[context=multiaxial,group=multiaxial,alias=parameter_4_multiaxial]
+    - parameter_5
+  input_groups:
+    parameter_8: my_group
+  outputs:
+    - parameter_8
+  methods:
+    - name: method_1
+      implementations:
+        - name: dummy_software
+          input_map:
+            - inputs:
+              - parameter_4_multiaxial
+              - parameter_4_uniaxial
+              - parameter_5
+              file: t6b_m1_infile_1
+          output_map:
+            - files:
+                - name: outfile.txt
+                  save: true
+              output: parameter_8
+          commands:
+            - command: hpcflow dummy doSomething
+              options:
+                - [--infile1, t6b_m1_infile_1]
+                - [--infile2, t6b_m1_infile_1]
