@@ -57,9 +57,7 @@ Run the command `matflow kill workflow/directory/path` where `workflow/directory
 
 We can get MatFlow to copy (a subset) of the workflow files to a Dropbox account after the workflow completes. 
 
-1. Firstly, you'll need to generate a Dropbox access token by creating an "app" here: https://www.dropbox.com/developers/apps
-2. Then you can add this token to the MatFlow configuration file (in `~/.matflow.config.yml`) as a new key called `dropbox_token`.
-3. Finally, you need to add one or more "archive locations" to the MatFlow config file. An archive location looks like this:
+1. Add an "archive location" to the MatFlow config file. An archive location looks like this:
 
     ```yaml
     archive_locations:
@@ -67,6 +65,7 @@ We can get MatFlow to copy (a subset) of the workflow files to a Dropbox account
         cloud_provider: dropbox
         path: /sims
     ```
-    In this case, this tells MatFlow to use the path `/sims` inside your Dropbox directory structure.
-4. You can then add a extra key to any of your workflows to tell MatFlow to use this archive location: `archive: dropbox`. If you want to exclude certain files, you can also add a key `archive_excludes` to your workflow, which is a list of glob-style patterns to exclude.
+    In this case, this tells MatFlow to use the path `/sims` inside your Dropbox directory structure. The path you specify here must exist.
+2. You can then add an extra key to any of your workflow files to tell MatFlow to use this archive location: `archive: dropbox`. If you want to exclude certain files, you can also add a key `archive_excludes` to your workflow, which is a list of glob-style patterns to exclude. Task schemas can also include `archive_exlcudes`.
 
+The first time you submit a workflow that uses this archive location, you will be prompted to authorize hpcflow to connect to your Dropbox account.
