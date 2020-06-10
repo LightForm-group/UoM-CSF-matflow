@@ -1,7 +1,7 @@
 # This example demonstrates using sequences with different `nest_idx` values to generate
 # nested elements (like that produced by a loop).
 
-name: nesting_example_1
+name: nesting_example_2
 stats: false
 run_options:
   l: short
