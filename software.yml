@@ -46,7 +46,7 @@ MTEX:
     executable: <<sources_dir>>/run_<<script>>.sh $MATLAB_HOME
     version_info:
       MATLAB:
-        version: R2018a (9.4.0.813654) 64-bit (glnxa64)
+        version: R2019a (9.6.0.1072779) 64-bit (glnxa64)
       MTEX:
         version: '5.3'
     sources_preparation:
