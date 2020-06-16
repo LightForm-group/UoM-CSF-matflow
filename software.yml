@@ -48,7 +48,7 @@ MTEX:
       MATLAB:
         version: R2019a (9.6.0.1072779) 64-bit (glnxa64)
       MTEX:
-        version: '5.3'
+        version: '5.3.1'
     sources_preparation:
       env: |
         module load apps/binapps/matlab/R2019a
