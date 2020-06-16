@@ -42,7 +42,7 @@ MTEX:
   instance_defaults:
     env: |
       module load apps/binapps/matlab/R2019a
-      module load apps/binapps/matlab/third-party-toolboxes/mtex/5.3
+      module load apps/binapps/matlab/third-party-toolboxes/mtex/5.3.1
     executable: <<sources_dir>>/run_<<script>>.sh $MATLAB_HOME
     version_info:
       MATLAB:
@@ -52,7 +52,7 @@ MTEX:
     sources_preparation:
       env: |
         module load apps/binapps/matlab/R2019a
-        module load apps/binapps/matlab/third-party-toolboxes/mtex/5.3
+        module load apps/binapps/matlab/third-party-toolboxes/mtex/5.3.1
   instances:
     - num_cores: 1
       sources_preparation:
