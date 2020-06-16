@@ -57,12 +57,11 @@ MTEX:
     - num_cores: 1
       sources_preparation:
         commands: |
-          mcc -d <<sources_dir>> -R -singleCompThread -m <<sources_dir>>/<<script>>.m $(cat $MTEX_INCLUDE)
+          mcc -d <<sources_dir>> -R -singleCompThread -m <<sources_dir>>/<<script>>.m $(cat $MTEX_INCLUDE | envsubst)
     - num_cores: 16
       required_scheduler_options:
         pe: smp.pe
         l: ivybridge      
       sources_preparation:
         commands: |
-          mcc -d <<sources_dir>> -m <<sources_dir>>/<<script>>.m $(cat $MTEX_INCLUDE)
-
+          mcc -d <<sources_dir>> -m <<sources_dir>>/<<script>>.m $(cat $MTEX_INCLUDE | envsubst)
