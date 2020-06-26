@@ -65,3 +65,24 @@ MTEX:
       sources_preparation:
         commands: |
           mcc -d <<sources_dir>> -m <<sources_dir>>/<<script>>.m $(cat $MTEX_INCLUDE | envsubst)
+
+DefDAP:
+  instances:
+    - num_cores: 1
+      version_info:
+        defdap:
+          version: '0.92.2'
+      sources_preparation:
+        env: |
+          module load apps/binapps/anaconda3/2019.07
+          source activate /mnt/eps01-rds/jf01-home01/shared/.conda/defdap_env
+          export HDF5_USE_FILE_LOCKING=FALSE        
+      executable: python <<sources_dir>>/<<script>>.py    
+      env: |
+        module load apps/binapps/anaconda3/2019.07
+        source activate /mnt/eps01-rds/jf01-home01/shared/.conda/defdap_env
+        export HDF5_USE_FILE_LOCKING=FALSE
+      task_preparation:
+        env: export HDF5_USE_FILE_LOCKING=FALSE
+      task_processing:
+        env: export HDF5_USE_FILE_LOCKING=FALSE

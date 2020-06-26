@@ -102,10 +102,47 @@
                   save: true
               output: microstructure_seeds
 
+- name: load_microstructure
+  outputs:
+    - microstructure_image
+  methods:
+    - name: EBSD+DIC
+      inputs:
+        - DIC
+        - EBSD
+        - transform_type
+        - root_path
+      implementations:
+        - name: DefDAP
+          input_map:
+            - inputs:
+              - DIC
+              - EBSD
+              - transform_type
+              - root_path
+              file: inputs.hdf5
+              save: false
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: microstructure_image  
+
 - name: generate_volume_element
   outputs:
     - volume_element
   methods:
+    - name: extrusion
+      inputs:
+        - microstructure_image
+        - depth    
+      implementations:
+        - name: damask
+          inputs:
+            - microstructure_image
+            - depth  
     - name: random_voronoi
       notes: >
         In this method we use the random orientations that already exist in
