@@ -9,3 +9,5 @@ For example, you could generate a new directory in your home area for testing an
 3. `matflow go /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/DefDAP/RVE_extrusion.yml`
 
 > Note that in general we should not run computationally- or storage-expensive simulations in our home areas (`~/.`).
+
+If you wish to play around with a profile file, copy it from the shared area into your own directory.
