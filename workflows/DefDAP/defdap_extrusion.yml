@@ -1,0 +1,61 @@
+name: defdap_extrusion
+stats: false
+run_options:
+  num_cores: 1
+  l: short
+
+tasks:
+
+  - name: load_microstructure
+    method: EBSD+DIC
+    software: DefDAP
+    base:
+      transform_type: affine
+      root_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/DefDAP/defdap_small_dataset
+      DIC:
+        filename: dic_data.txt
+        crop: [15, 28, 30, 15]
+        scale_num: 27.2
+        scale_denom: 2048
+        min_grain_size: 20
+        homog_points:
+          - [452, 322]
+          - [200, 417]
+          - [159, 144]
+          - [352, 269]
+          - [102, 33]
+          - [500, 48]
+          - [295, 245]
+          - [176, 437]
+          - [61, 382]
+          - [391, 398]
+          - [240, 208]
+      EBSD:
+        filename: ebsd_data
+        structure: cubic
+        flip_vert: true
+        boundary_tol: 8
+        min_grain_size: 10
+        homog_points:
+          - [780, 606]
+          - [374, 816]
+          - [285, 385]
+          - [612, 543]
+          - [186, 218]
+          - [839, 149]
+          - [516, 519]
+          - [335, 856]
+          - [145, 794]
+          - [686, 743]
+          - [424, 470]
+
+  - name: generate_volume_element
+    method: extrusion
+    software: damask
+    base:
+      depth: 10
+
+  - name: visualise_volume_element
+    method: VTK
+    software: damask
+
