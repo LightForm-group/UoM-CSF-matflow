@@ -1,0 +1,89 @@
+name: uniaxial_sim
+stats: false
+run_options:
+  l: short
+
+tasks:
+
+  - name: generate_microstructure_seeds
+    method: random
+    software: damask
+    base:
+      grid_size: [4, 4, 4]
+      num_grains: 3
+
+  - name: generate_volume_element
+    method: random_voronoi
+    software: damask
+    base:
+      rescale_size: [1, 1, 1]
+      size: [1, 1, 1]
+      rescale_grid: [4, 4, 4]
+
+  - name: visualise_volume_element
+    method: VTK
+    software: damask
+
+  - name: generate_load_case
+    method: uniaxial
+    software: formable
+    base:
+      total_times: [100]
+      num_increments: [200]
+      target_strain_rates: [1.0e-3]
+      target_strains: null
+      directions: [z]
+      rotations:
+        - axis: [1, 0, 0]
+          angle_deg: 0
+
+  - name: simulate_volume_element_loading
+    method: CP_FFT
+    software: DAMASK
+    run_options:
+      num_cores: 4
+      l: short
+    output_map_options:
+      operations:
+        - name: add_Cauchy
+          args: {P: P, F: F}
+          opts: {add_Mises: true}
+        - name: add_strain_tensor
+          args: {F: Fp, t: V, m: 0}
+          opts: {add_Mises: true}
+      incremental_data:
+        - name: vol_avg_stress
+          path: constituent/1_Aluminium_phenopowerlaw/generic/sigma
+          transforms: [mean_along_axes: 1]
+        - name: vol_avg_equivalent_plastic_strain
+          path: constituent/1_Aluminium_phenopowerlaw/generic/epsilon_V^0(Fp)_vM
+          transforms: [mean_along_axes: 1]
+    base:
+      material_properties:
+        homogenization:
+          - name: SX
+            keys: 
+              mech: none
+        crystallite:
+          - name: almostAll
+            outputs: [F]
+        phase:
+          - name: Aluminium_phenopowerlaw
+            keys:
+              elasticity: hooke
+              plasticity: phenopowerlaw
+              lattice_structure: fcc
+              Nslip: 12
+              Ntwin: 0
+              c11: 106.75e9
+              c12: 60.41e9
+              c44: 28.34e9
+              gdot0_slip: 0.001
+              n_slip: 20
+              tau0_slip: 22e6   
+              tausat_slip: 129e6
+              a_slip: 2.25
+              h0_slipslip: 573e6
+              interaction_slipslip: 1 1 1.4 1.4 1.4 1.4
+              atol_resistance: 1
+            outputs: [F, P, Fp]
