@@ -1,0 +1,24 @@
+name: sample_texture_unimodal
+stats: false
+run_options:
+  l: short
+
+tasks:
+
+  - name: get_model_texture
+    method: unimodal
+    software: mtex
+    base:
+      crystal_symmetry: cubic
+      specimen_symmetry: orthorhombic
+      halfwidth: 10
+      modal_orientation_hkl: [1, 0, 0] 
+      modal_orientation_uvw: [1, 0, 0]
+
+  - name: sample_texture
+    method: from_ODF
+    software: mtex
+    base:
+      num_orientations: 20
+      crystal_symmetry: cubic
+      specimen_symmetry: orthorhombic

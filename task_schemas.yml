@@ -7,7 +7,8 @@
   methods:
     - name: unimodal
       inputs: 
-        - modal_orientation
+        - modal_orientation_hkl
+        - modal_orientation_uvw
         - halfwidth
       implementations:
         - name: mtex
@@ -16,13 +17,46 @@
               options:
                 - [crystal_symmetry]
                 - [specimen_symmetry]
-                - [modal_orientation]
+                - [modal_orientation_hkl]
+                - [modal_orientation_uvw]
                 - [halfwidth]
           output_map:
             - files: 
               - name: ODF.txt
                 save: true
               output: ODF
+    - name: fibre
+      inputs:
+        - halfwidth
+      implementations:
+        - name: mtex
+          commands:
+            - command: <<executable>>
+              options:
+                - [crystal_symmetry]
+                - [specimen_symmetry]
+                - [halfwidth]
+          output_map:
+            - files: 
+              - name: ODF.txt
+                save: true
+              output: ODF
+    - name: random
+      inputs:
+        - num_orientations
+      implementations:
+        - name: mtex
+          commands:
+            - command: <<executable>>
+              options:
+                - [crystal_symmetry]
+                - [specimen_symmetry]
+                - [num_orientations]
+          output_map:
+            - files: 
+              - name: ODF.txt
+                save: true
+              output: ODF                
 
 - name: estimate_ODF
   outputs:

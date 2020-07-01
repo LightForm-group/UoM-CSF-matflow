@@ -1,0 +1,22 @@
+name: sample_texture_random
+stats: false
+run_options:
+  l: short
+
+tasks:
+
+  - name: get_model_texture
+    method: random
+    software: mtex
+    base:
+      crystal_symmetry: cubic
+      specimen_symmetry: orthorhombic
+      num_orientations: 1000
+
+  - name: sample_texture
+    method: from_ODF
+    software: mtex
+    base:
+      num_orientations: 20
+      crystal_symmetry: cubic
+      specimen_symmetry: orthorhombic
