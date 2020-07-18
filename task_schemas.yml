@@ -80,6 +80,25 @@
                 - name: ODF.txt
                   save: true
               output: ODF
+    - name: from_CRC_file
+      inputs: 
+        - CRC_file_path[file=True]
+        - CPR_file_path[file=True]
+        - specimen_symmetry
+        - phase
+      implementations:
+        - name: mtex
+          commands:
+            - command: <<executable>>
+              options:
+                - [CRC_file_path]
+                - [specimen_symmetry]                
+                - [phase]
+          output_map:
+            - files:
+                - name: ODF.txt
+                  save: true
+              output: ODF               
             
 - name: sample_texture
   inputs:
