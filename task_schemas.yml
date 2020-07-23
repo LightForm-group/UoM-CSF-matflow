@@ -288,6 +288,24 @@
               parameters: [geom.geom]
               stderr: stderr.log
 
+- name: visualise_volume_element_response
+  inputs:
+    - volume_element_response
+  methods:
+    - name: VTK
+      outputs:
+        - __file__VTR_file
+      implementations:
+        - name: damask
+          input_map: 
+            - inputs:
+                - volume_element_response
+              file: geom.geom
+          commands:
+            - command: geom_check
+              parameters: [geom.geom]
+              stderr: stderr.log
+
 - name: generate_load_case
   inputs:
     - total_times
