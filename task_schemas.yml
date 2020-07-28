@@ -190,12 +190,14 @@
     - name: extrusion
       inputs:
         - microstructure_image
-        - depth    
+        - depth
+        - image_axes
       implementations:
         - name: damask
           inputs:
             - microstructure_image
-            - depth  
+            - depth
+            - image_axes
     - name: random_voronoi
       notes: >
         In this method we use the random orientations that already exist in

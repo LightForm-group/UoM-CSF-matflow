@@ -54,6 +54,7 @@ tasks:
     software: damask
     base:
       depth: 10
+      image_axes: ['x', 'y']
 
   - name: visualise_volume_element
     method: VTK
