@@ -75,12 +75,12 @@ DefDAP:
       sources_preparation:
         env: |
           module load apps/binapps/anaconda3/2019.07
-          source activate /mnt/eps01-rds/jf01-home01/shared/.conda/defdap_env
+          source activate /mnt/eps01-rds/jf01-home01/shared/.conda/defdap_env_2
           export HDF5_USE_FILE_LOCKING=FALSE        
       executable: python <<sources_dir>>/<<script>>.py    
       env: |
         module load apps/binapps/anaconda3/2019.07
-        source activate /mnt/eps01-rds/jf01-home01/shared/.conda/defdap_env
+        source activate /mnt/eps01-rds/jf01-home01/shared/.conda/defdap_env_2
         export HDF5_USE_FILE_LOCKING=FALSE
       task_preparation:
         env: export HDF5_USE_FILE_LOCKING=FALSE
