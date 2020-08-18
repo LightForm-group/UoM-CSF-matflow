@@ -401,16 +401,17 @@
               stderr: stderr.log
 
 - name: generate_load_case
+  inputs:
+    - total_times
+    - num_increments
+    - name: target_strains
+      default: null  
   methods:
     - name: uniaxial      
       implementations:
         - name: formable
           inputs:
-            - total_times
-            - num_increments
             - directions # x, y or z
-            - name: target_strains
-              default: null
             - name: target_strain_rates
               default: null
             - name: rotations    
@@ -419,40 +420,32 @@
       implementations:
         - name: formable
           inputs:
-            - total_times
-            - num_increments
-            - target_strains
-            - target_strain_rates              
+            - name: target_strain_rates
+              default: null
             - directions # xy, xz or yz        
     - name: plane_strain
       implementations:
         - name: formable
           inputs:
-            - total_times
-            - num_increments
-            - target_strains
-            - target_strain_rates              
+            - name: target_strain_rates
+              default: null              
             - directions # xy, xz or yz
     - name: random_2D
       implementations:      
         - name: formable
           inputs:
-            - total_times
-            - num_increments
-            - target_strains
-            - target_strain_rates                  
+            - name: target_strain_rates
+              default: null                  
             - normal_directions # x, y, or z (i.e. load in yz, xz or xy planes)
     - name: random_3D
       implementations:
         - name: formable
           inputs:
-            - total_times
-            - num_increments
-            - target_strains
             - rotation
             - rotation_max_angle
             - rotation_load_case
-            - non_random_rotation      
+            - name: non_random_rotation      
+              default: null
   outputs:
     - load_case
 

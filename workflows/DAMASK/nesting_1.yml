@@ -20,3 +20,5 @@ tasks:
         vals:
           - 100
           - 200
+    output_map_options:
+      phase_label: Al          
