@@ -22,8 +22,11 @@
                 - [halfwidth]
           output_map:
             - files: 
-              - name: ODF.txt
-                save: true
+                - name: ODF.txt
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
               output: ODF
     - name: fibre
       inputs:
@@ -38,8 +41,11 @@
                 - [halfwidth]
           output_map:
             - files: 
-              - name: ODF.txt
-                save: true
+                - name: ODF.txt
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
               output: ODF
     - name: random
       inputs:
@@ -54,19 +60,23 @@
                 - [num_orientations]
           output_map:
             - files: 
-              - name: ODF.txt
-                save: true
+                - name: ODF.txt
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
               output: ODF                
 
 - name: estimate_ODF
   outputs:
     - ODF
+  inputs:
+    - specimen_symmetry
+    - phase
   methods:
     - name: from_CTF_file
       inputs: 
         - CTF_file_path[file=True]
-        - specimen_symmetry
-        - phase
       implementations:
         - name: mtex
           commands:
@@ -79,13 +89,14 @@
             - files:
                 - name: ODF.txt
                   save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
               output: ODF
     - name: from_CRC_file
       inputs: 
         - CRC_file_path[file=True]
         - CPR_file_path[file=True]
-        - specimen_symmetry
-        - phase
       implementations:
         - name: mtex
           commands:
@@ -98,8 +109,11 @@
             - files:
                 - name: ODF.txt
                   save: true
-              output: ODF               
-            
+              options:
+                - name: orientation_coordinate_system
+                  default: null                    
+              output: ODF
+
 - name: sample_texture
   inputs:
     - num_orientations
@@ -118,6 +132,9 @@
             - inputs:
                 - ODF
               file: ODF.txt
+            - inputs:
+                - ODF
+              file: orientation_coordinate_system.json
           commands:
             - command: <<executable>>
               options:
@@ -128,31 +145,39 @@
             - files:
                 - name: orientations.txt
                   save: true
+                - name: orientation_coordinate_system.json
+                  save: true
               output: orientations
-        
+
 - name: generate_microstructure_seeds
   outputs:
     - microstructure_seeds
   methods:
-    - name: random    
+    - name: random
       inputs:
         - grid_size
-        - num_grains          
+        - num_grains
       implementations:
         - name: damask
           outputs:
             - microstructure_seeds
+          command_files:
+            positions: positions_<<inc>>.txt
           commands:
             - command: seeds_fromRandom
-              stdout: positions.txt
+              stdout: <<positions>>
               stderr: stderr.log
               options: 
                 - [-N, num_grains]
                 - [-g, grid_size]       
           output_map:
             - files: 
-                - name: positions.txt
+                - name: <<positions>>
                   save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
+                - name: phase_label
               output: microstructure_seeds
 
 - name: load_microstructure
@@ -208,33 +233,67 @@
       implementations:
         - name: damask
           inputs:
-            - rescale_size
-            - rescale_grid
+            - name: rescale_size
+              default: null
+            - name: rescale_grid
+              default: null
+            - name: canvas_grid
+              default: null
           input_map:
             - inputs:
                 - microstructure_seeds
               file: orientation.seeds
+            - inputs:
+                - microstructure_seeds
+              file: orientation_coordinate_system.json
+            - inputs:
+                - microstructure_seeds
+              file: phase_label.txt
           output_map:
             - files:
-                - name: volume_element.geom
+                - name: <<geom_file>>
                   save: true
+                - name: orientation_coordinate_system.json
+                  save: true
+                - name: phase_label.txt
+                  save: true                  
+              options:
+                - name: model_coordinate_system
+                  default: null
+                - name: buffer_phase_label
+                  default: null
               output: volume_element
+          command_files:
+            geom_file: volume_element_<<inc>>.geom
+          command_pathways:
+            - commands_idx: [0]
+            - condition: [rescale_grid, rescale_size]
+              commands_idx: [0, 1]
+            - condition: [rescale_grid, rescale_size, canvas_grid]
+              commands_idx: [0, 1, 2]
+            - condition: [canvas_grid]
+              commands_idx: [0, 2]
           commands:
             - command: geom_fromVoronoiTessellation
               stdin: orientation.seeds
-              stdout: volume_element_initial.geom 
+              stdout: <<geom_file>>
               stderr: stderr.log
               options:
                 - [-s, size]
             - command: geom_rescale
-              stdin: volume_element_initial.geom
-              stdout: volume_element.geom
+              stdin: <<geom_file>>
+              stdout: <<geom_file>>
               stderr: stderr.log
               options:
                 - [-g, rescale_grid]
                 - [-s, rescale_size]
-
-    - name: random_voronoi_from_orientations      
+            - command: geom_canvas
+              stdin: <<geom_file>>
+              stdout: <<geom_file>>
+              stderr: stderr.log
+              options:
+                - [-g, canvas_grid]
+    - name: random_voronoi_from_orientations
       notes: >
         In this method we replace the orientations in microstructure_seeds
         with orientations computed from a previous task.        
@@ -245,32 +304,65 @@
       implementations:
         - name: damask
           inputs:
-            - rescale_size
-            - rescale_grid
+            - name: rescale_size
+              default: null
+            - name: rescale_grid
+              default: null
+            - name: canvas_grid
+              default: null
           input_map:
             - inputs:
                 - microstructure_seeds
                 - orientations
               file: orientation.seeds
+            - inputs:
+                - orientations
+              file: orientation_coordinate_system.json
+            - inputs:
+                - microstructure_seeds
+              file: phase_label.txt
           output_map:
             - files:
-                - name: volume_element.geom
+                - name: <<geom_file>>
                   save: true
+                - name: orientation_coordinate_system.json
+                  save: true
+                - name: phase_label.txt
+                  save: true                  
+              options:
+                - name: model_coordinate_system
+                  default: null
+                - name: buffer_phase_label
+                  default: null
               output: volume_element
+          command_files:
+            geom_file: volume_element_<<inc>>.geom
+          command_pathways:
+            - commands_idx: [0]
+            - condition: [rescale_grid, rescale_size]
+              commands_idx: [0, 1]
+            - condition: [rescale_grid, rescale_size, canvas_grid]
+              commands_idx: [0, 1, 2]
           commands:
             - command: geom_fromVoronoiTessellation
               stdin: orientation.seeds
-              stdout: volume_element_initial.geom 
+              stdout: <<geom_file>>
               stderr: stderr.log
               options:
                 - [-s, size]
             - command: geom_rescale
-              stdin: volume_element_initial.geom
-              stdout: volume_element.geom
+              stdin: <<geom_file>>
+              stdout: <<geom_file>>
               stderr: stderr.log
               options:
                 - [-g, rescale_grid]
                 - [-s, rescale_size]
+            - command: geom_canvas
+              stdin: <<geom_file>>
+              stdout: <<geom_file>>
+              stderr: stderr.log
+              options:
+                - [-g, canvas_grid]
 
 - name: visualise_volume_element
   inputs:
@@ -309,40 +401,54 @@
               stderr: stderr.log
 
 - name: generate_load_case
-  inputs:
-    - total_times
-    - num_increments
-    - target_strains
   methods:
     - name: uniaxial      
       implementations:
         - name: formable
           inputs:
-            - target_strain_rates
-            - rotations            
+            - total_times
+            - num_increments
             - directions # x, y or z
+            - name: target_strains
+              default: null
+            - name: target_strain_rates
+              default: null
+            - name: rotations    
+              default: null
     - name: biaxial
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - target_strains
             - target_strain_rates              
             - directions # xy, xz or yz        
     - name: plane_strain
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - target_strains
             - target_strain_rates              
             - directions # xy, xz or yz
     - name: random_2D
       implementations:      
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - target_strains
             - target_strain_rates                  
             - normal_directions # x, y, or z (i.e. load in yz, xz or xy planes)
     - name: random_3D
       implementations:
         - name: formable
-          inputs:              
+          inputs:
+            - total_times
+            - num_increments
+            - target_strains
             - rotation
             - rotation_max_angle
             - rotation_load_case
@@ -353,8 +459,15 @@
 - name: simulate_volume_element_loading
   inputs: 
     - volume_element
-    - material_properties
     - load_case
+    - homogenization_schemes
+    - name: homogenization_labels
+      default: null
+    - name: texture_alignment_method
+      default: axes_keyword
+    - name: single_crystal_parameters
+      default: null
+    - phases
   outputs:
     - volume_element_response      
   methods:
@@ -363,8 +476,12 @@
         - name: damask
           input_map:
             - inputs:
-                - material_properties
+                - homogenization_schemes
+                - homogenization_labels
                 - volume_element
+                - single_crystal_parameters
+                - phases
+                - texture_alignment_method
               file: material.config
             - inputs:
                 - volume_element
@@ -386,8 +503,9 @@
                   save: false
               output: volume_element_response
               options:
-                required: [incremental_data]
-                optional: [operations]
+                - name: operations
+                  default: null
+                - name: incremental_data
           archive_excludes: ['geom_load.hdf5', '*.spectralOut']
 
 - name: fit_yield_function
@@ -399,7 +517,7 @@
         - name: formable
           inputs:
             - yield_function_name
-            - yield_point_criteria                        
+            - yield_point_criteria
             - volume_element_response[context=uniaxial,alias=uniaxial_response]
             - volume_element_response[context=multiaxial,alias=multiaxial_responses,group=multiaxial_responses]
 
