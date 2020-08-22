@@ -44,15 +44,22 @@ tasks:
           args: {P: P, F: F}
           opts: {add_Mises: true}
         - name: add_strain_tensor
+          args: {F: F, t: V, m: 0}
+          opts: {add_Mises: true}          
+        - name: add_strain_tensor
           args: {F: Fp, t: V, m: 0}
           opts: {add_Mises: true}
       incremental_data:
-        - name: vol_avg_stress
-          path: constituent/1_Al/generic/sigma
+        - name: vol_avg_equivalent_stress
+          path: constituent/1_Al/generic/sigma_vM
+          transforms: [mean_along_axes: 1]
+        - name: vol_avg_equivalent_strain
+          path: constituent/1_Al/generic/epsilon_V^0(F)_vM
           transforms: [mean_along_axes: 1]
         - name: vol_avg_equivalent_plastic_strain
           path: constituent/1_Al/generic/epsilon_V^0(Fp)_vM
           transforms: [mean_along_axes: 1]
+          increments: 10 # Data should be extracted every 10th increment.
     base:
       homogenization_labels: [SX]
       homogenization_schemes:
