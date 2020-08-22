@@ -405,7 +405,9 @@
     - total_times
     - num_increments
     - name: target_strains
-      default: null  
+      default: null
+    - name: dump_frequency
+      default: null
   methods:
     - name: uniaxial      
       implementations:
