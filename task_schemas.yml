@@ -463,6 +463,8 @@
     - name: single_crystal_parameters
       default: null
     - phases
+    - name: numerics
+      default: null    
   outputs:
     - volume_element_response      
   methods:
@@ -478,6 +480,9 @@
                 - phases
                 - texture_alignment_method
               file: material.config
+            - inputs:
+                - numerics
+              file: numerics.config              
             - inputs:
                 - volume_element
               file: geom.geom
