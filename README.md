@@ -15,7 +15,7 @@ Included are:
 
 3. Now install MatFlow and some extensions, using `pip`. This may take several minutes. You may receive a warning about the scripts path not being on your PATH (see next step). 
     
-    `pip install --user matflow matflow-damask matflow-formable matflow-mtex`
+    `pip install --user matflow matflow-damask matflow-formable matflow-mtex matflow-defdap`
 
 4. Make sure the following path is on your `$PATH` environment variable: `~/.local/bin`. This can be done in your `.bash_profile` file like this: `PATH=$PATH:~/.local/bin`.
 
