@@ -1,3 +1,8 @@
+dummy_software:
+  instances:
+    - num_cores: 1
+      executable: hpcflow
+
 formable:
   instances:
     - num_cores: 1

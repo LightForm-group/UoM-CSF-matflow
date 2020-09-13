@@ -540,7 +540,7 @@
                   save: true
               output: parameter_2
           commands:
-            - command: <<executable>>
+            - command: <<executable>> dummy doSomething
               options:
                 - [--infile1, t1_m1_infile_1]
                 - [--infile2, t1_m1_infile_1]
@@ -567,7 +567,7 @@
                   save: true
               output: parameter_4                
           commands:
-            - command: hpcflow dummy doSomething
+            - command: <<executable>> dummy doSomething
               options:
                 - [--infile1, t2_m1_infile_1]
                 - [--infile2, t2_m1_infile_1]
@@ -592,7 +592,7 @@
                   save: true
               output: parameter_6                
           commands:
-            - command: hpcflow dummy doSomething
+            - command: <<executable>> dummy doSomething
               options:
                 - [--infile1, t3_m1_infile_1]
                 - [--infile2, t3_m1_infile_1]
@@ -623,7 +623,7 @@
                   save: true
               output: parameter_8                
           commands:
-            - command: hpcflow dummy doSomething
+            - command: <<executable>> dummy doSomething
               options:
                 - [--infile1, t4_m1_infile_1]
                 - [--infile2, t4_m1_infile_1]
@@ -649,7 +649,7 @@
                   save: true
               output: parameter_11
           commands:
-            - command: hpcflow dummy doSomething
+            - command: <<executable>> dummy doSomething
               options:
                 - [--infile1, t5_m1_infile_1]
                 - [--infile2, t5_m1_infile_1]
@@ -677,7 +677,7 @@
                   save: true
               output: parameter_8
           commands:
-            - command: hpcflow dummy doSomething
+            - command: <<executable>> dummy doSomething
               options:
                 - [--infile1, t6b_m1_infile_1]
                 - [--infile2, t6b_m1_infile_1]
