@@ -217,6 +217,8 @@
         - microstructure_image
         - depth
         - image_axes
+        - phase_label
+        - homog_label
       implementations:
         - name: damask
           inputs:
@@ -230,6 +232,7 @@
       inputs:
         - microstructure_seeds
         - size
+        - homog_label
       implementations:
         - name: damask
           inputs:
@@ -249,6 +252,9 @@
             - inputs:
                 - microstructure_seeds
               file: phase_label.txt
+            - inputs:
+                - homog_label
+              file: homog_label.txt              
           output_map:
             - files:
                 - name: <<geom_file>>
@@ -256,7 +262,9 @@
                 - name: orientation_coordinate_system.json
                   save: true
                 - name: phase_label.txt
-                  save: true                  
+                  save: true
+                - name: homog_label.txt
+                  save: true
               options:
                 - name: model_coordinate_system
                   default: null
@@ -301,6 +309,7 @@
         - microstructure_seeds
         - orientations
         - size
+        - homog_label        
       implementations:
         - name: damask
           inputs:
@@ -321,6 +330,9 @@
             - inputs:
                 - microstructure_seeds
               file: phase_label.txt
+            - inputs:
+                - homog_label
+              file: homog_label.txt                 
           output_map:
             - files:
                 - name: <<geom_file>>
@@ -328,6 +340,8 @@
                 - name: orientation_coordinate_system.json
                   save: true
                 - name: phase_label.txt
+                  save: true
+                - name: homog_label.txt
                   save: true                  
               options:
                 - name: model_coordinate_system
@@ -377,10 +391,6 @@
             - inputs:
                 - volume_element
               file: geom.geom
-          commands:
-            - command: geom_check
-              parameters: [geom.geom]
-              stderr: stderr.log
 
 - name: visualise_volume_element_response
   inputs:
@@ -418,13 +428,48 @@
               default: null
             - name: rotations    
               default: null
+          input_map:
+            - inputs:
+                - total_times
+                - num_increments
+                - target_strains
+                - target_strain_rates
+                - dump_frequency
+                - directions
+                - rotations
+              file: inputs.hdf5
+              save: false              
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: load_case
     - name: biaxial
       implementations:
         - name: formable
           inputs:
             - name: target_strain_rates
               default: null
-            - directions # xy, xz or yz        
+            - directions # xy, xz or yz
+          input_map:
+            - inputs:
+                - total_times
+                - num_increments
+                - target_strains
+                - target_strain_rates
+                - dump_frequency
+                - directions
+              file: inputs.hdf5
+              save: false              
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: load_case
     - name: plane_strain
       implementations:
         - name: formable
@@ -432,22 +477,78 @@
             - name: target_strain_rates
               default: null              
             - directions # xy, xz or yz
+          input_map:
+            - inputs:
+                - total_times
+                - num_increments
+                - target_strains
+                - target_strain_rates
+                - dump_frequency
+                - directions
+              file: inputs.hdf5
+              save: false              
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: load_case
     - name: random_2D
       implementations:      
         - name: formable
           inputs:
             - name: target_strain_rates
               default: null                  
-            - normal_directions # x, y, or z (i.e. load in yz, xz or xy planes)
+            - normal_directions # x, y, or z (i.e. load in yz, xz or xy planes)                                 
+          input_map:
+            - inputs:
+                - total_times
+                - num_increments
+                - target_strains
+                - target_strain_rates
+                - dump_frequency
+                - normal_directions
+              file: inputs.hdf5
+              save: false              
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: load_case
     - name: random_3D
       implementations:
         - name: formable
           inputs:
-            - rotation
-            - rotation_max_angle
-            - rotation_load_case
+            - name: rotation
+              default: false
+            - name: rotation_max_angle
+              default: null
+            - name: rotation_load_case
+              default: true
             - name: non_random_rotation      
               default: null
+          input_map:
+            - inputs:
+                - total_times
+                - num_increments
+                - target_strains
+                - dump_frequency
+                - rotation
+                - rotation_max_angle
+                - rotation_load_case
+                - non_random_rotation
+              file: inputs.hdf5
+              save: false
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: load_case
   outputs:
     - load_case
 
@@ -456,8 +557,6 @@
     - volume_element
     - load_case
     - homogenization_schemes
-    - name: homogenization_labels
-      default: null
     - name: texture_alignment_method
       default: axes_keyword
     - name: single_crystal_parameters
@@ -474,7 +573,6 @@
           input_map:
             - inputs:
                 - homogenization_schemes
-                - homogenization_labels
                 - volume_element
                 - single_crystal_parameters
                 - phases
@@ -512,7 +610,7 @@
   outputs:
     - fitted_yield_functions
   methods:
-    - name: formable
+    - name: least_squares
       implementations:
         - name: formable
           inputs:
@@ -520,6 +618,24 @@
             - yield_point_criteria
             - volume_element_response[context=uniaxial,alias=uniaxial_response]
             - volume_element_response[context=multiaxial,alias=multiaxial_responses,group=multiaxial_responses]
+            - name: fixed_parameters
+              default: null
+          input_map:
+            - inputs:
+                - yield_function_name
+                - yield_point_criteria
+                - uniaxial_response
+                - multiaxial_responses
+                - fixed_parameters
+              file: inputs.hdf5
+              save: false              
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: fitted_yield_functions
 
 - name: dummy_task_1
   outputs:
