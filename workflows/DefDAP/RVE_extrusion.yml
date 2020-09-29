@@ -1,7 +1,6 @@
 name: defdap_extrusion
 stats: false
 run_options:
-  num_cores: 1
   l: short
 
 tasks:
@@ -55,6 +54,8 @@ tasks:
     base:
       depth: 10
       image_axes: ['x', 'y']
+      homog_label: SX
+      phase_label: Al
 
   - name: visualise_volume_element
     method: VTK
