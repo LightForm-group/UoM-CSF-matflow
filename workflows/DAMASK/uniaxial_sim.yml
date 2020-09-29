@@ -18,6 +18,7 @@ tasks:
     software: damask
     base:
       size: [1, 1, 1]
+      homog_label: SX
 
   - name: visualise_volume_element
     method: VTK
@@ -61,26 +62,29 @@ tasks:
           transforms: [mean_along_axes: 1]
           increments: 10 # Data should be extracted every 10th increment.
     base:
-      homogenization_labels: [SX]
       homogenization_schemes:
         SX:
-          mech: none
+          mech:
+            type: none
       phases:
         Al:
-          outputs: [F, P, Fp]
-          tau0_slip: 22e6
-          tausat_slip: 129e6
-          h0_slipslip: 573e6
-          elasticity: hooke
-          plasticity: phenopowerlaw
-          lattice_structure: fcc
-          Nslip: 12
-          Ntwin: 0
-          c11: 106.75e9
-          c12: 60.41e9
-          c44: 28.34e9
-          gdot0_slip: 0.001
-          n_slip: 20
-          a_slip: 2.25
-          interaction_slipslip: 1 1 1.4 1.4 1.4 1.4
-          atol_resistance: 1
+          elasticity:
+            type: hooke
+            C_11: 106.75e9
+            C_12: 60.41e9
+            C_44: 28.34e9            
+          generic:
+            output: [F, P, Fp]
+          lattice: fcc
+          plasticity:
+            N_sl: [12]
+            a_sl: 2.25
+            atol_xi: 1.0
+            dot_gamma_0_sl: 0.001
+            h_0_sl_sl: 75e6
+            h_sl_sl: [1, 1, 1.4, 1.4, 1.4, 1.4]
+            n_sl: 20
+            output: [xi_sl]
+            xi_0_sl: [31e6]
+            xi_inf_sl: [63e6]
+            type: phenopowerlaw
