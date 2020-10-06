@@ -377,6 +377,40 @@
               stderr: stderr.log
               options:
                 - [-g, canvas_grid]
+    - name: random_voronoi_2
+      notes: >
+        In this method we use the random orientations that already exist in
+        microstructure_seeds (using DAMASK Python package functions).  
+      inputs: 
+        - name: microstructure_seeds
+        - name: size
+        - name: homog_label                
+        - name: scale_morphology
+          default: null
+        - name: buffer_phase_size
+          default: null
+        - name: buffer_phase_label
+          default: null        
+      implementations:
+        - name: damask
+    - name: random_voronoi_from_orientations_2
+      notes: >
+        In this method we replace the orientations in microstructure_seeds
+        with orientations computed from a previous task (using DAMASK Python package
+        functions).
+      inputs: 
+        - name: microstructure_seeds
+        - name: size
+        - name: homog_label                
+        - name: scale_morphology
+          default: null
+        - name: buffer_phase_size
+          default: null
+        - name: buffer_phase_label
+          default: null
+        - name: orientations
+      implementations:
+        - name: damask
 
 - name: visualise_volume_element
   inputs:
