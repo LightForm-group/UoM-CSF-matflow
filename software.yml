@@ -128,3 +128,14 @@ DefDAP:
         env: export HDF5_USE_FILE_LOCKING=FALSE
       task_processing:
         env: export HDF5_USE_FILE_LOCKING=FALSE
+
+neper:
+  instance_defaults:
+    env: |
+      module load apps/gcc/neper/4.0.1
+    executable: neper
+    version_info:
+      neper:
+        version: '4.0.1'
+  instances:
+    - num_cores: 1
