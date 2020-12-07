@@ -1,0 +1,20 @@
+name: demo_neper
+stats: false
+
+tasks:
+  
+  - name: generate_volume_element
+    method: random_voronoi
+    software: neper
+    base:
+      num_grains: 1000
+      grid_size: [32, 32, 32]
+      buffer_phase_size: [0, 0, 4]
+    output_map_options:
+      homog_label: SX
+      phase_label: Al
+      buffer_phase_label: Air
+  
+  - name: visualise_volume_element
+    method: VTK
+    software: damask
