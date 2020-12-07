@@ -229,13 +229,51 @@
       notes: >
         In this method we use the random orientations that already exist in
         microstructure_seeds.
-      inputs:
-        - microstructure_seeds
-        - size
-        - homog_label
       implementations:
+        - name: neper
+          inputs:
+            - name: num_grains
+            - name: grid_size
+            - name: buffer_phase_size
+              default: null
+          commands:
+            - command: <<executable>> -T
+              options:
+                - [-n, num_grains]
+                - [-format, tesr]
+                - [-tesrformat, ascii]
+                - [-tesrsize, grid_size]
+                - [-o, volume_element.tesr]
+                - [-oridescriptor, 'euler-bunge:passive']
+                - [-periodicity, all]
+            - command: <<executable>> -T
+              options:
+                - [-n, num_grains]
+                - [-format, tesr]
+                - [-tesrformat, ascii]
+                - [-tesrsize, grid_size]
+                - [-o, volume_element.tesr]
+                - [-oridescriptor, 'euler-bunge:passive']
+                - [-periodicity, all]
+                - [-transform, buffer_phase_size]                
+          command_pathways:
+            - commands_idx: [0]
+            - commands_idx: [1]
+              condition: [buffer_phase_size]
+          output_map:
+            - output: volume_element
+              files:
+                - name: volume_element.tesr
+                  save: true
+              options:
+                - homog_label
+                - phase_label
+                - buffer_phase_label
         - name: damask
           inputs:
+            - name: microstructure_seeds
+            - name: size
+            - name: homog_label          
             - name: rescale_size
               default: null
             - name: rescale_grid
@@ -305,14 +343,13 @@
       notes: >
         In this method we replace the orientations in microstructure_seeds
         with orientations computed from a previous task.        
-      inputs:
-        - microstructure_seeds
-        - orientations
-        - size
-        - homog_label        
       implementations:
         - name: damask
           inputs:
+            - name: microstructure_seeds
+            - name: orientations
+            - name: size
+            - name: homog_label
             - name: rescale_size
               default: null
             - name: rescale_grid
