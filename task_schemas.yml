@@ -626,16 +626,18 @@
 
 - name: simulate_volume_element_loading
   inputs: 
-    - volume_element
-    - load_case
-    - homogenization_schemes
+    - name: volume_element
+    - name: load_case
+    - name: homogenization_schemes
     - name: texture_alignment_method
       default: axes_keyword
     - name: single_crystal_parameters
       default: null
-    - phases
+    - name: phases
     - name: numerics
-      default: null    
+      default: null
+    - name: single_crystal_parameter_perturbation
+      default: null
   outputs:
     - volume_element_response      
   methods:
@@ -647,6 +649,7 @@
                 - homogenization_schemes
                 - volume_element
                 - single_crystal_parameters
+                - single_crystal_parameter_perturbation
                 - phases
                 - texture_alignment_method
               file: material.config
