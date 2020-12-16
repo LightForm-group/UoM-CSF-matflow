@@ -774,9 +774,9 @@
     - name: initial_damping  
   outputs:
     - single_crystal_parameters
-    - levenburg_marquardt_fitter
+    - levenberg_marquardt_fitter
   methods:
-    - name: levenburg_marquardt
+    - name: levenberg_marquardt
       implementations:
         - name: formable
           input_map:
@@ -798,7 +798,7 @@
             - files:
                 - name: outputs.hdf5
                   save: false
-              output: levenburg_marquardt_fitter
+              output: levenberg_marquardt_fitter
 
 - name: dummy_task_1
   outputs:
