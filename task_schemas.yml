@@ -462,6 +462,7 @@
             - inputs:
                 - volume_element
               file: geom.geom
+              save: true 
 
 - name: visualise_volume_element_response
   inputs:
