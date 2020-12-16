@@ -41,6 +41,9 @@ default_preparation_run_options:
 
 default_processing_run_options:
   l: short
+  
+default_iterate_run_options:
+  l: short  
 ```
 
 In this case, all preparation and processing jobs will use the short queue by default. This can be overidden from within a workflow if necessary.
