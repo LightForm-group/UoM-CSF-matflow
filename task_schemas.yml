@@ -716,6 +716,90 @@
                   save: false
               output: fitted_yield_functions
 
+- name: get_tensile_test
+  outputs:
+    - tensile_test
+  methods:
+    - name: from_CSV
+      implementations:
+        - name: formable
+          inputs: 
+            - name: CSV_file_path
+              file: true
+            - name: CSV_arguments
+            - name: eng_stress_col_index
+              default: null 
+            - name: eng_strain_col_index
+              default: null
+            - name: true_stress_col_index
+              default: null
+            - name: true_strain_col_index        
+              default: null
+            - name: stress_units
+              default: Pa
+          input_map:
+            - inputs:
+                - CSV_file_path
+                - CSV_arguments
+                - eng_stress_col_index
+                - eng_strain_col_index
+                - true_stress_col_index
+                - true_strain_col_index
+                - stress_units
+              file: inputs.hdf5
+              save: false              
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: tensile_test 
+
+- name: optimise_single_crystal_parameters
+  inputs:  
+    - name: volume_element_response
+      group: single_crystal_parameter_optimisation
+      alias: perturbed_volume_element_responses
+      include_all_iterations: true    
+    - name: single_crystal_parameters
+      group: single_crystal_parameter_optimisation
+      include_all_iterations: true    
+    - name: single_crystal_parameter_perturbation
+      group: single_crystal_parameter_optimisation
+      alias: single_crystal_parameter_perturbations
+      include_all_iterations: true    
+    - name: tensile_test
+      alias: experimental_tensile_test    
+    - name: initial_damping  
+  outputs:
+    - single_crystal_parameters
+    - levenburg_marquardt_fitter
+  methods:
+    - name: levenburg_marquardt
+      implementations:
+        - name: formable
+          input_map:
+            - inputs:
+                - single_crystal_parameters
+                - single_crystal_parameter_perturbations          
+                - perturbed_volume_element_responses
+                - experimental_tensile_test
+                - initial_damping
+              file: inputs.hdf5
+              save: false             
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: single_crystal_parameters
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: levenburg_marquardt_fitter
+
 - name: dummy_task_1
   outputs:
     - parameter_2
