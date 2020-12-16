@@ -652,16 +652,20 @@
                 - single_crystal_parameter_perturbation
                 - phases
                 - texture_alignment_method
-              file: material.config
+              file: material.yaml
+              save: true
             - inputs:
                 - numerics
-              file: numerics.config              
+              file: numerics.yaml
+              save: true
             - inputs:
                 - volume_element
               file: geom.geom
+              save: true
             - inputs:
                 - load_case
               file: load.load
+              save: true
           commands:
             - command: <<executable>>
               parallel_mode: MPI
