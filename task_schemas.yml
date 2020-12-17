@@ -800,6 +800,48 @@
                   save: false
               output: levenberg_marquardt_fitter
 
+- name: simulate_deformation
+  methods: 
+    - name: FE
+      outputs:
+        - model_response
+      implementations:
+        - name: Abaqus
+          inputs:
+            - material_models
+            - specimen_parts
+            - steps
+            - memory
+            - name: do_datacheck
+              default: null
+          input_map:
+            - inputs:
+                - material_models
+                - specimen_parts
+                - steps
+              file: inputs.inp
+          command_pathways:
+            - commands_idx: [0]
+            - commands_idx: [1]
+              condition: [do_datacheck]
+          commands:
+            - command: . $ABAQUS_HOME/liccheck.sh; <<executable>>
+              options: 
+                - [job=myjob]
+                - [input=inputs.inp]
+                - [cpus=$NSLOTS]
+                - [scratch=$HOME/scratch]
+                - [memory]
+                - [interactive]            
+            - command: . $ABAQUS_HOME/liccheck.sh; <<executable>>
+              options: 
+                - [datacheck]
+                - [job=myjob]
+                - [input=inputs.inp]
+                - [cpus=$NSLOTS]
+                - [scratch=$HOME/scratch]
+                - [memory]
+                - [interactive]
 - name: dummy_task_1
   outputs:
     - parameter_2

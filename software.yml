@@ -1,4 +1,4 @@
-dummy_software:
+ dummy_software:
   instances:
     - num_cores: 1
       executable: hpcflow
@@ -107,7 +107,6 @@ MTEX:
       sources_preparation:
         commands: |
           mcc -d <<sources_dir>> -m <<sources_dir>>/<<script>>.m $(cat $MTEX_INCLUDE | envsubst)
-
 DefDAP:
   instances:
     - num_cores: 1
@@ -139,3 +138,21 @@ neper:
         version: '4.0.1'
   instances:
     - num_cores: 1
+abaqus:
+  instances:
+    - env: |
+        module load apps/binapps/abaqus/2020
+      executable: abq2020
+      version_info:
+        abaqus:
+          version: '2020'    
+      num_cores: 1
+    - env: |
+        module load apps/binapps/abaqus/2020
+      executable: abq2020
+      version_info:
+        abaqus:
+          version: '2020'
+      num_cores: [2, 32, 1]
+      required_scheduler_options:
+        pe: smp.pe
