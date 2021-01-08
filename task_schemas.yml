@@ -190,6 +190,8 @@
         - EBSD
         - transform_type
         - root_path
+        - name: scaling_factor
+          default: 1
       implementations:
         - name: DefDAP
           input_map:
@@ -198,6 +200,7 @@
               - EBSD
               - transform_type
               - root_path
+              - scaling_factor
               file: inputs.hdf5
               save: false
           commands:
