@@ -845,6 +845,7 @@
                 - [scratch=$HOME/scratch]
                 - [memory]
                 - [interactive]
+
 - name: dummy_task_1
   outputs:
     - parameter_2
