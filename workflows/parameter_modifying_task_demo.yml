@@ -1,0 +1,22 @@
+name: parameter_modifying_task_demo
+run_options:
+  l: short
+
+tasks:
+  
+    # parameter_2 "generating" task:
+  - name: dummy_task_1
+    method: method_1
+    software: dummy_software
+      
+    # parameter_2 "modifying" task:
+  - name: dummy_task_2c
+    method: method_1
+    software: dummy_software
+    base:
+      parameter_3: 301
+  
+    # parameter_2 "consuming" task:
+  - name: dummy_task_2d
+    method: method_1
+    software: dummy_software
