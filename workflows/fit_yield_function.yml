@@ -1,6 +1,5 @@
 name: fit_yield_function
 
-stats: false
 run_options:
   l: short
 
