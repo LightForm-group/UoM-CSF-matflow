@@ -148,6 +148,83 @@
                 - name: orientation_coordinate_system.json
                   save: true
               output: orientations
+    - name: from_model_ODF
+      inputs:
+        - ODF_components
+        - crystal_symmetry
+        - specimen_symmetry
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - ODF_components
+              file: ODF_components.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [ODF_components.json]
+                - [crystal_symmetry]
+                - [specimen_symmetry]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.json
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null              
+              output: orientations
+    - name: from_CTF_file
+      inputs:
+        - CTF_file_path[file=True]
+        - specimen_symmetry
+        - phase
+        - name: reference_frame_transformation
+          default: euler_to_spatial # or "spatial_to_euler" or null
+      implementations:
+        - name: mtex
+          commands:
+            - command: <<executable>>
+              options:
+                - [CTF_file_path]
+                - [reference_frame_transformation]
+                - [specimen_symmetry]
+                - [phase]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.json
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null              
+              output: orientations   
+    - name: from_CRC_file
+      inputs:
+        - CRC_file_path[file=True]
+        - CPR_file_path[file=True]
+        - specimen_symmetry
+        - phase
+        - name: reference_frame_transformation
+          default: euler_to_spatial # or "spatial_to_euler" or null
+      implementations:
+        - name: mtex
+          commands:
+            - command: <<executable>>
+              options:
+                - [CRC_file_path]
+                - [reference_frame_transformation]
+                - [specimen_symmetry]
+                - [phase]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.json
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null              
+              output: orientations
 
 - name: generate_microstructure_seeds
   outputs:
@@ -228,50 +305,11 @@
             - microstructure_image
             - depth
             - image_axes
-    - name: random_voronoi
+    - name: random_voronoi_OLD
       notes: >
         In this method we use the random orientations that already exist in
         microstructure_seeds.
       implementations:
-        - name: neper
-          inputs:
-            - name: num_grains
-            - name: grid_size
-            - name: buffer_phase_size
-              default: null
-          commands:
-            - command: <<executable>> -T
-              options:
-                - [-n, num_grains]
-                - [-format, tesr]
-                - [-tesrformat, ascii]
-                - [-tesrsize, grid_size]
-                - [-o, volume_element.tesr]
-                - [-oridescriptor, 'euler-bunge:passive']
-                - [-periodicity, all]
-            - command: <<executable>> -T
-              options:
-                - [-n, num_grains]
-                - [-format, tesr]
-                - [-tesrformat, ascii]
-                - [-tesrsize, grid_size]
-                - [-o, volume_element.tesr]
-                - [-oridescriptor, 'euler-bunge:passive']
-                - [-periodicity, all]
-                - [-transform, buffer_phase_size]                
-          command_pathways:
-            - commands_idx: [0]
-            - commands_idx: [1]
-              condition: [buffer_phase_size]
-          output_map:
-            - output: volume_element
-              files:
-                - name: volume_element.tesr
-                  save: true
-              options:
-                - homog_label
-                - phase_label
-                - buffer_phase_label
         - name: damask
           inputs:
             - name: microstructure_seeds
@@ -342,7 +380,7 @@
               stderr: stderr.log
               options:
                 - [-g, canvas_grid]
-    - name: random_voronoi_from_orientations
+    - name: random_voronoi_from_orientations_OLD
       notes: >
         In this method we replace the orientations in microstructure_seeds
         with orientations computed from a previous task.        
@@ -417,23 +455,62 @@
               stderr: stderr.log
               options:
                 - [-g, canvas_grid]
-    - name: random_voronoi_2
+    - name: random_voronoi
       notes: >
         In this method we use the random orientations that already exist in
-        microstructure_seeds (using DAMASK Python package functions).  
-      inputs: 
-        - name: microstructure_seeds
-        - name: size
-        - name: homog_label                
-        - name: scale_morphology
-          default: null
-        - name: buffer_phase_size
-          default: null
-        - name: buffer_phase_label
-          default: null        
+        microstructure_seeds (using DAMASK Python package functions).         
       implementations:
         - name: damask
-    - name: random_voronoi_from_orientations_2
+          inputs:
+            - name: microstructure_seeds
+            - name: size
+            - name: homog_label
+            - name: scale_morphology
+              default: null
+            - name: buffer_phase_size
+              default: null
+            - name: buffer_phase_label
+              default: null
+        - name: neper
+          inputs:
+            - name: num_grains
+            - name: grid_size
+            - name: buffer_phase_size
+              default: null
+          commands:
+            - command: <<executable>> -T
+              options:
+                - [-n, num_grains]
+                - [-format, tesr]
+                - [-tesrformat, ascii]
+                - [-tesrsize, grid_size]
+                - [-o, volume_element.tesr]
+                - [-oridescriptor, 'euler-bunge:passive']
+                - [-periodicity, all]
+            - command: <<executable>> -T
+              options:
+                - [-n, num_grains]
+                - [-format, tesr]
+                - [-tesrformat, ascii]
+                - [-tesrsize, grid_size]
+                - [-o, volume_element.tesr]
+                - [-oridescriptor, 'euler-bunge:passive']
+                - [-periodicity, all]
+                - [-transform, buffer_phase_size]                
+          command_pathways:
+            - commands_idx: [0]
+            - commands_idx: [1]
+              condition: [buffer_phase_size]
+          output_map:
+            - output: volume_element
+              files:
+                - name: volume_element.tesr
+                  save: true
+              options:
+                - homog_label
+                - phase_label
+                - buffer_phase_label        
+    - name: random_voronoi_from_orientations
       notes: >
         In this method we replace the orientations in microstructure_seeds
         with orientations computed from a previous task (using DAMASK Python package
@@ -845,6 +922,26 @@
                 - [scratch=$HOME/scratch]
                 - [memory]
                 - [interactive]
+
+- name: visualise_orientations
+  methods:
+    - name: pole_figure
+      inputs:
+        - orientations
+        - crystal_symmetry
+        - pole_figure_directions
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - orientations                
+              file: orientations.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [orientations.json]
+                - [crystal_symmetry]
+                - [pole_figure_directions]
 
 - name: dummy_task_1
   outputs:
