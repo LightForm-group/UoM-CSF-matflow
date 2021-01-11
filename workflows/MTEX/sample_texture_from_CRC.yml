@@ -1,3 +1,6 @@
+
+# Warning: do not use for now! There are issues with ODF export/import.
+
 name: sample_texture_from_CRC
 stats: false
 run_options:
