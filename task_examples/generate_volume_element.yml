@@ -1,0 +1,123 @@
+# Example parametrisations of `generate_volume_element` tasks.
+
+# The `generate_volume_element` task outputs a `volume_element` parameter.
+
+name: generate_volume_element_examples
+archive: dropbox
+
+tasks:
+
+  # The first task is to provide seed positions for some of the  generate volume element
+  # tasks below.
+  - name: generate_microstructure_seeds
+    method: random
+    software: damask
+    base:
+      grid_size: [16, 16, 16]
+      num_grains: 3
+    output_map_options:
+      phase_label: Al
+
+  # --------------------------------------------------------------------------------------
+  # Generate volume element task examples
+  # --------------------------------------------------------------------------------------
+
+  # Example 1: Use the random orientations previously generated within the 
+  # microstructure_seeds parameter:
+  - name: generate_volume_element
+    method: random_voronoi
+    software: damask
+    context: example_1
+    base:
+      size: [1, 1, 1]
+      homog_label: SX
+
+  # Example 2: Like example 1, but specify do two additional modifications to the volume
+  # element: a) stretch the morphology in the x-direction by a factor of 1.5, using
+  # `scale_morphology` and b) add a single buffer phase of "air" in the z-direction to
+  # break up the periodicity.
+  - name: generate_volume_element
+    method: random_voronoi
+    software: damask
+    context: example_2
+    base:
+      size: [1, 1, 1]
+      homog_label: SX
+      scale_morphology: [1.5, 1, 1]     # optional
+      buffer_phase_size: [8, 0, 0]      # optional, this is voxels to add to one face
+      buffer_phase_label: Air           # optional, required if buffer_phase_size set
+
+  # Example 3: Using Neper - grain seed positions are also generated randomly using Neper
+  # so `microstructure_seeds` from the previous task are not required.
+  - name: generate_volume_element
+    method: random_voronoi
+    software: neper
+    context: example_3
+    base:
+      num_grains: 3
+      grid_size: [16, 16, 16]
+      buffer_phase_size: [4, 0, 0]      # optional, this is voxel to add per face (4 top and 4 bottom)
+    output_map_options:
+      homog_label: SX
+      phase_label: Al
+      buffer_phase_label: Air           # required if `buffer_phase_size` specified
+
+  # Example 4: Do not use orientations from `microstructure_seeds`; specify orientations
+  # for each grain manually here:
+  - name: generate_volume_element
+    method: random_voronoi_from_orientations
+    software: damask
+    context: example_4
+    base:
+      size: [1, 1, 1]
+      homog_label: SX
+      orientations:
+        type: quat
+        unit_cell_alignment:
+          x: a
+        quaternions:
+          - [1, 0, 0, 0]
+          - [1, 0, 0, 0]
+          - [1, 0, 0, 0]
+
+  # Example 5: Extruding from a 2D microstructure (e.g. from EBSD/DIC data). Note, the
+  # `microstructure_image` parameter will typically come from another task (e.g.
+  # task `load_microstructure` with method `EBSD+DIC` and software: `DefDAP`), rather
+  # than being manually specified, as it is here.
+  - name: generate_volume_element
+    method: extrusion
+    software: damask
+    context: example_5
+    base:
+      depth: 10
+      image_axes: ['x', 'y']
+      homog_label: SX
+      phase_label: Al
+      microstructure_image:
+        grains: [
+          [0, 0, 0, 1, 1, 1],
+          [0, 0, 0, 1, 1, 1],
+          [0, 1, 1, 1, 1, 1],
+          [1, 1, 1, 1, 1, 1],
+          [0, 0, 1, 1, 1, 0],
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+        ]
+        orientations: [
+          [39.18268407, 148.66440189, 255.56965614],
+          [342.14544064, 135.6297025 , 257.25726621],
+        ]
+
+  # --------------------------------------------------------------------------------------
+  
+  # The final task is to visualise all of the generated volume elements
+  
+  - name: visualise_volume_element
+    method: VTK
+    software: damask
+    contexts:
+      - example_1
+      - example_2
+      - example_3
+      - example_4
+      - example_5

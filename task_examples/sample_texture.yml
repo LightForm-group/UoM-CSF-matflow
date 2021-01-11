@@ -1,0 +1,104 @@
+# Example parametrisations of `sample_texture` tasks.
+
+# The `sample_texture` task outputs an `orientations` parameter.
+
+name: sample_texture_examples
+archive: dropbox
+
+tasks:
+
+  # --------------------------------------------------------------------------------------
+  # Sample texture examples
+  # --------------------------------------------------------------------------------------
+
+  # Example 1: Sample orientations from a CTF file.
+  - name: sample_texture
+    method: from_CTF_file
+    software: mtex
+    context: example_1
+    base:
+      CTF_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/MTEX/RD-TD Data.ctf
+      specimen_symmetry: orthorhombic
+      phase: Aluminium  # the phase name to be sampled, as labelled within the CTF file
+      num_orientations: 1000
+      reference_frame_transformation: euler_to_spatial # default is "euler_to_spatial", also allowed are: "spatial_to_euler" and null
+
+  # Example 2: Sample orientations from CRC and CPR files
+  - name: sample_texture
+    method: from_CRC_file
+    software: mtex
+    context: example_2
+    base:
+      CRC_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/MTEX/RD-TD Data.crc
+      CPR_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/MTEX/RD-TD Data.cpr
+      specimen_symmetry: orthorhombic
+      phase: Aluminium # the phase name to be sampled, as labelled within the CTF file
+      num_orientations: 1000
+      reference_frame_transformation: euler_to_spatial # default is "euler_to_spatial", also allowed are: "spatial_to_euler" and null
+
+  # Example 3: Sample orientations from a model unimodal ODF:
+  - name: sample_texture
+    method: from_model_ODF
+    software: mtex
+    context: example_3
+    base:
+      num_orientations: 1000
+      crystal_symmetry: hexagonal
+      specimen_symmetry: orthorhombic
+      ODF_components:
+        - type: unimodal
+          component_fraction: 1.0
+          modal_orientation_HKL: [0, 0, 1]
+          modal_orientation_UVW: [1, 0, 0]
+          halfwidth: 5
+    output_map_options:
+      orientation_coordinate_system:  # for all sample_texture methods, we can optionally label the axes as RD/TD/ND
+        x: RD
+        y: TD
+        z: ND
+  
+  # Example 4: Sample orientations from a mixed model ODF (unimodal + uniform). Currently
+  # only unimodal and uniform components are supported. See
+  # https://github.com/LightForm-group/matflow-mtex/issues/3
+  - name: sample_texture
+    method: from_model_ODF
+    software: mtex
+    context: example_4
+    base:
+      num_orientations: 1000
+      crystal_symmetry: hexagonal
+      specimen_symmetry: orthorhombic
+      ODF_components:
+        - type: unimodal
+          component_fraction: 0.7               # component fractions must sum to 1!
+          modal_orientation_HKL: [0, 0, 1]
+          modal_orientation_UVW: [1, 0, 0]
+          halfwidth: 5          
+        - type: uniform
+          component_fraction: 0.3               # component fractions must sum to 1!
+
+  # --------------------------------------------------------------------------------------
+  
+  # The final tasks are to visualise all of the generated orientations
+
+  - name: visualise_orientations
+    method: pole_figure
+    software: mtex
+    contexts: [example_1, example_2]
+    base:
+      crystal_symmetry: cubic
+      pole_figure_directions:
+        - [0, 0, 1]
+        - [1, 0, 1]        
+        - [1, 1, 1]
+
+  - name: visualise_orientations
+    method: pole_figure
+    software: mtex
+    contexts: [example_3, example_4]
+    base:
+      crystal_symmetry: hexagonal
+      pole_figure_directions:
+        - [0, 0, 0, 1]
+        - [1, 0, -1, 0]
+        - [1, 1, -2, 0]
