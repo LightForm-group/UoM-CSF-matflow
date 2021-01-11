@@ -1,5 +1,4 @@
 name: uniaxial_sim
-stats: false
 run_options:
   l: short
 tasks:
@@ -60,7 +59,7 @@ tasks:
         - name: vol_avg_equivalent_plastic_strain
           path: constituent/1_Al/generic/epsilon_V^0(Fp)_vM
           transforms: [mean_along_axes: 1]
-          increments: 10 # Data should be extracted every 10th increment.
+          increments: 10 # E.g. extract data every 10th increment.
     base:
       homogenization_schemes:
         SX:
