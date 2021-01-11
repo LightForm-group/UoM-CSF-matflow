@@ -31,7 +31,7 @@ tasks:
       CRC_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/MTEX/RD-TD Data.crc
       CPR_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/MTEX/RD-TD Data.cpr
       specimen_symmetry: orthorhombic
-      phase: Aluminium # the phase name to be sampled, as labelled within the CTF file
+      phase: Aluminium # the phase name to be sampled, as labelled within the CPR file
       num_orientations: 1000
       reference_frame_transformation: euler_to_spatial # default is "euler_to_spatial", also allowed are: "spatial_to_euler" and null
 
