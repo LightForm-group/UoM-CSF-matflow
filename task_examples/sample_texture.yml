@@ -3,7 +3,6 @@
 # The `sample_texture` task outputs an `orientations` parameter.
 
 name: sample_texture_examples
-archive: dropbox
 
 tasks:
 

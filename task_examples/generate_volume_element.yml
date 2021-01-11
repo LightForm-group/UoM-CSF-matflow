@@ -3,7 +3,6 @@
 # The `generate_volume_element` task outputs a `volume_element` parameter.
 
 name: generate_volume_element_examples
-archive: dropbox
 
 tasks:
 
