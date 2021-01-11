@@ -949,7 +949,8 @@
   methods:
     - name: method_1
       inputs:
-        - parameter_1
+        - name: parameter_1
+          default: 432
       implementations:
         - name: dummy_software
           input_map:
@@ -988,6 +989,65 @@
                 - name: outfile.txt
                   save: true
               output: parameter_4                
+          commands:
+            - command: <<executable>> dummy doSomething
+              options:
+                - [--infile1, t2_m1_infile_1]
+                - [--infile2, t2_m1_infile_1]
+                - [--value, parameter_2]
+
+- name: dummy_task_2c
+  outputs:
+    - parameter_4
+    - parameter_2
+  methods:
+    - name: method_1
+      inputs:
+        - name: parameter_1
+        - name: parameter_2
+        - name: parameter_3
+      implementations:
+        - name: dummy_software
+          input_map:
+            - inputs:
+                - parameter_1
+                - parameter_2
+                - parameter_3
+              file: t2_m1_infile_1
+          output_map:
+            - files:
+                - name: outfile.txt
+                  save: true
+              output: parameter_4
+            - files:
+                - name: outfile.txt
+                  save: true
+              output: parameter_2                         
+          commands:
+            - command: <<executable>> dummy doSomething
+              options:
+                - [--infile1, t2_m1_infile_1]
+                - [--infile2, t2_m1_infile_1]
+                - [--value, parameter_2]
+
+- name: dummy_task_2d
+  outputs:
+    - parameter_5
+  methods:
+    - name: method_1
+      inputs:
+        - name: parameter_2
+      implementations:
+        - name: dummy_software
+          input_map:
+            - inputs:
+                - parameter_2
+              file: t2_m1_infile_1
+          output_map:
+            - files:
+                - name: outfile.txt
+                  save: true
+              output: parameter_5
           commands:
             - command: <<executable>> dummy doSomething
               options:
