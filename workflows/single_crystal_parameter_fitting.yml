@@ -1,0 +1,122 @@
+name: single_crystal_parameter_fitting
+
+run_options:
+  l: short
+
+iterate:
+  parameter: single_crystal_parameters
+  num_iterations: 4
+
+tasks:
+  - name: generate_microstructure_seeds
+    method: random
+    software: damask
+    base:
+      grid_size: [32, 32, 32]
+      num_grains: 2000
+    output_map_options:
+      phase_label: Al
+
+  - name: generate_volume_element
+    method: random_voronoi
+    software: damask
+    base:
+      size: [1, 1, 1]
+      homog_label: SX
+      scale_morphology: [1.5, 1, 1]
+
+  - name: generate_load_case
+    method: uniaxial
+    software: formable
+    base:
+      total_times:         [     6,     44,   1725,   1725]
+      num_increments:      [    20,     75,     50,     25]
+      target_strain_rates: [1.0e-4, 1.0e-4, 1.0e-4, 1.0e-4]
+      directions:          [     x,      x,      x,      x]
+
+  - name: get_tensile_test
+    method: from_CSV
+    software: formable
+    base:
+      CSV_file_path: /mnt/iusers01/cr01/mbdxqap3/scratch/test-matflow/surfalex_tensile_test_data.csv
+      CSV_arguments:
+        delimiter: ','
+        skip_rows: 0
+        header_row: 1
+      eng_strain_col_index: 0
+      eng_stress_col_index: 1
+      stress_units: MPa
+
+  - name: simulate_volume_element_loading
+    method: CP_FFT
+    software: DAMASK
+    run_options:
+      num_cores: 16
+      processing:
+        num_cores: 4
+        job_array: true
+    output_map_options:
+      operations:
+        - name: add_Cauchy
+          args: {P: P, F: F}
+          opts: {add_Mises: true}
+        - name: add_strain_tensor
+          args: {F: F, t: V, m: 0}
+          opts: {add_Mises: true}
+      incremental_data:
+        - name: vol_avg_equivalent_stress
+          path: constituent/1_Al/generic/sigma_vM
+          transforms: [mean_along_axes: 1]
+        - name: vol_avg_equivalent_strain
+          path: constituent/1_Al/generic/epsilon_V^0(F)_vM
+          transforms: [mean_along_axes: 1]
+    base:
+      single_crystal_parameters:
+        Al:
+          h_0_sl_sl: 400e6
+          xi_0_sl: [30e6]
+          xi_inf_sl: [95e6]
+      homogenization_schemes:
+        SX:
+          mech:
+            type: none
+      phases:
+        Al:
+          elasticity:
+            type: hooke
+            C_11: 106.75e9
+            C_12: 60.41e9
+            C_44: 28.34e9
+          generic:
+            output: [F, P, Fp]
+          lattice: fcc
+          plasticity:
+            type: phenopowerlaw
+            single_crystal_parameters: Al
+            N_sl: [12]
+            a_sl: 2.25
+            atol_xi: 1.0
+            dot_gamma_0_sl: 0.001            
+            h_sl_sl: [1, 1, 1.4, 1.4, 1.4, 1.4]
+            n_sl: 20
+            output: [xi_sl]            
+    sequences:
+      - name: single_crystal_parameter_perturbation
+        vals:
+          - perturbation: null
+          - address: [Al, h_0_sl_sl]
+            perturbation: 0.05
+          - address: [Al, xi_0_sl, 0]
+            perturbation: 0.05
+          - address: [Al, xi_inf_sl, 0]
+            perturbation: 0.05
+    groups:
+      single_crystal_parameter_optimisation:
+        group_by: []
+        nest: True
+ 
+  - name: optimise_single_crystal_parameters
+    method: levenberg_marquardt
+    software: formable
+    base:
+      initial_damping: [2.0, 1.0, 0.5]
