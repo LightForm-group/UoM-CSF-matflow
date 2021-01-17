@@ -12,7 +12,7 @@ tasks:
     method: from_CTF_file
     software: mtex
     base:
-      CTF_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/MTEX/RD-TD Data.ctf
+      CTF_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/data/RD-TD Data.ctf
       specimen_symmetry: orthorhombic
       phase: Aluminium
 
