@@ -38,7 +38,7 @@ tasks:
     method: from_CSV
     software: formable
     base:
-      CSV_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/surfalex_tensile_test_data.csv
+      CSV_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/example_data/surfalex_tensile_test_data.csv
       CSV_arguments:
         delimiter: ','
         skip_rows: 0

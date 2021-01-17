@@ -12,8 +12,8 @@ tasks:
     method: from_CRC_file
     software: mtex
     base:
-      CRC_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/data/RD-TD Data.crc
-      CPR_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/data/RD-TD Data.cpr
+      CRC_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/example_data/RD-TD Data.crc
+      CPR_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/example_data/RD-TD Data.cpr
       specimen_symmetry: orthorhombic
       phase: Aluminium
 

@@ -9,7 +9,7 @@ tasks:
     software: DefDAP
     base:
       transform_type: affine
-      root_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/data/defdap_small_dataset
+      root_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/example_data/defdap_small_dataset
       DIC:
         filename: dic_data.txt
         crop: [15, 28, 30, 15]
