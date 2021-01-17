@@ -136,3 +136,7 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+
+# Ignore .hpcflow directories from /completed_workflows in case any sensitive keys in it!
+.hpcflow

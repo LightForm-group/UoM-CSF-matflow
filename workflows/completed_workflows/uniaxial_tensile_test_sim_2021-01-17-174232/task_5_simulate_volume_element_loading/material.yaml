@@ -1,0 +1,67 @@
+phase:
+  Al:
+    elasticity:
+      type: hooke
+      C_11: 106750000000.0
+      C_12: 60410000000.0
+      C_44: 28340000000.0
+    generic:
+      output:
+      - F
+      - P
+      - Fp
+    lattice: fcc
+    plasticity:
+      N_sl:
+      - 12
+      a_sl: 2.25
+      atol_xi: 1.0
+      dot_gamma_0_sl: 0.001
+      h_0_sl_sl: 75000000.0
+      h_sl_sl:
+      - 1
+      - 1
+      - 1.4
+      - 1.4
+      - 1.4
+      - 1.4
+      n_sl: 20
+      output:
+      - xi_sl
+      xi_0_sl:
+      - 31000000.0
+      xi_inf_sl:
+      - 63000000.0
+      type: phenopowerlaw
+homogenization:
+  SX:
+    mech:
+      type: none
+microstructure:
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.7661515860157811
+    - -0.6217086348339772
+    - 0.16209719281635948
+    - 0.014649938547025874
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.19497211554446317
+    - 0.4040523942887244
+    - 0.016149329282781465
+    - 0.8935696592842564
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.2907644475563739
+    - -0.8276898597212289
+    - -0.4013186154390225
+    - 0.263303818912668
+    phase: Al
