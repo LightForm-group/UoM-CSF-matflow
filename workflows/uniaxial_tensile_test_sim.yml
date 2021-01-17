@@ -1,6 +1,9 @@
-name: uniaxial_sim
+name: uniaxial_tensile_test_sim
+stats: false
+# archive: dropbox
 run_options:
   l: short
+
 tasks:
 
   - name: generate_microstructure_seeds
@@ -30,7 +33,7 @@ tasks:
       total_times: [100]
       num_increments: [200]
       target_strain_rates: [1.0e-3]
-      directions: [z]
+      directions: [x]
 
   - name: simulate_volume_element_loading
     method: CP_FFT
