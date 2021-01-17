@@ -1,0 +1,55 @@
+# This workflow will generate, using MTEX, a sequences of pole figures of single
+# orientations. For each pole figure, the orientation is specified in a different way, but
+# all orientations (and so all pole figures) should be identical. In this way, we test:
+#   1. Equivalent Euler angle specification in degrees and radians
+#   2. Equivalent quaternion specification with either P=+/-1 convention
+
+# Notes
+# -----
+#  - All orientations are a 90 degree rotation about Z; Bunge Euler: (90 deg, 0, 0).
+#  - MTEX (5.3.1) converts this Euler angle (90, 0, 0) to the quaternion in the following
+#    way: 
+#       ori = orientation.byEuler([90 0 0] * degree, cs);
+#       quat = quaternion(ori)
+#       ans = [-0.707107 0 0 -0.707107]
+#
+#    This is equivalent to [+0.707107 0 0 +0.707107] (with both axis and angle reversed):
+#       q1 = quaternion([-0.707107 0 0 -0.707107].')
+#       q2 = -q1
+#       orientation(q1) == orientation(q2) % True
+#
+#    So MTEX uses the P=-1 convention in this sense, and in matflow-mtex we should
+#    scale the vector part of quaternions by -1 if P=1.
+
+name: test_orientation_consistency
+tasks:   
+  - name: visualise_orientations
+    method: pole_figure
+    software: mtex
+    base:
+      crystal_symmetry: triclinic # so we only see one orientaion on the pole figure
+      pole_figure_directions:
+        - [1, 1, 1]               # so we can see rotations about Z
+    sequences:
+      - name: orientations
+        vals:
+          
+          - type: euler
+            unit_cell_alignment: {x: a}
+            euler_angles: [[90, 0, 0]]
+            euler_degrees: true            
+          
+          - type: euler
+            unit_cell_alignment: {x: a}
+            euler_angles: [[1.5707963267948, 0, 0]]
+            euler_degrees: false            
+          
+          - type: quat
+            unit_cell_alignment: {x: a}
+            quaternions: [[+0.707106781, 0, 0, -0.707106781]]
+            P: +1 # this quaternion is the above Euler angle, converted with P=+1            
+          
+          - type: quat
+            unit_cell_alignment: {x: a}          
+            quaternions: [[+0.707106781, 0, 0, +0.707106781]]
+            P: -1 # this quaternion is the above Euler angle, converted with P=-1
