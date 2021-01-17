@@ -46,10 +46,10 @@ tasks:
           
           - type: quat
             unit_cell_alignment: {x: a}
-            quaternions: [[+0.707106781, 0, 0, -0.707106781]]
+            quaternions: [[+0.7071067811865475, 0, 0, -0.7071067811865475]]
             P: +1 # this quaternion is the above Euler angle, converted with P=+1            
           
           - type: quat
             unit_cell_alignment: {x: a}          
-            quaternions: [[+0.707106781, 0, 0, +0.707106781]]
+            quaternions: [[+0.7071067811865475, 0, 0, +0.7071067811865475]]
             P: -1 # this quaternion is the above Euler angle, converted with P=-1
