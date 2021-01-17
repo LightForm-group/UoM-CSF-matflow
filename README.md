@@ -1,9 +1,12 @@
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LightForm-group/UoM-CSF-matflow/HEAD)
+
 This repository contains information about running [MatFlow](https://github.com/LightForm-group/matflow) on the [Computational Shared Facility](http://ri.itservices.manchester.ac.uk/csf3/) (CSF) at the University of Manchester.
 
 Included are:
 - A [software definition file](https://github.com/LightForm-group/UoM-CSF-matflow/blob/master/software.yml)
 - A set of [example task schemas](https://github.com/LightForm-group/UoM-CSF-matflow/blob/master/task_schemas.yml)
 - Some [example workflows](https://github.com/LightForm-group/UoM-CSF-matflow/tree/master/workflows)
+- Some [Jupyter notebooks](https://github.com/LightForm-group/UoM-CSF-matflow/tree/master/workflows/jupyter_notebooks) demonstrating use of the MatFlow API on completed workflows. Click the Binder link above and navigate to `/workflows/jupyter_notebooks` to explore these.
 
 ## Installation of MatFlow on the CSF
 
