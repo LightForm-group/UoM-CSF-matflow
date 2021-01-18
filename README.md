@@ -6,7 +6,7 @@ Included are:
 - A [software definition file](https://github.com/LightForm-group/UoM-CSF-matflow/blob/master/software.yml)
 - A set of [example task schemas](https://github.com/LightForm-group/UoM-CSF-matflow/blob/master/task_schemas.yml)
 - Some [example workflows](https://github.com/LightForm-group/UoM-CSF-matflow/tree/master/workflows)
-- Some [Jupyter notebooks](https://github.com/LightForm-group/UoM-CSF-matflow/tree/master/workflows/jupyter_notebooks) demonstrating use of the MatFlow API on completed workflows. Click the Binder link above and navigate to `/workflows/jupyter_notebooks` to explore these.
+- Some [Jupyter notebooks](https://github.com/LightForm-group/UoM-CSF-matflow/tree/master/workflows/jupyter_notebooks) demonstrating use of the MatFlow API on completed workflows. Click the [Binder link above](https://mybinder.org/v2/gh/LightForm-group/UoM-CSF-matflow/HEAD) and navigate to `/workflows/jupyter_notebooks` to explore these.
 
 ## Installation of MatFlow on the CSF
 
