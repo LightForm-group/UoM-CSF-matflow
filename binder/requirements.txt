@@ -1,2 +1,2 @@
-matflow>=0.2.14
+matflow>=0.2.15
 formable>=0.1.12
