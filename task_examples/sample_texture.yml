@@ -16,7 +16,7 @@ tasks:
     software: mtex
     context: example_1
     base:
-      CTF_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/MTEX/RD-TD Data.ctf
+      CTF_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/example_data/RD-TD Data.ctf
       specimen_symmetry: orthorhombic
       phase: Aluminium  # the phase name to be sampled, as labelled within the CTF file
       num_orientations: 1000
@@ -28,8 +28,8 @@ tasks:
     software: mtex
     context: example_2
     base:
-      CRC_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/MTEX/RD-TD Data.crc
-      CPR_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/MTEX/RD-TD Data.cpr
+      CRC_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/example_data/RD-TD Data.crc
+      CPR_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/example_data/RD-TD Data.cpr
       specimen_symmetry: orthorhombic
       phase: Aluminium # the phase name to be sampled, as labelled within the CPR file
       num_orientations: 1000
