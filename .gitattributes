@@ -1,2 +1,2 @@
-workflows/completed_workflows/ linguist-vendored
-workflows/example_data/ linguist-vendored
+workflows/completed_workflows/* linguist-vendored
+workflows/example_data/* linguist-vendored
