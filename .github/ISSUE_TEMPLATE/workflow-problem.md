@@ -27,9 +27,14 @@ If the profile YAML file does not run, please just share the profile file.
 
 
 **MatFlow and extension package versions**
-Please paste below the output from the following commands on the CSF:
+If your problem is on the CSF, please paste below the output from the following commands on the CSF:
 
 ```bash
 module load apps/anaconda3/5.2.0/bin
 pip list --user | grep "matflow\|damask\|formable"
 ```
+
+If your problem is on your local computer, please paste below the output from the following command on your local computer:
+
+- For a Mac or Linux computer: `pip list | grep "matflow\|damask\|formable"`
+- For a Windows computer: `pip list | findstr "matflow damask formable"`
