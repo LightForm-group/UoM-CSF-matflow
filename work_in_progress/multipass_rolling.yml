@@ -14,10 +14,10 @@ tasks:
     method: random
     software: damask
     base:
-      grid_size: [4, 4, 4]
-      num_grains: 3
+      grid_size: [32, 32, 32]
+      num_grains: 1024
     output_map_options:
-      phase_label: Al      
+      phase_label: Ti_alpha      
 
   - name: generate_volume_element
     method: random_voronoi
@@ -58,41 +58,44 @@ tasks:
           opts: {add_Mises: true}
       incremental_data:
         - name: vol_avg_equivalent_stress
-          path: constituent/1_Al/generic/sigma_vM
+          path: constituent/1_Ti_alpha/generic/sigma_vM
           transforms: [mean_along_axes: 1]
         - name: vol_avg_equivalent_strain
-          path: constituent/1_Al/generic/epsilon_V^0(F)_vM
+          path: constituent/1_Ti_alpha/generic/epsilon_V^0(F)_vM
           transforms: [mean_along_axes: 1]
         - name: vol_avg_equivalent_plastic_strain
-          path: constituent/1_Al/generic/epsilon_V^0(Fp)_vM
+          path: constituent/1_Ti_alpha/generic/epsilon_V^0(Fp)_vM
           transforms: [mean_along_axes: 1]
-          increments: 10 # E.g. extract data every 10th increment.
+          increments: 1 # E.g. extract data every 1 increment.
     base:
       homogenization_schemes:
         SX:
           mech:
             type: none
       phases:
-        Al:
+        Ti_alpha:
           elasticity:
-            type: hooke
-            C_11: 106.75e9
-            C_12: 60.41e9
-            C_44: 28.34e9            
+            type: hooke                # S = C.E
+            C_11: 160.0e9              # elasticity stiffness tensor constants
+            C_12: 90.0e9
+            C_13: 66.0e9
+            C_33: 181.7e9
+            C_44: 46.5e9
           generic:
-            output: [F, P, Fp]
-          lattice: fcc
+            output: [F, P, Fp, O]
+          lattice: hex                 # define crystal
+          c/a: 1.587                   # <c>/<a>
           plasticity:
-            N_sl: [12]
-            a_sl: 2.25
-            atol_xi: 1.0
-            dot_gamma_0_sl: 0.001
-            h_0_sl_sl: 75e6
-            h_sl_sl: [1, 1, 1.4, 1.4, 1.4, 1.4]
-            n_sl: 20
-            output: [xi_sl]
-            xi_0_sl: [31e6]
-            xi_inf_sl: [63e6]
+            N_sl: [3, 3, 0, 6]         # number of slip systems basal,prism,pyrm1,pyrm2
+            a_sl: 2.0                  # ?
+            a_tol_xi: 1.0              # ?
+            dot_gamma_0_sl: 0.001      # initial shear rate
+            h_sl_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] # hardening/dependancy matrix
+            h_0_sl_sl: 15.0e6          # initial hardening
+            n_sl: 10                   # slip sensitivity
+            output: [gamma_sl, xi_sl]
+            xi_0_sl: [100.0e+06, 100.0e+06, 0.0, 200.0e+06]   # CRSS initial
+            xi_inf_sl: [100.0e+06, 100.0e+06, 0.0, 200.0e+06] # CRSS hardened
             type: phenopowerlaw
 
   - name: modify_volume_element
