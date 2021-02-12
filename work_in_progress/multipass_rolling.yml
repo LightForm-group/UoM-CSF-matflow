@@ -31,13 +31,13 @@ tasks:
   #   software: damask
 
   - name: generate_load_case
-    method: uniaxial
+    method: plane_strain
     software: formable
     base:
-      total_times: [100]
-      num_increments: [200]
-      target_strain_rates: [1.0e-3]
-      directions: [x]
+      total_times: [0.2]
+      num_increments: [10]
+      target_strain_rates: [-0.5]
+      directions: [zy]
 
   - name: simulate_volume_element_loading
     method: CP_FFT
