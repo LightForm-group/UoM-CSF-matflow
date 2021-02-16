@@ -232,10 +232,12 @@
   methods:
     - name: random
       inputs:
-        - grid_size
+        - size
         - num_grains
       implementations:
         - name: damask
+          inputs:
+            - grid_size
           outputs:
             - microstructure_seeds
           command_files:
@@ -247,6 +249,7 @@
               options: 
                 - [-N, num_grains]
                 - [-g, grid_size]
+                - [-s, size]
           output_map:
             - files: 
                 - name: <<positions>>
