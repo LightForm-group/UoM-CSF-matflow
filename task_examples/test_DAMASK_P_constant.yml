@@ -8,6 +8,7 @@ tasks:
     method: random
     software: damask
     base:
+      size: [1, 1, 1]
       grid_size: [4, 4, 4]
       num_grains: 1
     output_map_options:
@@ -17,7 +18,6 @@ tasks:
     method: random_voronoi_from_orientations
     software: damask
     base:
-      size: [1, 1, 1]
       homog_label: SX
     sequences:
       - name: orientations
