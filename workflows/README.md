@@ -1,6 +1,6 @@
 ## Running the example workflows
 
-You can run any of the example workflows by calling `matflow go /path/to/profile.yml`. The worflow profile file does not need to be in the current working directory.
+You can run any of the example workflows by calling `matflow go /path/to/profile.yml`. The workflow profile file does not need to be in the current working directory.
 
 For example, you could generate a new directory in your home area for testing and run the demo RVE extrusion workflow which uses DefDAP:
 

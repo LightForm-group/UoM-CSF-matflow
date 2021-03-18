@@ -12,6 +12,7 @@ tasks:
     method: random
     software: damask
     base:
+      size: [1, 1, 1]
       grid_size: [16, 16, 16]
       num_grains: 3
     output_map_options:
@@ -28,7 +29,6 @@ tasks:
     software: damask
     context: example_1
     base:
-      size: [1, 1, 1]
       homog_label: SX
 
   # Example 2: Like example 1, but specify do two additional modifications to the volume
@@ -40,7 +40,6 @@ tasks:
     software: damask
     context: example_2
     base:
-      size: [1, 1, 1]
       homog_label: SX
       scale_morphology: [1.5, 1, 1]     # optional
       buffer_phase_size: [8, 0, 0]      # optional, this is voxels to add to one face
@@ -68,7 +67,6 @@ tasks:
     software: damask
     context: example_4
     base:
-      size: [1, 1, 1]
       homog_label: SX
       orientations:
         type: quat

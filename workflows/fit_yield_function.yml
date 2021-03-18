@@ -9,6 +9,7 @@ tasks:
     method: random
     software: damask
     base:
+      size: [1, 1, 1]
       grid_size: [4, 4, 4]
       num_grains: 3
     output_map_options:
@@ -18,7 +19,6 @@ tasks:
     method: random_voronoi
     software: damask
     base:
-      size: [1, 1, 1]
       homog_label: SX
 
   - name: visualise_volume_element
