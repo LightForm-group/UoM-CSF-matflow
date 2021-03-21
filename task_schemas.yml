@@ -181,8 +181,14 @@
         - phase
         - name: reference_frame_transformation
           default: euler_to_spatial # or "spatial_to_euler" or null
+        - name: rotation # dict with keys "euler_angles_deg" list optional "keep_XY" bool, or "keep_euler" bool
+          default: null
       implementations:
         - name: mtex
+          input_map:
+            - inputs:
+                - rotation
+              file: rotation.json        
           commands:
             - command: <<executable>>
               options:
@@ -190,6 +196,7 @@
                 - [reference_frame_transformation]
                 - [specimen_symmetry]
                 - [phase]
+                - [rotation.json]
                 - [num_orientations]
           output_map:
             - files:
@@ -207,8 +214,14 @@
         - phase
         - name: reference_frame_transformation
           default: euler_to_spatial # or "spatial_to_euler" or null
+        - name: rotation # dict with keys "euler_angles_deg" list optional "keep_XY" bool, or "keep_euler" bool
+          default: null
       implementations:
         - name: mtex
+          input_map:
+            - inputs:
+                - rotation
+              file: rotation.json          
           commands:
             - command: <<executable>>
               options:
@@ -216,6 +229,7 @@
                 - [reference_frame_transformation]
                 - [specimen_symmetry]
                 - [phase]
+                - [rotation.json]                
                 - [num_orientations]
           output_map:
             - files:

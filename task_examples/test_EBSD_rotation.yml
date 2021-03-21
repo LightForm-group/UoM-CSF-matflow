@@ -1,0 +1,29 @@
+# TODO: need to check I understand the rotation. Elements 2 and 3 should not rotate Euler
+# angles at all, whereas element 1 should rotate.
+
+name: test_EBSD_rotation
+archive: dropbox
+tasks:
+
+  - name: sample_texture
+    method: from_CTF_file
+    software: MTEX
+    base:
+      CTF_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/example_data/RD-TD Data.ctf
+      specimen_symmetry: orthorhombic
+      phase: Aluminium 
+      num_orientations: 2000
+      reference_frame_transformation: euler_to_spatial
+    output_map_options:
+      orientation_coordinate_system:
+        x: RD
+        y: TD
+        z: ND
+    sequences:
+      - name: rotation
+        vals:
+          - euler_angles_deg: [-90, 0, 0]
+            keep_XY: true
+          - euler_angles_deg: [-90, 0, 0] # this should not rotate the Euler angles at all
+            keep_euler: true
+          - null
