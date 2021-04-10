@@ -13,7 +13,7 @@ tasks:
       grid_size: [4, 4, 4]
       num_grains: 3
     output_map_options:
-      phase_label: Al      
+      phase_label: Al
 
   - name: generate_volume_element
     method: random_voronoi
