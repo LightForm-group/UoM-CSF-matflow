@@ -251,7 +251,8 @@
       implementations:
         - name: damask
           inputs:
-            - grid_size
+            - name: grid_size
+              ignore_dependency_from: ['generate_volume_element']
           outputs:
             - microstructure_seeds
           command_files:
@@ -283,6 +284,7 @@
             - phase_label
             - name: grid_size
               default: null
+              ignore_dependency_from: ['generate_volume_element']
             - name: orientation_coordinate_system
               default: null
           outputs:
