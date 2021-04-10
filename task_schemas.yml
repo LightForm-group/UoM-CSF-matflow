@@ -176,7 +176,7 @@
               output: orientations
     - name: from_CTF_file
       inputs:
-        - CTF_file_path[file=True]
+        - CTF_file_path[file=True,save=True]
         - specimen_symmetry
         - phase
         - name: reference_frame_transformation
@@ -208,8 +208,8 @@
               output: orientations   
     - name: from_CRC_file
       inputs:
-        - CRC_file_path[file=True]
-        - CPR_file_path[file=True]
+        - CRC_file_path[file=True,save=True]
+        - CPR_file_path[file=True,save=True]
         - specimen_symmetry
         - phase
         - name: reference_frame_transformation
@@ -843,6 +843,7 @@
           inputs: 
             - name: CSV_file_path
               file: true
+              save: true
             - name: CSV_arguments
             - name: eng_stress_col_index
               default: null 
@@ -871,7 +872,7 @@
             - files:
                 - name: outputs.hdf5
                   save: false
-              output: tensile_test 
+              output: tensile_test
 
 - name: optimise_single_crystal_parameters
   inputs:  
