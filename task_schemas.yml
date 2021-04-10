@@ -246,10 +246,13 @@
   methods:
     - name: random
       inputs:
-        - grid_size
+        - size
         - num_grains
       implementations:
         - name: damask
+          inputs:
+            - name: grid_size
+              ignore_dependency_from: ['generate_volume_element']
           outputs:
             - microstructure_seeds
           command_files:
@@ -260,7 +263,8 @@
               stderr: stderr.log
               options: 
                 - [-N, num_grains]
-                - [-g, grid_size]       
+                - [-g, grid_size]
+                - [-s, size]
           output_map:
             - files: 
                 - name: <<positions>>
@@ -270,6 +274,21 @@
                   default: null
                 - name: phase_label
               output: microstructure_seeds
+    - name: random_NEW
+      inputs:
+        - size
+        - num_grains
+      implementations:
+        - name: damask
+          inputs:
+            - phase_label
+            - name: grid_size
+              default: null
+              ignore_dependency_from: ['generate_volume_element']
+            - name: orientation_coordinate_system
+              default: null
+          outputs:
+            - microstructure_seeds
 
 - name: load_microstructure
   outputs:
@@ -477,10 +496,12 @@
         - name: damask
           inputs:
             - name: microstructure_seeds
-            - name: size
+            - name: grid_size
             - name: homog_label
             - name: scale_morphology
               default: null
+            - name: scale_update_size
+              default: true
             - name: buffer_phase_size
               default: null
             - name: buffer_phase_label
@@ -531,10 +552,12 @@
         functions).
       inputs: 
         - name: microstructure_seeds
-        - name: size
+        - name: grid_size
         - name: homog_label                
         - name: scale_morphology
           default: null
+        - name: scale_update_size
+          default: true
         - name: buffer_phase_size
           default: null
         - name: buffer_phase_label

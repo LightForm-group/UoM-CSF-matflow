@@ -9,6 +9,8 @@ tasks:
   - name: generate_microstructure_seeds
     method: random
     software: damask
+    base:
+      size: [1, 1, 1]
     sequences:
       - name: grid_size
         nest_idx: 0
