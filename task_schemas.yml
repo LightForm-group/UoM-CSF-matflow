@@ -816,6 +816,10 @@
             - volume_element_response[context=multiaxial,alias=multiaxial_responses,group=multiaxial_responses]
             - name: fixed_parameters
               default: null
+            - name: initial_parameters
+              default: null
+            - name: opt_parameters
+              default: null              
           input_map:
             - inputs:
                 - yield_function_name
@@ -823,6 +827,8 @@
                 - uniaxial_response
                 - multiaxial_responses
                 - fixed_parameters
+                - initial_parameters
+                - opt_parameters
               file: inputs.hdf5
               save: false              
           commands:
