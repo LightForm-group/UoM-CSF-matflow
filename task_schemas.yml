@@ -208,7 +208,7 @@
               output: orientations   
     - name: from_CRC_file
       inputs:
-        - CRC_file_path[file=True,save=True]
+        - CRC_file_path[file=True,save=False]
         - CPR_file_path[file=True,save=True]
         - specimen_symmetry
         - phase
