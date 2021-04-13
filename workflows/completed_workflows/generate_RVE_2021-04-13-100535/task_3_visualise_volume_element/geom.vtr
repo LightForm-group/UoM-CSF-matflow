@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<VTKFile type="RectilinearGrid" version="0.1" byte_order="LittleEndian" header_type="UInt32" compressor="vtkZLibDataCompressor">
+  <RectilinearGrid WholeExtent="0 16 0 16 0 16">
+    <FieldData>
+      <Array type="String" Name="comments" NumberOfTuples="1" format="binary">
+        AQAAAACAAAAUAAAAHAAAAA==eJzLzUwuyi8uKSpNLiktSi1WMDQwYAAAVnUHMA==
+      </Array>
+    </FieldData>
+  <Piece Extent="0 16 0 16 0 16">
+    <PointData>
+    </PointData>
+    <CellData>
+      <DataArray type="Int64" Name="materialpoint" format="binary" RangeMin="1" RangeMax="100">
+        AQAAAACAAAAAAAAA4QcAAA==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
+      </DataArray>
+    </CellData>
+    <Coordinates>
+      <DataArray type="Float64" Name="x" format="binary" RangeMin="0" RangeMax="1">
+        AQAAAACAAACIAAAAOAAAAA==eJxjYEAGG+wh9AEofQJKX4DSV6D0DSh9B0o/gNKPoPQTKP0MSr+A0q+g9Bso/Q5Kf7AHAB2kEak=
+      </DataArray>
+      <DataArray type="Float64" Name="y" format="binary" RangeMin="0" RangeMax="1">
+        AQAAAACAAACIAAAAOAAAAA==eJxjYEAGG+wh9AEofQJKX4DSV6D0DSh9B0o/gNKPoPQTKP0MSr+A0q+g9Bso/Q5Kf7AHAB2kEak=
+      </DataArray>
+      <DataArray type="Float64" Name="z" format="binary" RangeMin="0" RangeMax="1">
+        AQAAAACAAACIAAAAOAAAAA==eJxjYEAGG+wh9AEofQJKX4DSV6D0DSh9B0o/gNKPoPQTKP0MSr+A0q+g9Bso/Q5Kf7AHAB2kEak=
+      </DataArray>
+    </Coordinates>
+  </Piece>
+  </RectilinearGrid>
+</VTKFile>

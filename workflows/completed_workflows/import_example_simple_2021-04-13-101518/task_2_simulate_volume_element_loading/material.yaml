@@ -1,0 +1,940 @@
+phase:
+  Al:
+    elasticity:
+      type: hooke
+      C_11: 106750000000.0
+      C_12: 60410000000.0
+      C_44: 28340000000.0
+    generic:
+      output:
+      - F
+      - P
+      - Fp
+    lattice: fcc
+    plasticity:
+      N_sl:
+      - 12
+      a_sl: 2.25
+      atol_xi: 1.0
+      dot_gamma_0_sl: 0.001
+      h_0_sl_sl: 75000000.0
+      h_sl_sl:
+      - 1
+      - 1
+      - 1.4
+      - 1.4
+      - 1.4
+      - 1.4
+      n_sl: 20
+      output:
+      - xi_sl
+      xi_0_sl:
+      - 31000000.0
+      xi_inf_sl:
+      - 63000000.0
+      type: phenopowerlaw
+homogenization:
+  SX:
+    mech:
+      type: none
+microstructure:
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.6352578072513575
+    - -0.5465580575057224
+    - -0.5016050048184281
+    - 0.21474223441808846
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.3306655098508589
+    - -0.01435082166785737
+    - 0.9349915702857683
+    - 0.12745641610794708
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.2270442317877019
+    - 0.8636038643838471
+    - -0.25427350852679365
+    - 0.37146233334578166
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.31157721539547834
+    - -0.9226296137152749
+    - -0.06679544590531691
+    - -0.21728461323414555
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.00670001419128881
+    - 0.02086673121710789
+    - 0.8725080079306241
+    - 0.48810804688622306
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.4405154825312192
+    - 0.8485675540504686
+    - -0.23220834093352266
+    - 0.17876941087331777
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.3942352275474383
+    - 0.043132852258239075
+    - -0.875875009323852
+    - 0.27488381265296563
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.3117880327319813
+    - 0.5499255374215187
+    - -0.1387695002874705
+    - 0.7623077801824801
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.05918544617604976
+    - 0.7008912667285145
+    - 0.4854936066139746
+    - 0.5191767262903793
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.7656398447408107
+    - -0.32992955010414543
+    - 0.16942419384821866
+    - 0.5255830692214359
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.5125482261524738
+    - -0.7159633767045506
+    - -0.06146809822857854
+    - 0.47001322533087536
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.9064802177278829
+    - -0.019814230499938197
+    - 0.1836783465549955
+    - -0.3796883934814553
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.6255766116222651
+    - 0.3165118534594306
+    - 0.056621990439537355
+    - -0.7108221295159194
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.41062030946091216
+    - 0.1291723432045888
+    - -0.4967143579458634
+    - -0.7536446867189401
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.05856971763890298
+    - 0.28929458235236966
+    - -0.7502951019660915
+    - 0.5915534572318544
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.20492217365681478
+    - -0.9624667720572162
+    - -0.17715597767377164
+    - 0.01674440216845993
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.7334372706657967
+    - 0.6022171233481564
+    - 0.022102827833225785
+    - -0.31450877785262693
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.015977106436192833
+    - -0.14291781018517624
+    - 0.5430686713463169
+    - 0.827282085992406
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.16450225271189425
+    - 0.29366934089695457
+    - 0.1344352076110817
+    - -0.9320002693263697
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.4225594959751384
+    - -0.5763649683075769
+    - 0.6988517901732554
+    - -0.029207379900963816
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.9198881867023563
+    - 0.1651650155242268
+    - -0.35570378363743865
+    - 0.001029523357229067
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.18252233890410938
+    - -0.0589451654455866
+    - 0.5775105536694735
+    - 0.7935317408093668
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.2325256354332287
+    - 0.8414559465614987
+    - 0.11364888457821117
+    - 0.4743075477965685
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.4186081280530772
+    - 0.5739796249249453
+    - 0.48883707808273114
+    - -0.5063130813937711
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.18104839832544997
+    - -0.861711857397946
+    - 0.2627440455573725
+    - -0.39451200084118687
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.5261816099314289
+    - 0.695228628650668
+    - -0.4755622524710847
+    - 0.11675020898957424
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.15598735166644823
+    - -0.058970641184646594
+    - -0.719123033071991
+    - -0.6745757725442706
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.5594888099566714
+    - 0.5964116249213124
+    - -0.5703714614108997
+    - 0.0770833393151997
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.24342429129239104
+    - -0.8760589320475264
+    - 0.0011691621318834903
+    - -0.41624991897711416
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.01981949796419152
+    - 0.6723881235399182
+    - 0.32890892110055864
+    - -0.6628124323240939
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.67973549543291
+    - -0.6905524738116378
+    - 0.23357581904847585
+    - -0.08086577716832681
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.19745750684015814
+    - 0.5382854746465398
+    - 0.6159166396621987
+    - 0.5402832347614014
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.788810188542247
+    - 0.18181834157282784
+    - 0.33076171297641294
+    - 0.485095110621165
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.5696883197770205
+    - 0.6713595378076492
+    - -0.39770813247089204
+    - 0.25799191977821756
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.1518095195008958
+    - 0.6660020964728437
+    - -0.6067206166310775
+    - 0.40655278948432927
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.2667090119265426
+    - -0.31282810166503994
+    - 0.7874299646016459
+    - -0.45930265905311873
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.02621165944128758
+    - 0.27967301543830436
+    - -0.24747752344339677
+    - -0.9272814183058469
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.29511312843176135
+    - 0.10873377957826692
+    - 0.7821780905985879
+    - 0.5378500173778846
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.8642178047582625
+    - -0.19936590022526499
+    - -0.13957753802753622
+    - -0.44033956742989966
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.5906483598092389
+    - 0.07114856779083067
+    - -0.7945242162449034
+    - -0.12167031748290592
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.041798931309302026
+    - -0.35459278103248476
+    - 0.730871209717485
+    - 0.5816735199294779
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.7576960654926898
+    - 0.38537680797714097
+    - -0.29498245150609403
+    - 0.43631037291554536
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.24494575247626413
+    - 0.644143320569358
+    - 0.6156514560287994
+    - 0.3821704405096465
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.9268844370106245
+    - -0.24684914851648992
+    - 0.11455352871420615
+    - 0.25851156137261055
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.1495141607651503
+    - 0.9539386283875909
+    - 0.15902014787857122
+    - -0.2058135116297565
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.4642263311926209
+    - -0.034167275323728825
+    - -0.6371232830108087
+    - -0.6143292545288076
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.5113502438688773
+    - -0.2524221921751222
+    - 0.5324565167565
+    - 0.6255349892342398
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.35565862781176427
+    - 0.7366334323693273
+    - 0.461911070421849
+    - 0.34280649031279764
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.7840251161153992
+    - 0.01707842870544968
+    - -0.31734382244288734
+    - -0.5332033785813111
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.5831425212954741
+    - 0.09741145363742672
+    - 0.5484207146984013
+    - -0.5913463690994439
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.6519758275119124
+    - -0.06286762583979774
+    - 0.31042258616471946
+    - -0.6889216210573099
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.5076916224344724
+    - 0.2699606566448717
+    - -0.3285627105812739
+    - -0.7492776558721131
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.9550650122869989
+    - 0.19468118377648175
+    - 0.18709313366188457
+    - 0.12225472721002947
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.2880063816353371
+    - -0.8856235797595498
+    - 0.22561033617091963
+    - 0.28604750536238827
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.41683084018689065
+    - -0.8782110981826179
+    - -0.16594709357934362
+    - 0.16570721116034715
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.36193651408958927
+    - -0.27063391907713547
+    - -0.12105599380179846
+    - 0.8838012717677465
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.12055788979809229
+    - 0.5473176841151396
+    - 0.8227500535745264
+    - 0.09482350555313399
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.6753162665771022
+    - 0.46929450366472764
+    - -0.568384304976438
+    - -0.025492955554281545
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.9712134564293233
+    - -0.13721956086426382
+    - -0.14155505114450964
+    - 0.13370632618653738
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.019502230749379994
+    - 0.5672686886981997
+    - -0.41947023008508894
+    - 0.708428277167693
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.3350060954006616
+    - 0.7851163782606152
+    - 0.13906473780389658
+    - 0.5020201065005971
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.10745860428956688
+    - -0.00095288173151915
+    - 0.4870057752812104
+    - 0.8667624329787783
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.8053328578964897
+    - 0.12839981113859483
+    - -0.45759992120427717
+    - 0.3543371115275466
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.548371287202304
+    - 0.16287466609453097
+    - -0.8197649264758257
+    - -0.02731739073863601
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.2816023059712722
+    - -0.936784411735674
+    - 0.00895788435453596
+    - -0.20749665902997116
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.34243164196917153
+    - 0.7455246441285374
+    - -0.4860504998572424
+    - 0.3011452924484123
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.7129217054299757
+    - -0.6281061409412437
+    - -0.1987017668839294
+    - 0.24029757692477458
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.7785156622702166
+    - 0.5151670218137435
+    - -0.3448244493303672
+    - 0.09804285991102522
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.34441244781376407
+    - 0.08161495607814302
+    - 0.0028241044023925442
+    - 0.9352599046092046
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.8012998656691758
+    - 0.5219814576122889
+    - 0.2225722830300028
+    - 0.18951375151772856
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.3029405625066986
+    - -0.6141164899525001
+    - 0.6476246906981161
+    - -0.3341709328393411
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.44013492074234783
+    - 0.15441697613521785
+    - -0.3364946080610194
+    - -0.8180513601053687
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.3302698876866762
+    - -0.8814879664173632
+    - 0.24803213675343852
+    - 0.22886857688711973
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.04834740758226476
+    - 0.9105020037632277
+    - 0.30165563072035023
+    - -0.2786619991637348
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.011023872670567323
+    - 0.9383949527056281
+    - 0.3169320055301122
+    - 0.13728616404651245
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.14873949577176343
+    - 0.6419106248400827
+    - 0.24980381700522042
+    - -0.7095247459564739
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.061777368179857566
+    - -0.29864114928503105
+    - -0.9205050647274464
+    - -0.24426920916399966
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.5774389394298753
+    - 0.7427589254281565
+    - -0.33793691073550597
+    - -0.025924781377163537
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.07473553510861289
+    - -0.2264604323692056
+    - 0.4417544779976162
+    - -0.8648602508684484
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.7814767999308686
+    - 0.5892612148460833
+    - 0.08740292989487634
+    - 0.18554233935605782
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.5395579654454662
+    - -0.39471991773579485
+    - -0.6526042025067447
+    - -0.35662465329465404
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.10728182442516436
+    - 0.2907790062389895
+    - 0.9084453756258664
+    - 0.2804731345114044
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.004688757012043327
+    - -0.39359983943023824
+    - -0.9151054325761737
+    - -0.08740268432803817
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.359507314181488
+    - 0.6390034560001502
+    - 0.5477324864404456
+    - 0.40301141121269024
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.6307375389100579
+    - -0.5322411748537456
+    - -0.4764032679951953
+    - -0.303198639580533
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.20281433988959943
+    - 0.2602547135039569
+    - 0.9244870528267243
+    - 0.19093851573183634
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.6133588436525651
+    - 0.09250703240321691
+    - -0.5138604416284608
+    - 0.5926051167502198
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.35324548214384627
+    - 0.09774535855975737
+    - -0.47758730692192797
+    - 0.7984822092520573
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.1605355840284252
+    - -0.5634343043460515
+    - 0.23131829705650245
+    - -0.7766993989914073
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.4386173080348376
+    - 0.4596391621719066
+    - 0.7635359361130991
+    - 0.11558361455705356
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.7289480382595027
+    - -0.20490912303705255
+    - 0.6521617926020868
+    - -0.03649664482992047
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.9940437086788151
+    - -0.10667989205638388
+    - -0.021104845940976516
+    - -0.007147820976561379
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.0038689303213547523
+    - -0.09985677530011915
+    - -0.9762485560673551
+    - -0.19223010321287995
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.4886030256612447
+    - -0.8586991693482664
+    - 0.15451289907406188
+    - -0.005346390838980455
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.9181150549724449
+    - 0.02906578284731134
+    - -0.27330957962859864
+    - 0.2855202265753796
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.04738127767784152
+    - -0.6800714858982067
+    - -0.6804410140261359
+    - 0.26880813794397057
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.31422306400351
+    - 0.02103323760658795
+    - -0.8955155980396382
+    - -0.3144412228568957
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.34006035420732267
+    - 0.8416518615014699
+    - -0.13475473329418483
+    - -0.3972685003650729
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.6379669053458425
+    - -0.4036322737892149
+    - -0.1458519438601304
+    - -0.6393797195027524
+    phase: Al
+- homogenization: SX
+  constituents:
+  - fraction: 1.0
+    orientation:
+    - 0.36798010057140895
+    - 0.31219529050087286
+    - 0.5111545120882379
+    - 0.7112283817061625
+    phase: Al
