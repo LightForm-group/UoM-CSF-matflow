@@ -1,30 +1,21 @@
-name: uniaxial_tensile_test_sim
-stats: false
-# archive: dropbox
+name: import_example_simple
+
 run_options:
   l: short
 
+import:
+  - parameter: volume_element
+    from:
+      # (specify either the full path to HDF5 file, or the parent directory:)
+      workflow: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/completed_workflows/generate_RVE_2021-04-13-100535
+      # --- Additional options ---
+      # context:        # (string) optionally specify which context this comes from in the source workflow
+      # iteration:      # (int) optionally specify which iteration to use (default is final iteration, -1) in the source workflow
+      # elements:       # (list of int) optionally specify which subset of elements to use (default is all elements) in the source workflow
+    # as:               # (string) optionally rename the parameter for use in this workflow (default is no name change)
+    # context:          # (string) optionally use a different context for the parameter in this workflow
+
 tasks:
-
-  - name: generate_microstructure_seeds
-    method: random
-    software: damask
-    base:
-      grid_size: [4, 4, 4]
-      num_grains: 3
-    output_map_options:
-      phase_label: Al
-
-  - name: generate_volume_element
-    method: random_voronoi
-    software: damask
-    base:
-      size: [1, 1, 1]
-      homog_label: SX
-
-  - name: visualise_volume_element
-    method: VTK
-    software: damask
 
   - name: generate_load_case
     method: uniaxial

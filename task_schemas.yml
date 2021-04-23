@@ -176,13 +176,19 @@
               output: orientations
     - name: from_CTF_file
       inputs:
-        - CTF_file_path[file=True]
+        - CTF_file_path[file=True,save=True]
         - specimen_symmetry
         - phase
         - name: reference_frame_transformation
           default: euler_to_spatial # or "spatial_to_euler" or null
+        - name: rotation # dict with keys "euler_angles_deg" list optional "keep_XY" bool, or "keep_euler" bool
+          default: null
       implementations:
         - name: mtex
+          input_map:
+            - inputs:
+                - rotation
+              file: rotation.json        
           commands:
             - command: <<executable>>
               options:
@@ -190,6 +196,7 @@
                 - [reference_frame_transformation]
                 - [specimen_symmetry]
                 - [phase]
+                - [rotation.json]
                 - [num_orientations]
           output_map:
             - files:
@@ -201,14 +208,20 @@
               output: orientations   
     - name: from_CRC_file
       inputs:
-        - CRC_file_path[file=True]
-        - CPR_file_path[file=True]
+        - CRC_file_path[file=True,save=False]
+        - CPR_file_path[file=True,save=True]
         - specimen_symmetry
         - phase
         - name: reference_frame_transformation
           default: euler_to_spatial # or "spatial_to_euler" or null
+        - name: rotation # dict with keys "euler_angles_deg" list optional "keep_XY" bool, or "keep_euler" bool
+          default: null
       implementations:
         - name: mtex
+          input_map:
+            - inputs:
+                - rotation
+              file: rotation.json          
           commands:
             - command: <<executable>>
               options:
@@ -216,6 +229,7 @@
                 - [reference_frame_transformation]
                 - [specimen_symmetry]
                 - [phase]
+                - [rotation.json]                
                 - [num_orientations]
           output_map:
             - files:
@@ -237,7 +251,8 @@
       implementations:
         - name: damask
           inputs:
-            - grid_size
+            - name: grid_size
+              ignore_dependency_from: ['generate_volume_element']
           outputs:
             - microstructure_seeds
           command_files:
@@ -269,6 +284,7 @@
             - phase_label
             - name: grid_size
               default: null
+              ignore_dependency_from: ['generate_volume_element']
             - name: orientation_coordinate_system
               default: null
           outputs:
@@ -836,6 +852,10 @@
             - volume_element_response[context=multiaxial,alias=multiaxial_responses,group=multiaxial_responses]
             - name: fixed_parameters
               default: null
+            - name: initial_parameters
+              default: null
+            - name: opt_parameters
+              default: null              
           input_map:
             - inputs:
                 - yield_function_name
@@ -843,6 +863,8 @@
                 - uniaxial_response
                 - multiaxial_responses
                 - fixed_parameters
+                - initial_parameters
+                - opt_parameters
               file: inputs.hdf5
               save: false              
           commands:
@@ -863,6 +885,7 @@
           inputs: 
             - name: CSV_file_path
               file: true
+              save: true
             - name: CSV_arguments
             - name: eng_stress_col_index
               default: null 
@@ -891,7 +914,7 @@
             - files:
                 - name: outputs.hdf5
                   save: false
-              output: tensile_test 
+              output: tensile_test
 
 - name: optimise_single_crystal_parameters
   inputs:  
