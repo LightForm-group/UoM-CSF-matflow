@@ -252,6 +252,7 @@
         - name: damask
           inputs:
             - name: grid_size
+              default: null
               ignore_dependency_from: ['generate_volume_element']
           outputs:
             - microstructure_seeds
@@ -263,8 +264,18 @@
               stderr: stderr.log
               options: 
                 - [-N, num_grains]
-                - [-g, grid_size]
                 - [-s, size]
+            - command: seeds_fromRandom
+              stdout: <<positions>>
+              stderr: stderr.log
+              options: 
+                - [-N, num_grains]
+                - [-g, grid_size]
+                - [-s, size]          
+          command_pathways:
+            - commands_idx: [0]
+            - condition: [grid_size]
+              commands_idx: [1]
           output_map:
             - files: 
                 - name: <<positions>>
