@@ -239,6 +239,12 @@
                 - name: orientation_coordinate_system
                   default: null              
               output: orientations
+    - name: from_random
+      implementations:
+        - name: damask
+          inputs:
+            - name: orientation_coordinate_system
+              default: null
 
 - name: generate_microstructure_seeds
   outputs:
