@@ -245,6 +245,7 @@
           inputs:
             - name: orientation_coordinate_system
               default: null
+              ignore_dependency_from: ['generate_microstructure_seeds']
 
 - name: generate_microstructure_seeds
   outputs:
@@ -293,6 +294,7 @@
               ignore_dependency_from: ['generate_volume_element']
             - name: orientation_coordinate_system
               default: null
+              ignore_dependency_from: ['sample_texture']
           outputs:
             - microstructure_seeds
 
@@ -751,9 +753,11 @@
   inputs:
     - orientations
     - load_case
-    - phases
+    - name: phases
+      ignore_dependency_from: ['simulate_volume_element_loading']
     - name: numerics
       default: null
+      ignore_dependency_from: ['simulate_volume_element_loading']
   outputs:
     - orientrations_response
   methods:
@@ -803,8 +807,10 @@
     - name: single_crystal_parameters
       default: null
     - name: phases
+      ignore_dependency_from: ['simulate_orientrations_loading']
     - name: numerics
       default: null
+      ignore_dependency_from: ['simulate_orientrations_loading']
     - name: single_crystal_parameter_perturbation
       default: null
   outputs:
