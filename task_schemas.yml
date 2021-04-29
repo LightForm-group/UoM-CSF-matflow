@@ -602,8 +602,8 @@
             - command: <<executable>>
               parallel_mode: MPI
               options:
-                - [--load, load.load]
-                - [--geom, geom.geom]
+                - [--load, load.yaml]
+                - [--geom, geom.vtr]
               stdout: stdout.log
               stderr: stderr.log
           output_map:
