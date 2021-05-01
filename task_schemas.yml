@@ -239,6 +239,13 @@
                 - name: orientation_coordinate_system
                   default: null              
               output: orientations
+    - name: from_random
+      implementations:
+        - name: damask
+          inputs:
+            - name: orientation_coordinate_system
+              default: null
+              ignore_dependency_from: ['generate_microstructure_seeds']
 
 - name: generate_microstructure_seeds
   outputs:
@@ -257,6 +264,7 @@
               ignore_dependency_from: ['generate_volume_element']
             - name: orientation_coordinate_system
               default: null
+              ignore_dependency_from: ['sample_texture']
           outputs:
             - microstructure_seeds
 
@@ -556,6 +564,54 @@
   outputs:
     - load_case
 
+- name: simulate_orientrations_loading
+  inputs:
+    - orientations
+    - load_case
+    - name: phases
+      ignore_dependency_from: ['simulate_volume_element_loading']
+    - name: numerics
+      default: null
+      ignore_dependency_from: ['simulate_volume_element_loading']
+  outputs:
+    - orientrations_response
+  methods:
+    - name: Taylor
+      implementations:
+        - name: damask
+          input_map:
+            - inputs:
+                - orientations
+                - phases
+              file: material.yaml
+              save: true
+            - inputs:
+                - numerics
+              file: numerics.yaml
+              save: true
+            - inputs:
+                - load_case
+              file: load.load
+              save: true
+          commands:
+            - command: <<executable>>
+              parallel_mode: MPI
+              options:
+                - [--load, load.load]
+                - [--geom, geom.geom]
+              stdout: stdout.log
+              stderr: stderr.log
+          output_map:
+            - files: 
+                - name: geom_load.hdf5
+                  save: false
+              output: orientrations_response
+              # options:
+              #   - name: operations
+              #     default: null
+              #   - name: incremental_data
+          archive_excludes: ['geom_load.hdf5', '*.spectralOut']
+
 - name: simulate_volume_element_loading
   inputs: 
     - name: volume_element
@@ -566,8 +622,10 @@
     - name: single_crystal_parameters
       default: null
     - name: phases
+      ignore_dependency_from: ['simulate_orientrations_loading']
     - name: numerics
       default: null
+      ignore_dependency_from: ['simulate_orientrations_loading']
     - name: single_crystal_parameter_perturbation
       default: null
   outputs:
