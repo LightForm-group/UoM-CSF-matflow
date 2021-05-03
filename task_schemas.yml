@@ -591,14 +591,14 @@
               save: true
             - inputs:
                 - load_case
-              file: load.load
+              file: load.yaml
               save: true
           commands:
             - command: <<executable>>
               parallel_mode: MPI
               options:
-                - [--load, load.load]
-                - [--geom, geom.geom]
+                - [--load, load.yaml]
+                - [--geom, geom.vtr]
               stdout: stdout.log
               stderr: stderr.log
           output_map:
@@ -606,10 +606,10 @@
                 - name: geom_load.hdf5
                   save: false
               output: orientrations_response
-              # options:
-              #   - name: operations
-              #     default: null
-              #   - name: incremental_data
+              options:
+                - name: operations
+                  default: null
+                - name: incremental_data
           archive_excludes: ['geom_load.hdf5', '*.spectralOut']
 
 - name: simulate_volume_element_loading
