@@ -276,7 +276,8 @@
       inputs:
         - DIC
         - EBSD
-        - transform_type
+        - name: transform_type
+          default: affine
         - root_path
         - name: scaling_factor
           default: 1
@@ -297,7 +298,29 @@
             - files:
                 - name: outputs.hdf5
                   save: false
-              output: microstructure_image  
+              output: microstructure_image
+    - name: EBSD
+      inputs:
+        - EBSD
+        - root_path
+        - name: scaling_factor
+          default: 1
+      implementations:
+        - name: DefDAP
+          input_map:
+            - inputs:
+              - EBSD
+              - root_path
+              - scaling_factor
+              file: inputs.hdf5
+              save: false
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: microstructure_image
 
 - name: generate_volume_element
   outputs:
