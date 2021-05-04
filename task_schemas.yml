@@ -595,7 +595,7 @@
   outputs:
     - load_case
 
-- name: simulate_orientrations_loading
+- name: simulate_orientations_loading
   inputs:
     - orientations
     - load_case
@@ -605,7 +605,7 @@
       default: null
       ignore_dependency_from: ['simulate_volume_element_loading']
   outputs:
-    - orientrations_response
+    - orientations_response
   methods:
     - name: Taylor
       implementations:
@@ -636,11 +636,16 @@
             - files: 
                 - name: geom_load.hdf5
                   save: false
-              output: orientrations_response
+              output: orientations_response
               options:
                 - name: operations
                   default: null
                 - name: incremental_data
+                  default: null
+                - name: field_data
+                  default: null
+                - name: grain_data
+                  default: null
           archive_excludes: ['geom_load.hdf5', '*.spectralOut']
 
 - name: simulate_volume_element_loading
@@ -653,10 +658,10 @@
     - name: single_crystal_parameters
       default: null
     - name: phases
-      ignore_dependency_from: ['simulate_orientrations_loading']
+      ignore_dependency_from: ['simulate_orientations_loading']
     - name: numerics
       default: null
-      ignore_dependency_from: ['simulate_orientrations_loading']
+      ignore_dependency_from: ['simulate_orientations_loading']
     - name: single_crystal_parameter_perturbation
       default: null
   outputs:
