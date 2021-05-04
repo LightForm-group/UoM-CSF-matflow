@@ -665,10 +665,6 @@
                   default: null
                 - name: incremental_data
                   default: null
-                - name: field_data
-                  default: null
-                - name: grain_data
-                  default: null
           archive_excludes: ['geom_load.hdf5', '*.spectralOut']
 
 - name: simulate_volume_element_loading
