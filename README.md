@@ -72,7 +72,7 @@ We can get MatFlow to copy (a subset) of the workflow files to a Dropbox account
         path: /sims
     ```
     In this case, this tells MatFlow to use the path `/sims` inside your Dropbox directory structure. The path you specify here must exist.
-2. You can then add an extra key to any of your workflow files to tell MatFlow to use this archive location: `archive: dropbox`. If you want to exclude certain files, you can also add a key `archive_excludes` to your workflow, which is a list of glob-style patterns to exclude. Task schemas can also include `archive_exlcudes`.
+2. You can then add an extra key to any of your workflow files to tell MatFlow to use this archive location: `archive: dropbox`. If you want to exclude certain files, you can also add a key `archive_excludes` to your workflow, which is a list of glob-style patterns to exclude. Task schemas can also include `archive_excludes`.
 
 The first time you submit a workflow that uses this archive location, you will be prompted to authorize hpcflow to connect to your Dropbox account.
 
