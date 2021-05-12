@@ -63,6 +63,9 @@ tasks:
           path: constituent/1_Al/generic/epsilon_V^0(Fp)_vM
           transforms: [mean_along_axes: 1]
           increments: 10 # E.g. extract data every 10th increment.
+      visualise:
+        increments: [0, -1] # Generate a VTK file for the initial and final increments
+        labels: ['F', 'P', 'sigma_vM']          
     base:
       homogenization_schemes:
         SX:
