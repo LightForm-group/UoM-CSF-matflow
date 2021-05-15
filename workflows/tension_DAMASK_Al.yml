@@ -1,5 +1,5 @@
-name: uniaxial_tensile_test_sim
-stats: false
+name: tension_DAMASK_Al
+
 # archive: dropbox
 run_options:
   l: short
