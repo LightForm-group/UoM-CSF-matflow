@@ -11,7 +11,7 @@ tasks:
     software: damask
     base:
       size: [1, 1, 1]
-      num_grains: 3
+      num_grains: 100
     output_map_options:
       phase_label: Mg
 
@@ -19,7 +19,7 @@ tasks:
     method: random_voronoi
     software: damask
     base:
-      grid_size: [4, 4, 4]
+      grid_size: [16, 16, 16]
       homog_label: SX
 
   - name: visualise_volume_element
@@ -30,8 +30,8 @@ tasks:
     method: uniaxial
     software: formable
     base:
-      total_times: [100]
-      num_increments: [200]
+      total_times: [50]
+      num_increments: [2000]
       target_strain_rates: [1.0e-3]
       directions: [x]
 
@@ -71,186 +71,53 @@ tasks:
         SX:
           mech:
             type: none
+      numerics:
+        grid:
+          maxCutBack: 8            
       phases:
         Mg:
           generic:
             output:
-              - F                 # deformation gradient (total)
-              - P                 # stress (piola-kirchoff)
-              - Fp                # deformation gradient (plastic part)
-              - O                 # orientations (as quaternions)
-          lattice: hex
-          c/a: 1.6235
+              - F       # deformation gradient (total)
+              - P       # stress (piola-kirchoff)
+              - Fp      # deformation gradient (plastic part)
+              - O       # orientations (as quaternions)
+          lattice: hex            
+          c/a: 1.62350                                      # from Tromans 2011, Elastic Anisotropy of HCP Metal Crystals and Polycrystals
           elasticity:
             type: hooke
-            C_11: 59300000000.0
-            C_12: 25700000000.0
-            C_13: 21400000000.0
-            C_33: 61500000000.0
-            C_44: 16400000000.0
-          plasticity:            
-            type: phenopowerlaw            
+            C_11: 59.3e9
+            C_12: 25.7e9
+            C_13: 21.4e9
+            C_33: 61.5e9
+            C_44: 16.4e9
+          plasticity:
+            type: phenopowerlaw
             output:
-              - gamma_sl          # slip volume fraction
-              - gamma_tw          # twinning volume fraction
-              - xi_sl             # slip resistance
-              - xi_tw             # twinning resistance            
-            N_sl:     # Number of slip systems to include
-              - 3                 # basal
-              - 3                 # prism 
-              - 0                 # prism
-              - 0                 # pyr(a)
-              - 0                 # pyr(c+a)
-              - 0                 # pyr(c+a)            
-            xi_0_sl:    # Initial slip CRSSs  
-              - 17000000.0        # basal      
-              - 77000000.0        # prism 
-              - 0.0               # prism
-              - 0.0               # pyr(a)
-              - 0.0               # pyr(c+a)
-              - 0.0               # pyr(c+a)            
-            xi_inf_sl: # Final slip CRSSs (same as initial = no hardening)
-              - 17000000.0        # basal   
-              - 77000000.0        # prism 
-              - 0.0               # prism
-              - 0.0               # pyr(a)
-              - 0.0               # pyr(c+a)
-              - 0.0               # pyr(c+a)
-            N_tw:     # Number of twin systems to include
-              - 6                 # T1
-              - 0                 # C1
-              - 0                 # T2    
-              - 0                 # C2
-            xi_0_tw:  # Intial twin CRSSs
-              - 33000000.0        # T1
-              - 0.0               # C1
-              - 0.0               # T2 
-              - 0                 # C2
+              - gamma_sl # slip volume fraction
+              - gamma_tw # twinning volume fraction
+              - xi_sl    # slip resistance
+              - xi_tw    # twinning resistance          
+            N_sl:       [3, 3, 0, 0, 0, 0]                                # Number of slip systems to include - basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)
+            xi_0_sl:    [50e6, 150e6,  0.0,   0.0,  0.0,   0.0]           # basal  prism  prism pyr(a) pyr(c+a) pyr(c+a) 
+            xi_inf_sl:  [100e6, 300e6,  0.0,  0.0,  0.0,  0.0]            # basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)            
+            N_tw:       [6, 0, 0, 0]                                      # Number of twin systems to include - tensile 1, compressive 1, tensile 2, compressive 2
+            xi_0_tw:    [300e6,  0.0,  0.0,  0]                           # tensile 1, compressive 1, tensile 2, compressive 2
             a_sl: 2.25
             atol_xi: 1.0
             dot_gamma_0_sl: 0.001
-            h_0_sl_sl: 500000000.0
-            h_sl_sl:
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-            n_sl: 20
+            h_0_sl_sl: 500.0e6
+            h_sl_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   1, 1, 1, 1, 1, 1, 1, 1, 1, 1,    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   1, 1]  # just guessing
+            n_sl: 20            
             dot_gamma_0_tw: 0.001
             c_1: 0.0
             c_2: 0.0
             c_3: 20.0
             c_4: 20.0
             f_sl_sat_tw: 10.0
-            h_0_tw_tw: 50000000.0
-            h_0_tw_sl: 150000000.0
-            h_tw_tw:
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-            h_sl_tw:
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-            h_tw_sl:
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
-              - 1
+            h_0_tw_tw: 50.0e6
+            h_0_tw_sl: 150.0e6
+            h_tw_tw: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   1, 1, 1, 1, 1, 1, 1, 1, 1, 1]                                                      #  - " - 
+            h_sl_tw: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   1, 1, 1, 1, 1, 1, 1, 1, 1, 1,    1, 1, 1, 1]                                           #  - " - 
+            h_tw_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   1, 1, 1, 1, 1, 1, 1, 1, 1, 1,    1, 1, 1, 1]                                           #  - " - 
             n_tw: 20
