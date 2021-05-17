@@ -2,7 +2,7 @@
 name: New task schema
 about: For suggesting a new task schema (including new methods/implementations)
 title: ''
-labels: ''
+labels: new-task-schema
 assignees: ''
 
 ---
