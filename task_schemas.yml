@@ -665,6 +665,10 @@
                   default: null
                 - name: incremental_data
                   default: null
+                - name: volume_data
+                  default: null
+                - name: phase_data
+                  default: null
           archive_excludes: ['geom_load.hdf5', '*.spectralOut']
 
 - name: simulate_volume_element_loading
@@ -728,6 +732,10 @@
                 - name: operations
                   default: null
                 - name: incremental_data
+                  default: null
+                - name: volume_data
+                  default: null
+                - name: phase_data
                   default: null
                 - name: field_data
                   default: null
