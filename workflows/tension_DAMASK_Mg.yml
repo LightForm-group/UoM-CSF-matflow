@@ -98,18 +98,18 @@ tasks:
               - gamma_tw # twinning volume fraction
               - xi_sl    # slip resistance
               - xi_tw    # twinning resistance          
-            N_sl:       [3, 3, 0, 0, 0, 0]                                # Number of slip systems to include - basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)
-            xi_0_sl:    [50e6, 150e6,  0.0,   0.0,  0.0,   0.0]           # basal  prism  prism pyr(a) pyr(c+a) pyr(c+a) 
-            xi_inf_sl:  [100e6, 300e6,  0.0,  0.0,  0.0,  0.0]            # basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)            
-            N_tw:       [6, 0, 0, 0]                                      # Number of twin systems to include - tensile 1, compressive 1, tensile 2, compressive 2
-            xi_0_tw:    [300e6,  0.0,  0.0,  0]                           # tensile 1, compressive 1, tensile 2, compressive 2
+            N_sl:       [3, 3, 0, 6, 0, 6]                                # Number of slip systems to include - basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)
+            xi_0_sl:    [10.0e6, 55.0e6, 0, 60.0e6, 0.0, 60.0e6]          # basal  prism  prism pyr(a) pyr(c+a) pyr(c+a) 
+            xi_inf_sl:  [40.0e6, 135.0e6, 0, 150.0e6, 0.0, 150.0e6]       # basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)            
+            N_tw:       [6, 0, 0, 6]                                      # Number of twin systems to include - tensile 1, compressive 1, tensile 2, compressive 2
+            xi_0_tw:    [40e6, 0.0, 0.0, 60.0e6]                          # tensile 1, compressive 1, tensile 2, compressive 2
             a_sl: 2.25
             atol_xi: 1.0
             dot_gamma_0_sl: 0.001
-            h_0_sl_sl: 500.0e6
-            h_sl_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   1, 1, 1, 1, 1, 1, 1, 1, 1, 1,    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   1, 1]  # just guessing
-            n_sl: 20            
             dot_gamma_0_tw: 0.001
+            h_0_sl_sl: 500.0e6
+            n_sl: 20
+            n_tw: 20
             c_1: 0.0
             c_2: 0.0
             c_3: 20.0
@@ -117,7 +117,7 @@ tasks:
             f_sl_sat_tw: 10.0
             h_0_tw_tw: 50.0e6
             h_0_tw_sl: 150.0e6
-            h_tw_tw: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   1, 1, 1, 1, 1, 1, 1, 1, 1, 1]                                                      #  - " - 
-            h_sl_tw: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   1, 1, 1, 1, 1, 1, 1, 1, 1, 1,    1, 1, 1, 1]                                           #  - " - 
-            h_tw_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   1, 1, 1, 1, 1, 1, 1, 1, 1, 1,    1, 1, 1, 1]                                           #  - " - 
-            n_tw: 20
+            h_sl_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            h_tw_tw: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            h_sl_tw: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            h_tw_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
