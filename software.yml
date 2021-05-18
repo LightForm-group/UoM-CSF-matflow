@@ -113,7 +113,7 @@ DefDAP:
     - num_cores: 1
       version_info:
         defdap:
-          version: '0.92.2'
+          version: '0.93.2'
       sources_preparation:
         env: |
           module load apps/binapps/anaconda3/2019.07
