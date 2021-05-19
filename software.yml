@@ -31,7 +31,7 @@ DAMASK:
       module load tools/env/proxy
       module load mpi/intel-18.0/openmpi/4.1.0
       module load tools/gcc/cmake/3.13.2
-      module load apps/binapps/anaconda3/2019.07
+      module load apps/binapps/anaconda3/2020.07
       export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.0
       export PETSC_ARCH=mkl-opt
       export DAMASK_ROOT=/mnt/eps01-rds/jf01-home01/shared/DAMASK-v3a3
@@ -40,7 +40,7 @@ DAMASK:
       export OMP_NUM_THREADS=1
       PATH=$PETSC_DIR/$PETSC_ARCH/bin:$PATH
       LD_LIBRARY_PATH=$PETSC_DIR/$PETSC_ARCH/lib:$LD_LIBRARY_PATH
-      source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_env
+      source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_v3a3_env
     executable: DAMASK_grid
     task_preparation:
       env: |
@@ -48,7 +48,7 @@ DAMASK:
         module load tools/env/proxy
         module load mpi/intel-18.0/openmpi/4.1.0
         module load tools/gcc/cmake/3.13.2
-        module load apps/binapps/anaconda3/2019.07
+        module load apps/binapps/anaconda3/2020.07
         export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.0
         export PETSC_ARCH=mkl-opt
         export DAMASK_ROOT=/mnt/eps01-rds/jf01-home01/shared/DAMASK-v3a3
@@ -57,14 +57,14 @@ DAMASK:
         export OMP_NUM_THREADS=1
         PATH=$PETSC_DIR/$PETSC_ARCH/bin:$PATH
         LD_LIBRARY_PATH=$PETSC_DIR/$PETSC_ARCH/lib:$LD_LIBRARY_PATH
-        source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_env
+        source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_v3a3_env
     task_processing:
       env: |
         module purge
         module load tools/env/proxy
         module load mpi/intel-18.0/openmpi/4.1.0
         module load tools/gcc/cmake/3.13.2
-        module load apps/binapps/anaconda3/2019.07
+        module load apps/binapps/anaconda3/2020.07
         export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.0
         export PETSC_ARCH=mkl-opt
         export DAMASK_ROOT=/mnt/eps01-rds/jf01-home01/shared/DAMASK-v3a3
@@ -73,7 +73,7 @@ DAMASK:
         export OMP_NUM_THREADS=1
         PATH=$PETSC_DIR/$PETSC_ARCH/bin:$PATH
         LD_LIBRARY_PATH=$PETSC_DIR/$PETSC_ARCH/lib:$LD_LIBRARY_PATH
-        source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_env
+        source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_v3a3_env
   instances:
     - num_cores: 1
     - num_cores: [2, 32, 1]
