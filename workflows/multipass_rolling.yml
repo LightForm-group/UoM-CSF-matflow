@@ -146,12 +146,12 @@ tasks:
             xi_inf_sl: [33.3e6, 33.3e6] # CRSS final
             type: phenopowerlaw
 
-  # task_6_modify_volume_element_new_orientations
+  # task_5_modify_volume_element_new_orientations
   - name: modify_volume_element
     method: new_orientations
     software: damask
 
-    # task_7_modify_volume_element_geometry       
+    # task_6_modify_volume_element_geometry       
   - name: modify_volume_element
     method: geometry
     software: damask
