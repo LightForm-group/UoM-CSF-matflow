@@ -429,6 +429,17 @@
           default: null
       implementations:
         - name: damask
+    - name: new_orientations
+      inputs:
+        - volume_element_response
+      implementations:
+        - name: damask
+    - name: geometry
+      inputs:
+        - volume_element_response
+      implementations:
+        - name: damask
+
 
 - name: visualise_volume_element
   inputs:
