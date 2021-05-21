@@ -4,15 +4,26 @@ jobs:
   lintAllTheThings:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: yaml-lint
-      uses: ibiqlik/action-yamllint@v3
-      with:
-        file_or_dir: task_schemas.yml
-        config_data: |
-          extends: default
-          rules:
-            trailing-spaces:
-              level: warning
-            line-length:
-              level: warning
+      - uses: actions/checkout@v1
+      - name: yaml-lint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: task_schemas.yml
+          config_data: |
+            extends: default
+            rules:
+              trailing-spaces:
+                level: warning
+              line-length:
+                level: warning
+      - name: yaml-lint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: software.yml
+          config_data: |
+            extends: default
+            rules:
+              trailing-spaces:
+                level: warning
+              line-length:
+                level: warning
