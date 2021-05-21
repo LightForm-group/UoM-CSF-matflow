@@ -6,7 +6,7 @@
     - specimen_symmetry
   methods:
     - name: unimodal
-      inputs: 
+      inputs:
         - modal_orientation_hkl
         - modal_orientation_uvw
         - halfwidth
@@ -21,7 +21,7 @@
                 - [modal_orientation_uvw]
                 - [halfwidth]
           output_map:
-            - files: 
+            - files:
                 - name: ODF.txt
                   save: true
               options:
@@ -40,7 +40,7 @@
                 - [specimen_symmetry]
                 - [halfwidth]
           output_map:
-            - files: 
+            - files:
                 - name: ODF.txt
                   save: true
               options:
@@ -59,13 +59,13 @@
                 - [specimen_symmetry]
                 - [num_orientations]
           output_map:
-            - files: 
+            - files:
                 - name: ODF.txt
                   save: true
               options:
                 - name: orientation_coordinate_system
                   default: null
-              output: ODF                
+              output: ODF
 
 - name: estimate_ODF
   outputs:
@@ -75,7 +75,7 @@
     - phase
   methods:
     - name: from_CTF_file
-      inputs: 
+      inputs:
         - CTF_file_path[file=True]
       implementations:
         - name: mtex
@@ -83,7 +83,7 @@
             - command: <<executable>>
               options:
                 - [CTF_file_path]
-                - [specimen_symmetry]                
+                - [specimen_symmetry]
                 - [phase]
           output_map:
             - files:
@@ -94,7 +94,7 @@
                   default: null
               output: ODF
     - name: from_CRC_file
-      inputs: 
+      inputs:
         - CRC_file_path[file=True]
         - CPR_file_path[file=True]
       implementations:
@@ -103,7 +103,7 @@
             - command: <<executable>>
               options:
                 - [CRC_file_path]
-                - [specimen_symmetry]                
+                - [specimen_symmetry]
                 - [phase]
           output_map:
             - files:
@@ -111,7 +111,7 @@
                   save: true
               options:
                 - name: orientation_coordinate_system
-                  default: null                    
+                  default: null
               output: ODF
 
 - name: sample_texture
@@ -127,7 +127,7 @@
         - name: mtex
           inputs:
             - crystal_symmetry
-            - specimen_symmetry        
+            - specimen_symmetry
           input_map:
             - inputs:
                 - ODF
@@ -172,7 +172,7 @@
                   save: true
               options:
                 - name: orientation_coordinate_system
-                  default: null              
+                  default: null
               output: orientations
     - name: from_CTF_file
       inputs:
@@ -188,7 +188,7 @@
           input_map:
             - inputs:
                 - rotation
-              file: rotation.json        
+              file: rotation.json
           commands:
             - command: <<executable>>
               options:
@@ -204,8 +204,8 @@
                   save: true
               options:
                 - name: orientation_coordinate_system
-                  default: null              
-              output: orientations   
+                  default: null
+              output: orientations
     - name: from_CRC_file
       inputs:
         - CRC_file_path[file=True,save=False]
@@ -221,7 +221,7 @@
           input_map:
             - inputs:
                 - rotation
-              file: rotation.json          
+              file: rotation.json
           commands:
             - command: <<executable>>
               options:
@@ -229,7 +229,7 @@
                 - [reference_frame_transformation]
                 - [specimen_symmetry]
                 - [phase]
-                - [rotation.json]                
+                - [rotation.json]
                 - [num_orientations]
           output_map:
             - files:
@@ -237,7 +237,7 @@
                   save: true
               options:
                 - name: orientation_coordinate_system
-                  default: null              
+                  default: null
               output: orientations
 
 - name: generate_microstructure_seeds
@@ -253,7 +253,7 @@
           inputs:
             - name: grid_size
               default: null
-              ignore_dependency_from: ['generate_volume_element']
+              ignore_dependency_from: ["generate_volume_element"]
           outputs:
             - microstructure_seeds
           command_files:
@@ -262,22 +262,22 @@
             - command: seeds_fromRandom
               stdout: <<positions>>
               stderr: stderr.log
-              options: 
+              options:
                 - [-N, num_grains]
                 - [-s, size]
             - command: seeds_fromRandom
               stdout: <<positions>>
               stderr: stderr.log
-              options: 
+              options:
                 - [-N, num_grains]
                 - [-g, grid_size]
-                - [-s, size]          
+                - [-s, size]
           command_pathways:
             - commands_idx: [0]
             - condition: [grid_size]
               commands_idx: [1]
           output_map:
-            - files: 
+            - files:
                 - name: <<positions>>
                   save: true
               options:
@@ -295,7 +295,7 @@
             - phase_label
             - name: grid_size
               default: null
-              ignore_dependency_from: ['generate_volume_element']
+              ignore_dependency_from: ["generate_volume_element"]
             - name: orientation_coordinate_system
               default: null
           outputs:
@@ -317,11 +317,11 @@
         - name: DefDAP
           input_map:
             - inputs:
-              - DIC
-              - EBSD
-              - transform_type
-              - root_path
-              - scaling_factor
+                - DIC
+                - EBSD
+                - transform_type
+                - root_path
+                - scaling_factor
               file: inputs.hdf5
               save: false
           commands:
@@ -330,7 +330,7 @@
             - files:
                 - name: outputs.hdf5
                   save: false
-              output: microstructure_image  
+              output: microstructure_image
 
 - name: generate_volume_element
   outputs:
@@ -364,7 +364,7 @@
           inputs:
             - name: microstructure_seeds
             - name: size
-            - name: homog_label          
+            - name: homog_label
             - name: rescale_size
               default: null
             - name: rescale_grid
@@ -383,7 +383,7 @@
               file: phase_label.txt
             - inputs:
                 - homog_label
-              file: homog_label.txt              
+              file: homog_label.txt
           output_map:
             - files:
                 - name: <<geom_file>>
@@ -433,7 +433,7 @@
     - name: random_voronoi_from_orientations_OLD
       notes: >
         In this method we replace the orientations in microstructure_seeds
-        with orientations computed from a previous task.        
+        with orientations computed from a previous task.
       implementations:
         - name: damask
           inputs:
@@ -460,7 +460,7 @@
               file: phase_label.txt
             - inputs:
                 - homog_label
-              file: homog_label.txt                 
+              file: homog_label.txt
           output_map:
             - files:
                 - name: <<geom_file>>
@@ -470,7 +470,7 @@
                 - name: phase_label.txt
                   save: true
                 - name: homog_label.txt
-                  save: true                  
+                  save: true
               options:
                 - name: model_coordinate_system
                   default: null
@@ -508,7 +508,7 @@
     - name: random_voronoi
       notes: >
         In this method we use the random orientations that already exist in
-        microstructure_seeds (using DAMASK Python package functions).         
+        microstructure_seeds (using DAMASK Python package functions).
       implementations:
         - name: damask
           inputs:
@@ -537,7 +537,7 @@
                 - [-tesrformat, ascii]
                 - [-tesrsize, grid_size]
                 - [-o, volume_element.tesr]
-                - [-oridescriptor, 'euler-bunge:passive']
+                - [-oridescriptor, "euler-bunge:passive"]
                 - [-periodicity, all]
             - command: <<executable>> -T
               options:
@@ -546,9 +546,9 @@
                 - [-tesrformat, ascii]
                 - [-tesrsize, grid_size]
                 - [-o, volume_element.tesr]
-                - [-oridescriptor, 'euler-bunge:passive']
+                - [-oridescriptor, "euler-bunge:passive"]
                 - [-periodicity, all]
-                - [-transform, buffer_phase_size]                
+                - [-transform, buffer_phase_size]
           command_pathways:
             - commands_idx: [0]
             - commands_idx: [1]
@@ -561,16 +561,16 @@
               options:
                 - homog_label
                 - phase_label
-                - buffer_phase_label        
+                - buffer_phase_label
     - name: random_voronoi_from_orientations
       notes: >
         In this method we replace the orientations in microstructure_seeds
         with orientations computed from a previous task (using DAMASK Python package
         functions).
-      inputs: 
+      inputs:
         - name: microstructure_seeds
         - name: grid_size
-        - name: homog_label                
+        - name: homog_label
         - name: scale_morphology
           default: null
         - name: scale_update_size
@@ -592,11 +592,11 @@
         - __file__VTR_file
       implementations:
         - name: damask
-          input_map: 
+          input_map:
             - inputs:
                 - volume_element
               file: geom.geom
-              save: true 
+              save: true
 
 - name: visualise_volume_element_response
   inputs:
@@ -607,7 +607,7 @@
         - __file__VTR_file
       implementations:
         - name: damask
-          input_map: 
+          input_map:
             - inputs:
                 - volume_element_response
               file: geom.geom
@@ -625,14 +625,14 @@
     - name: dump_frequency
       default: null
   methods:
-    - name: uniaxial      
+    - name: uniaxial
       implementations:
         - name: formable
           inputs:
             - directions # x, y or z
             - name: target_strain_rates
               default: null
-            - name: rotations    
+            - name: rotations
               default: null
           input_map:
             - inputs:
@@ -644,7 +644,7 @@
                 - directions
                 - rotations
               file: inputs.hdf5
-              save: false              
+              save: false
           commands:
             - command: <<executable>> inputs.hdf5
           output_map:
@@ -668,7 +668,7 @@
                 - dump_frequency
                 - directions
               file: inputs.hdf5
-              save: false              
+              save: false
           commands:
             - command: <<executable>> inputs.hdf5
           output_map:
@@ -681,7 +681,7 @@
         - name: formable
           inputs:
             - name: target_strain_rates
-              default: null              
+              default: null
             - directions # xy, xz or yz
           input_map:
             - inputs:
@@ -692,7 +692,7 @@
                 - dump_frequency
                 - directions
               file: inputs.hdf5
-              save: false              
+              save: false
           commands:
             - command: <<executable>> inputs.hdf5
           output_map:
@@ -701,12 +701,12 @@
                   save: false
               output: load_case
     - name: random_2D
-      implementations:      
+      implementations:
         - name: formable
           inputs:
             - name: target_strain_rates
-              default: null                  
-            - normal_directions # x, y, or z (i.e. load in yz, xz or xy planes)                                 
+              default: null
+            - normal_directions # x, y, or z (i.e. load in yz, xz or xy planes)
           input_map:
             - inputs:
                 - total_times
@@ -716,7 +716,7 @@
                 - dump_frequency
                 - normal_directions
               file: inputs.hdf5
-              save: false              
+              save: false
           commands:
             - command: <<executable>> inputs.hdf5
           output_map:
@@ -734,7 +734,7 @@
               default: null
             - name: rotation_load_case
               default: true
-            - name: non_random_rotation      
+            - name: non_random_rotation
               default: null
           input_map:
             - inputs:
@@ -759,7 +759,7 @@
     - load_case
 
 - name: simulate_volume_element_loading
-  inputs: 
+  inputs:
     - name: volume_element
     - name: load_case
     - name: homogenization_schemes
@@ -773,7 +773,7 @@
     - name: single_crystal_parameter_perturbation
       default: null
   outputs:
-    - volume_element_response      
+    - volume_element_response
   methods:
     - name: CP_FFT
       implementations:
@@ -809,7 +809,7 @@
               stdout: stdout.log
               stderr: stderr.log
           output_map:
-            - files: 
+            - files:
                 - name: geom_load.hdf5
                   save: false
               output: volume_element_response
@@ -818,8 +818,8 @@
                   default: null
                 - name: incremental_data
                 - name: visualise
-                  default: null                
-          archive_excludes: ['geom_load.hdf5', '*.spectralOut']
+                  default: null
+          archive_excludes: ["geom_load.hdf5", "*.spectralOut"]
 
 - name: fit_yield_function
   outputs:
@@ -838,7 +838,7 @@
             - name: initial_parameters
               default: null
             - name: opt_parameters
-              default: null              
+              default: null
           input_map:
             - inputs:
                 - yield_function_name
@@ -849,7 +849,7 @@
                 - initial_parameters
                 - opt_parameters
               file: inputs.hdf5
-              save: false              
+              save: false
           commands:
             - command: <<executable>> inputs.hdf5
           output_map:
@@ -865,18 +865,18 @@
     - name: from_CSV
       implementations:
         - name: formable
-          inputs: 
+          inputs:
             - name: CSV_file_path
               file: true
               save: true
             - name: CSV_arguments
             - name: eng_stress_col_index
-              default: null 
+              default: null
             - name: eng_strain_col_index
               default: null
             - name: true_stress_col_index
               default: null
-            - name: true_strain_col_index        
+            - name: true_strain_col_index
               default: null
             - name: stress_units
               default: Pa
@@ -890,7 +890,7 @@
                 - true_strain_col_index
                 - stress_units
               file: inputs.hdf5
-              save: false              
+              save: false
           commands:
             - command: <<executable>> inputs.hdf5
           output_map:
@@ -900,21 +900,21 @@
               output: tensile_test
 
 - name: optimise_single_crystal_parameters
-  inputs:  
+  inputs:
     - name: volume_element_response
       group: single_crystal_parameter_optimisation
       alias: perturbed_volume_element_responses
-      include_all_iterations: true    
+      include_all_iterations: true
     - name: single_crystal_parameters
       group: single_crystal_parameter_optimisation
-      include_all_iterations: true    
+      include_all_iterations: true
     - name: single_crystal_parameter_perturbation
       group: single_crystal_parameter_optimisation
       alias: single_crystal_parameter_perturbations
-      include_all_iterations: true    
+      include_all_iterations: true
     - name: tensile_test
-      alias: experimental_tensile_test    
-    - name: initial_damping  
+      alias: experimental_tensile_test
+    - name: initial_damping
   outputs:
     - single_crystal_parameters
     - levenberg_marquardt_fitter
@@ -925,12 +925,12 @@
           input_map:
             - inputs:
                 - single_crystal_parameters
-                - single_crystal_parameter_perturbations          
+                - single_crystal_parameter_perturbations
                 - perturbed_volume_element_responses
                 - experimental_tensile_test
                 - initial_damping
               file: inputs.hdf5
-              save: false             
+              save: false
           commands:
             - command: <<executable>> inputs.hdf5
           output_map:
@@ -944,7 +944,7 @@
               output: levenberg_marquardt_fitter
 
 - name: simulate_deformation
-  methods: 
+  methods:
     - name: FE
       outputs:
         - model_response
@@ -969,15 +969,15 @@
               condition: [do_datacheck]
           commands:
             - command: . $ABAQUS_HOME/liccheck.sh; <<executable>>
-              options: 
+              options:
                 - [job=myjob]
                 - [input=inputs.inp]
                 - [cpus=$NSLOTS]
                 - [scratch=$HOME/scratch]
                 - [memory]
-                - [interactive]            
+                - [interactive]
             - command: . $ABAQUS_HOME/liccheck.sh; <<executable>>
-              options: 
+              options:
                 - [datacheck]
                 - [job=myjob]
                 - [input=inputs.inp]
@@ -997,7 +997,7 @@
         - name: mtex
           input_map:
             - inputs:
-                - orientations                
+                - orientations
               file: orientations.json
           commands:
             - command: <<executable>>
@@ -1051,7 +1051,7 @@
             - files:
                 - name: outfile.txt
                   save: true
-              output: parameter_4                
+              output: parameter_4
           commands:
             - command: <<executable>> dummy doSomething
               options:
@@ -1085,7 +1085,7 @@
             - files:
                 - name: outfile.txt
                   save: true
-              output: parameter_2                         
+              output: parameter_2
           commands:
             - command: <<executable>> dummy doSomething
               options:
@@ -1146,7 +1146,7 @@
             - files:
                 - name: outfile.txt
                   save: true
-              output: parameter_2                         
+              output: parameter_2
           commands:
             - command: <<executable>> dummy doSomething
               options:
@@ -1171,7 +1171,7 @@
             - files:
                 - name: outfile.txt
                   save: true
-              output: parameter_6                
+              output: parameter_6
           commands:
             - command: <<executable>> dummy doSomething
               options:
@@ -1193,16 +1193,16 @@
         - name: dummy_software
           input_map:
             - inputs:
-              - parameter_2
-              - parameter_6
-              - parameter_7
-              - parameter_9
+                - parameter_2
+                - parameter_6
+                - parameter_7
+                - parameter_9
               file: t4_m1_infile_1
           output_map:
             - files:
                 - name: outfile.txt
                   save: true
-              output: parameter_8                
+              output: parameter_8
           commands:
             - command: <<executable>> dummy doSomething
               options:
@@ -1221,8 +1221,8 @@
         - name: dummy_software
           input_map:
             - inputs:
-              - parameter_8_group
-              - parameter_10
+                - parameter_8_group
+                - parameter_10
               file: t5_m1_infile_1
           output_map:
             - files:
@@ -1248,9 +1248,9 @@
         - name: dummy_software
           input_map:
             - inputs:
-              - parameter_4_multiaxial
-              - parameter_4_uniaxial
-              - parameter_5
+                - parameter_4_multiaxial
+                - parameter_4_uniaxial
+                - parameter_5
               file: t6b_m1_infile_1
           output_map:
             - files:
