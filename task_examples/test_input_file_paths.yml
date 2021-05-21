@@ -1,0 +1,25 @@
+# Test that a file input parameter can be resolved when specified in different ways:
+# relative path, absolute path and a path including "~".
+
+name: test_input_file_paths
+run_options:
+  l: short
+tasks:
+  - name: get_tensile_test
+    method: from_CSV
+    software: formable
+    base:
+      CSV_arguments:
+        delimiter: ','
+        skip_rows: 0
+        header_row: 1
+      eng_strain_col_index: 0
+      eng_stress_col_index: 1
+      stress_units: MPa
+    sequences:
+      - name: CSV_file_path
+        vals:
+          - surfalex_tensile_test_data.csv                                                  # relative
+          - /mnt/iusers01/cr01/mbdxqap3/scratch/test-matflow/surfalex_tensile_test_data.csv # absolute
+          - ~/scratch/test-matflow/surfalex_tensile_test_data.csv                           # expand user
+          

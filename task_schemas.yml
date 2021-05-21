@@ -752,6 +752,8 @@
                   default: null
                 - name: grain_data
                   default: null
+                - name: visualise
+                  default: null
           archive_excludes: ['geom_load.hdf5', '*.spectralOut']
 
 - name: fit_yield_function

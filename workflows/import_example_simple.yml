@@ -10,6 +10,7 @@ import:
       workflow: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/completed_workflows/generate_RVE_2021-04-13-100535
       # --- Additional options ---
       # context:        # (string) optionally specify which context this comes from in the source workflow
+      # task_idx:       # (int) optionally specify the task index from which to import the parameter. If give, `context` is ignored.      
       # iteration:      # (int) optionally specify which iteration to use (default is final iteration, -1) in the source workflow
       # elements:       # (list of int) optionally specify which subset of elements to use (default is all elements) in the source workflow
     # as:               # (string) optionally rename the parameter for use in this workflow (default is no name change)
