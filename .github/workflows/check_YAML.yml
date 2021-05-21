@@ -29,4 +29,4 @@ jobs:
         uses: ibiqlik/action-yamllint@v3.0.1
         with:
           # File(s) or Directory, separate by space if multiple files or folder are specified
-          file_or_dir: *.yml
+          file_or_dir: "*.yml"
