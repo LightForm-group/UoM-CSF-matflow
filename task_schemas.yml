@@ -336,9 +336,9 @@
   outputs:
     - volume_element
   methods:
-      - name: from_damask_input_files
+    - name: from_damask_input_files
       inputs:
-	      - geom_path[file=true]
+        - geom_path[file=true]
         - material_path[file=true]
       implementations:
         - name: damask
