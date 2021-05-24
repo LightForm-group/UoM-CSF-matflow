@@ -142,15 +142,23 @@ neper:
 
 abaqus:
   instances:
-    - env: |
+    - env: | # neper gives access to gmsh
         module load apps/binapps/abaqus/2020
+        module load apps/gcc/neper/4.0.1
+      task_preparation:
+        env: | # neper gives access to gmsh
+          module load apps/gcc/neper/4.0.1
       executable: abq2020
       version_info:
         abaqus:
           version: "2020"
       num_cores: 1
-    - env: |
+    - env: | # neper gives access to gmsh
         module load apps/binapps/abaqus/2020
+        module load apps/gcc/neper/4.0.1
+      task_preparation:
+        env: | # neper gives access to gmsh
+          module load apps/gcc/neper/4.0.1
       executable: abq2020
       version_info:
         abaqus:
