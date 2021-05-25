@@ -34,6 +34,8 @@ Included are:
     
 7. Now run `matflow validate` again. This time there should be no warnings.
 
+**Note**: when connecting to the CSF to submit workflows, do *not* use X11 forwarding (the `-X` flag of the `ssh` command).
+
 ## Setting default scheduler options for preparation/processing jobs
 
 Often, preparation and processing jobs are not computationally expensive, and can be run as serial jobs in the short queue on the CSF. We can set default scheduler options for the preparation and processing jobs by adding this to the MatFlow config file:
