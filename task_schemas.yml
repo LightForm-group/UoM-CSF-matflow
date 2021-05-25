@@ -625,6 +625,11 @@
     - name: dump_frequency
       default: null
   methods:
+    - name: from_damask_input_files
+      inputs:
+        - load_case_path[file=true]
+      implementations:
+        - name: damask
     - name: uniaxial
       implementations:
         - name: formable
