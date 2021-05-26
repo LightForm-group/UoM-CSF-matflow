@@ -34,6 +34,8 @@ Included are:
     
 7. Now run `matflow validate` again. This time there should be no warnings.
 
+**Note**: when connecting to the CSF to submit workflows, do *not* use X11 forwarding (the `-X` flag of the `ssh` command).
+
 ## Setting default scheduler options for preparation/processing jobs
 
 Often, preparation and processing jobs are not computationally expensive, and can be run as serial jobs in the short queue on the CSF. We can set default scheduler options for the preparation and processing jobs by adding this to the MatFlow config file:
@@ -72,7 +74,7 @@ We can get MatFlow to copy (a subset) of the workflow files to a Dropbox account
         path: /sims
     ```
     In this case, this tells MatFlow to use the path `/sims` inside your Dropbox directory structure. The path you specify here must exist.
-2. You can then add an extra key to any of your workflow files to tell MatFlow to use this archive location: `archive: dropbox`. If you want to exclude certain files, you can also add a key `archive_excludes` to your workflow, which is a list of glob-style patterns to exclude. Task schemas can also include `archive_exlcudes`.
+2. You can then add an extra key to any of your workflow files to tell MatFlow to use this archive location: `archive: dropbox`. If you want to exclude certain files, you can also add a key `archive_excludes` to your workflow, which is a list of glob-style patterns to exclude. Task schemas can also include `archive_excludes`.
 
 The first time you submit a workflow that uses this archive location, you will be prompted to authorize hpcflow to connect to your Dropbox account.
 

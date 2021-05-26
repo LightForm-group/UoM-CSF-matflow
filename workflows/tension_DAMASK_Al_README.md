@@ -1,11 +1,11 @@
-# Notes on the `uniaxial_tensile_test_sim` workflow
+# Notes on the `tension_DAMASK_Al` workflow
 
 ## Initial options
 
-We will use the example uniaxial simulation profile file located [here on GitHuB](https://github.com/LightForm-group/UoM-CSF-matflow/blob/master/workflows/uniaxial_tensile_test_sim.yml). Let's go through the different sections of the workflow file. First of all, we see this block:
+We will use the example uniaxial simulation profile file located [here on GitHuB](https://github.com/LightForm-group/UoM-CSF-matflow/blob/master/workflows/tension_DAMASK_Al.yml). Let's go through the different sections of the workflow file. First of all, we see this block:
 
 ```yaml
-name: uniaxial_tensile_test_sim
+name: tension_DAMASK_Al
 archive: dropbox
 run_options:
   l: short
@@ -108,6 +108,9 @@ Finally, we have the task to perform the actual simulation using DAMASK:
           path: constituent/1_Al/generic/epsilon_V^0(Fp)_vM
           transforms: [mean_along_axes: 1]
           increments: 10 # E.g. extract data every 10th increment.
+      visualise:
+        increments: [0, -1] # Generate a VTK file for the initial and final increments
+        labels: ['F', 'P', 'sigma_vM']           
     base:
       homogenization_schemes:
         SX:

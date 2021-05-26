@@ -8,13 +8,13 @@ formable:
     - num_cores: 1
       version_info:
         formable:
-          version: '0.1.17'
+          version: "0.1.17"
       sources_preparation:
         env: |
           module load apps/binapps/anaconda3/2019.07
           source activate /mnt/eps01-rds/jf01-home01/shared/.conda/formable_env
-          export HDF5_USE_FILE_LOCKING=FALSE        
-      executable: python <<sources_dir>>/<<script>>.py    
+          export HDF5_USE_FILE_LOCKING=FALSE
+      executable: python <<sources_dir>>/<<script>>.py
       env: |
         module load apps/binapps/anaconda3/2019.07
         source activate /mnt/eps01-rds/jf01-home01/shared/.conda/formable_env
@@ -90,7 +90,7 @@ MTEX:
       MATLAB:
         version: R2019a (9.6.0.1072779) 64-bit (glnxa64)
       MTEX:
-        version: '5.3.1'
+        version: "5.3.1"
     sources_preparation:
       env: |
         module load apps/binapps/matlab/R2019a
@@ -103,7 +103,7 @@ MTEX:
     - num_cores: 16
       required_scheduler_options:
         pe: smp.pe
-        l: ivybridge      
+        l: ivybridge
       sources_preparation:
         commands: |
           mcc -d <<sources_dir>> -m <<sources_dir>>/<<script>>.m $(cat $MTEX_INCLUDE | envsubst)
@@ -113,13 +113,13 @@ DefDAP:
     - num_cores: 1
       version_info:
         defdap:
-          version: '0.93.2'
+          version: "0.93.2"
       sources_preparation:
         env: |
           module load apps/binapps/anaconda3/2019.07
           source activate /mnt/eps01-rds/jf01-home01/shared/.conda/defdap_env_2
-          export HDF5_USE_FILE_LOCKING=FALSE        
-      executable: python <<sources_dir>>/<<script>>.py    
+          export HDF5_USE_FILE_LOCKING=FALSE
+      executable: python <<sources_dir>>/<<script>>.py
       env: |
         module load apps/binapps/anaconda3/2019.07
         source activate /mnt/eps01-rds/jf01-home01/shared/.conda/defdap_env_2
@@ -136,25 +136,33 @@ neper:
     executable: neper
     version_info:
       neper:
-        version: '4.0.1'
+        version: "4.0.1"
   instances:
     - num_cores: 1
 
 abaqus:
   instances:
-    - env: |
+    - env: | # neper gives access to gmsh
         module load apps/binapps/abaqus/2020
+        module load apps/gcc/neper/4.0.1
+      task_preparation:
+        env: | # neper gives access to gmsh
+          module load apps/gcc/neper/4.0.1
       executable: abq2020
       version_info:
         abaqus:
-          version: '2020'    
+          version: "2020"
       num_cores: 1
-    - env: |
+    - env: | # neper gives access to gmsh
         module load apps/binapps/abaqus/2020
+        module load apps/gcc/neper/4.0.1
+      task_preparation:
+        env: | # neper gives access to gmsh
+          module load apps/gcc/neper/4.0.1
       executable: abq2020
       version_info:
         abaqus:
-          version: '2020'
+          version: "2020"
       num_cores: [2, 32, 1]
       required_scheduler_options:
         pe: smp.pe
