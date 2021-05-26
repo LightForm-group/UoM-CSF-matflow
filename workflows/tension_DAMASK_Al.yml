@@ -12,7 +12,6 @@ tasks:
     base:
       size: [1, 1, 1]
       num_grains: 3
-    output_map_options:
       phase_label: Al      
 
   - name: generate_volume_element
@@ -43,53 +42,57 @@ tasks:
       l: short
     output_map_options:
       operations:
-        - name: add_Cauchy
+        - name: add_stress_Cauchy
           args: {P: P, F: F}
           opts: {add_Mises: true}
-        - name: add_strain_tensor
+        - name: add_strain
           args: {F: F, t: V, m: 0}
           opts: {add_Mises: true}          
-        - name: add_strain_tensor
-          args: {F: Fp, t: V, m: 0}
+        - name: add_strain
+          args: {F: F_p, t: V, m: 0}
           opts: {add_Mises: true}
-      incremental_data:
-        - name: vol_avg_equivalent_stress
-          path: constituent/1_Al/generic/sigma_vM
+      phase_data:
+        - field_name: sigma_vM
+          phase_name: Al
+          out_name: vol_avg_equivalent_stress
           transforms: [mean_along_axes: 1]
-        - name: vol_avg_equivalent_strain
-          path: constituent/1_Al/generic/epsilon_V^0(F)_vM
+        - field_name: epsilon_V^0(F)_vM
+          phase_name: Al
+          out_name: vol_avg_equivalent_strain
           transforms: [mean_along_axes: 1]
-        - name: vol_avg_equivalent_plastic_strain
-          path: constituent/1_Al/generic/epsilon_V^0(Fp)_vM
+        - field_name: epsilon_V^0(F_p)_vM
+          phase_name: Al
+          out_name: vol_avg_equivalent_plastic_strain
           transforms: [mean_along_axes: 1]
-          increments: 10 # E.g. extract data every 10th increment.
+          increments:
+            - step: 10
       visualise:
         increments: [0, -1] # Generate a VTK file for the initial and final increments
         labels: ['F', 'P', 'sigma_vM']          
     base:
       homogenization_schemes:
         SX:
-          mech:
-            type: none
+          mechanical:
+            type: pass
+          N_constituents: 1
       phases:
         Al:
-          elasticity:
-            type: hooke
-            C_11: 106.75e9
-            C_12: 60.41e9
-            C_44: 28.34e9            
-          generic:
-            output: [F, P, Fp]
-          lattice: fcc
-          plasticity:
-            N_sl: [12]
-            a_sl: 2.25
-            atol_xi: 1.0
-            dot_gamma_0_sl: 0.001
-            h_0_sl_sl: 75e6
-            h_sl_sl: [1, 1, 1.4, 1.4, 1.4, 1.4]
-            n_sl: 20
-            output: [xi_sl]
-            xi_0_sl: [31e6]
-            xi_inf_sl: [63e6]
-            type: phenopowerlaw
+          lattice: cF
+          mechanical:
+            output: [F, P, F_p]
+            elastic:
+              type: Hooke
+              C_11: 106.75e9
+              C_12: 60.41e9
+              C_44: 28.34e9
+            plastic:
+              type: phenopowerlaw
+              output: [xi_sl]
+              N_sl: [12]
+              n_sl: 20
+              a_sl: 2.25
+              dot_gamma_0_sl: 0.001
+              h_0_sl_sl: 573e6
+              h_sl_sl: [1, 1, 1.4, 1.4, 1.4, 1.4]
+              xi_0_sl: [22e6]
+              xi_inf_sl: [129e6]

@@ -11,6 +11,7 @@ tasks:
     software: damask
     base:
       size: [1, 1, 1]
+      phase_label: Al
     sequences:
       - name: grid_size
         nest_idx: 0
@@ -21,6 +22,4 @@ tasks:
         nest_idx: 0
         vals:
           - 100
-          - 200
-    output_map_options:
-      phase_label: Al          
+          - 200      

@@ -14,16 +14,15 @@ tasks:
     method: random
     software: damask
     base:
+      size: [1, 1, 1]
       grid_size: [32, 32, 32]
       num_grains: 1024
-    output_map_options:
       phase_label: Ti_alpha      
 
   - name: generate_volume_element
     method: random_voronoi
     software: damask
     base:
-      size: [1, 1, 1]
       homog_label: SX
 
   # - name: visualise_volume_element
@@ -47,56 +46,57 @@ tasks:
       l: short
     output_map_options:
       operations:
-        - name: add_Cauchy
+        - name: add_stress_Cauchy
           args: {P: P, F: F}
           opts: {add_Mises: true}
-        - name: add_strain_tensor
+        - name: add_strain
           args: {F: F, t: V, m: 0}
           opts: {add_Mises: true}          
-        - name: add_strain_tensor
-          args: {F: Fp, t: V, m: 0}
+        - name: add_strain
+          args: {F: F_p, t: V, m: 0}
           opts: {add_Mises: true}
       incremental_data:
         - name: vol_avg_equivalent_stress
-          path: constituent/1_Ti_alpha/generic/sigma_vM
+          path: constituent/Ti_alpha/generic/sigma_vM
           transforms: [mean_along_axes: 1]
         - name: vol_avg_equivalent_strain
-          path: constituent/1_Ti_alpha/generic/epsilon_V^0(F)_vM
+          path: constituent/Ti_alpha/generic/epsilon_V^0(F)_vM
           transforms: [mean_along_axes: 1]
         - name: vol_avg_equivalent_plastic_strain
-          path: constituent/1_Ti_alpha/generic/epsilon_V^0(Fp)_vM
+          path: constituent/Ti_alpha/generic/epsilon_V^0(F_p)_vM
           transforms: [mean_along_axes: 1]
           increments: 1 # E.g. extract data every 1 increment.
     base:
       homogenization_schemes:
         SX:
-          mech:
-            type: none
+          mechanical:
+            type: pass
+          N_constituents: 1
       phases:
         Ti_alpha:
-          elasticity:
-            type: hooke                # S = C.E
-            C_11: 160.0e9              # elasticity stiffness tensor constants
-            C_12: 90.0e9
-            C_13: 66.0e9
-            C_33: 181.7e9
-            C_44: 46.5e9
-          generic:
-            output: [F, P, Fp, O]
-          lattice: hex                 # define crystal
+          lattice: hP                  # define crystal
           c/a: 1.587                   # <c>/<a>
-          plasticity:
-            N_sl: [3, 3, 0, 6]         # number of slip systems basal,prism,pyrm1,pyrm2
-            a_sl: 2.0                  # ?
-            a_tol_xi: 1.0              # ?
-            dot_gamma_0_sl: 0.001      # initial shear rate
-            h_sl_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] # hardening/dependancy matrix
-            h_0_sl_sl: 15.0e6          # initial hardening
-            n_sl: 10                   # slip sensitivity
-            output: [gamma_sl, xi_sl]
-            xi_0_sl: [100.0e+06, 100.0e+06, 0.0, 200.0e+06]   # CRSS initial
-            xi_inf_sl: [100.0e+06, 100.0e+06, 0.0, 200.0e+06] # CRSS hardened
-            type: phenopowerlaw
+          mechanical:
+            output: [F, P, F_p, O]
+            elastic:
+              type: Hooke                # S = C.E
+              C_11: 160.0e9              # elasticity stiffness tensor constants
+              C_12: 90.0e9
+              C_13: 66.0e9
+              C_33: 181.7e9
+              C_44: 46.5e9
+            plastic:
+              type: phenopowerlaw
+              output: [gamma_sl, xi_sl]
+              N_sl: [3, 3, 0, 6]         # number of slip systems basal,prism,pyrm1,pyrm2
+              a_sl: 2.0                  # ?
+              dot_gamma_0_sl: 0.001      # initial shear rate
+              h_sl_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] # hardening/dependancy matrix
+              h_0_sl_sl: 15.0e6          # initial hardening
+              n_sl: 10                   # slip sensitivity
+              xi_0_sl: [100.0e+06, 100.0e+06, 0.0, 200.0e+06]   # CRSS initial
+              xi_inf_sl: [100.0e+06, 100.0e+06, 0.0, 200.0e+06] # CRSS hardened
+
 
   - name: modify_volume_element
     method: new_orientations
