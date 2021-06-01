@@ -1,50 +1,58 @@
-name: multipass_rolling
+name: multipass_ti64_alpha
+
+# Description: #
+# This workflow:
+# 1+2. Generates an equiaxed VE of ti64 alpha phase with random texture
+# 3+4. Simulates uniaxial rolling to -10% height, outputs texture, stress, strain results
+# 5+6. Sets texture and strain to that of final simulation inc. 
+# tasks 4-6 are repeated 5 times resulting in texture, stress, strain results for 50% height reduction.
+# Note that this doesnt capture effects of intragranular misorientation on texture evolution. 
 
 archive: dropbox
 run_options:
-  l: short
+  l: s_rt=04:00:00 # define wallclock
+#  l: short # puts in short queue (1hr max)
 
 iterate:
   parameter: volume_element
-  num_iterations: 2
+  num_iterations: 5
 
 tasks:
-
+  # task_1_generate_microstructure_seeds_random
   - name: generate_microstructure_seeds
     method: random
     software: damask
     base:
-      grid_size: [32, 32, 32]
+      size: [1, 1, 1]
+      grid_size: [32, 32, 32] # z needs to be divisable by number of cores
       num_grains: 1024
     output_map_options:
-      phase_label: Ti_alpha      
+      phase_label: Ti64_alpha     
 
+  # task_2_generate_volume_element_random_voronoi
   - name: generate_volume_element
-    method: random_voronoi
+    method: random_voronoi 
     software: damask
     base:
-      size: [1, 1, 1]
       homog_label: SX
 
-  # - name: visualise_volume_element
-  #   method: VTK
-  #   software: damask
-
+  # task_3_generate_load_case_plane_strain
   - name: generate_load_case
     method: plane_strain
     software: formable
     base:
       total_times: [0.2]
-      num_increments: [10]
+      num_increments: [10] # incs in damask.load
       target_strain_rates: [-0.5]
       directions: [zy]
 
+  # task_4_simulate_volume_element_loading_CP_FFT
   - name: simulate_volume_element_loading
     method: CP_FFT
     software: DAMASK
     run_options:
-      num_cores: 4
-      l: short
+      num_cores: 8
+      l: s_rt=04:00:00                 # define wallclock for just DAMASK
     output_map_options:
       operations:
         - name: add_Cauchy
@@ -56,24 +64,38 @@ tasks:
         - name: add_strain_tensor
           args: {F: Fp, t: V, m: 0}
           opts: {add_Mises: true}
+#         - name: add_IPF_color                    # for future reference
+#           args: {O: O, hkl: [0.0, 0.0, 1.0]}
+#           opts: {}
       incremental_data:
+        - name: def_grad # required for multipass
+          path: constituent/1_Ti64_alpha/generic/F
+          transforms: [mean_along_axes: 1]
+        - name: vol_avg_stress
+          path: constituent/1_Ti64_alpha/generic/sigma
+          transforms: [mean_along_axes: 1]
         - name: vol_avg_equivalent_stress
-          path: constituent/1_Ti_alpha/generic/sigma_vM
+          path: constituent/1_Ti64_alpha/generic/sigma_vM
+          transforms: [mean_along_axes: 1]
+        - name: vol_avg_strain
+          path: constituent/1_Ti64_alpha/generic/epsilon_V^0(F)
           transforms: [mean_along_axes: 1]
         - name: vol_avg_equivalent_strain
-          path: constituent/1_Ti_alpha/generic/epsilon_V^0(F)_vM
+          path: constituent/1_Ti64_alpha/generic/epsilon_V^0(F)_vM
           transforms: [mean_along_axes: 1]
-        - name: vol_avg_equivalent_plastic_strain
-          path: constituent/1_Ti_alpha/generic/epsilon_V^0(Fp)_vM
-          transforms: [mean_along_axes: 1]
-          increments: 1 # E.g. extract data every 1 increment.
+        - name: orientations
+          path: constituent/1_Ti64_alpha/generic/O
+          increments: 1 # extract data every 1 increment
+      visualise:
+        increments: [0, -1] # Generate a VTK file for the initial and final increments
+        labels: ['F', 'P', 'sigma', 'sigma_vM', 'epsilon_V^0(F)', 'epsilon_V^0(F)_vM'] # , 'IPFcolor_[0\ 0\ 1]'] # quantities in VTK  
     base:
       homogenization_schemes:
         SX:
           mech:
             type: none
       phases:
-        Ti_alpha:
+        Ti64_alpha: # ------------------------------------------------------
           elasticity:
             type: hooke                # S = C.E
             C_11: 160.0e9              # elasticity stiffness tensor constants
@@ -83,22 +105,53 @@ tasks:
             C_44: 46.5e9
           generic:
             output: [F, P, Fp, O]
-          lattice: hex                 # define crystal
+          lattice: hex                 # define CS
           c/a: 1.587                   # <c>/<a>
           plasticity:
-            N_sl: [3, 3, 0, 6]         # number of slip systems basal,prism,pyrm1,pyrm2
+            N_sl: [3, 3, 0, 6]         # number of slip systems [basal,prism,pyrm1,pyrm2]
             a_sl: 2.0                  # ?
             a_tol_xi: 1.0              # ?
             dot_gamma_0_sl: 0.001      # initial shear rate
             h_sl_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] # hardening/dependancy matrix
-            h_0_sl_sl: 15.0e6          # initial hardening
-            n_sl: 10                   # slip sensitivity
+            h_0_sl_sl: 15.0e6          # initial hardening slsl interaction
+            n_sl: 10                   # stress exponent 1/m (m=strain rate sensitivity)
             output: [gamma_sl, xi_sl]
             xi_0_sl: [100.0e+06, 100.0e+06, 0.0, 200.0e+06]   # CRSS initial
             xi_inf_sl: [100.0e+06, 100.0e+06, 0.0, 200.0e+06] # CRSS hardened
             type: phenopowerlaw
 
+          # plastic from M. Levy, Handbook of Elastic Properties of Solids, Liquids, and Gases (2001)
+          # Plastic from C. Zambaldi, "Orientation informed nanoindentation of a-titanium: Indentation pileup in hexagonal metals deforming by prismatic slip", J. Mater. Res., Vol. 27, No. 1, Jan 14, 2012
+          # elastic+plastic from L. Wang, Z. Zheng, H. Phukan, P. Kenesei, J.-S. Park, J. Lind, R.M. Suter, T.R. Bieler, Direct measurement of critical resolved shear stress of prismatic and basal slip in polycrystalline Ti using high energy X-ray diffraction microscopy, Acta Mater 2017
+
+        Ti64_beta: # -------------------------------------------------------
+          elasticity:
+            type: hooke                # S = C.E
+            C_11: 233.3e9              # elasticity stiffness tensor constants
+            C_12: 135.5e9
+            C_44: 118.0e9
+          generic:
+            output: [F, Fe, Fp, P, Lp, O]
+          lattice: bcc                 # define CS
+          plasticity:
+            N_sl: [12, 12]             # number of slip systems [{110}<111>, {112}<111>, ({123}<111>?)]
+            a_sl: 2.0                  # ?
+            atol_xi: 1.0               # ?
+            dot_gamma_0_sl: 0.001      # initial shear rate
+            h_0_sl_sl: 1000.0e6        # initial hardening slsl interaction
+            h_sl_sl: [1, 1, 1.4, 1.4, 1.4, 1.4] # hardening/dependancy matrix
+            n_sl: 10                   # stress exponent 1/m (m=strain rate sensistivity)
+            output: [gamma_sl, xi_sl]
+            xi_0_sl: [33.3e6, 33.3e6]   # CRSS initial
+            xi_inf_sl: [33.3e6, 33.3e6] # CRSS final
+            type: phenopowerlaw
+
+  # task_5_modify_volume_element_new_orientations
   - name: modify_volume_element
     method: new_orientations
     software: damask
-    base: {}
+
+    # task_6_modify_volume_element_geometry       
+  - name: modify_volume_element
+    method: geometry
+    software: damask
