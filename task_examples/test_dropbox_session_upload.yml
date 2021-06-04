@@ -1,0 +1,13 @@
+# Testing the use of Dropbox upload sessions.
+
+name: test_dropbox_session_upload
+archive: dropbox
+tasks:
+  - name: dummy_task_make_file
+    method: method_1
+    software: dummy_software
+    sequences:
+      - name: size_MB
+        vals:
+          - 50 # should be uploaded
+          - 500 # will not be uploaded unless a session is used
