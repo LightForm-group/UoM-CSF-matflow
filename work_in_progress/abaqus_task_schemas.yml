@@ -31,6 +31,8 @@
       default: 0.0
     - name: Nb_el_thickness
       default: 1
+    - name: num_interval
+      default: null
   methods:
     - name: default
       implementations:
