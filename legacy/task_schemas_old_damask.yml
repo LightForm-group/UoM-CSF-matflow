@@ -1,0 +1,564 @@
+- name: sample_texture
+  inputs:
+    - num_orientations
+  outputs:
+    - orientations
+  methods:
+    - name: from_ODF
+      inputs:
+        - ODF
+      implementations:
+        - name: mtex
+          inputs:
+            - crystal_symmetry
+            - specimen_symmetry
+          input_map:
+            - inputs:
+                - ODF
+              file: ODF.txt
+            - inputs:
+                - ODF
+              file: orientation_coordinate_system.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [crystal_symmetry]
+                - [specimen_symmetry]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.txt
+                  save: true
+                - name: orientation_coordinate_system.json
+                  save: true
+              output: orientations
+    - name: from_model_ODF
+      inputs:
+        - ODF_components
+        - crystal_symmetry
+        - specimen_symmetry
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - ODF_components
+              file: ODF_components.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [ODF_components.json]
+                - [crystal_symmetry]
+                - [specimen_symmetry]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.json
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
+              output: orientations
+    - name: from_CTF_file
+      inputs:
+        - CTF_file_path[file=True,save=True]
+        - specimen_symmetry
+        - phase
+        - name: reference_frame_transformation
+          default: euler_to_spatial # or "spatial_to_euler" or null
+        - name: rotation # dict with keys "euler_angles_deg" list optional "keep_XY" bool, or "keep_euler" bool
+          default: null
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - rotation
+              file: rotation.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [CTF_file_path]
+                - [reference_frame_transformation]
+                - [specimen_symmetry]
+                - [phase]
+                - [rotation.json]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.json
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
+              output: orientations
+    - name: from_CRC_file
+      inputs:
+        - CRC_file_path[file=True,save=False]
+        - CPR_file_path[file=True,save=True]
+        - specimen_symmetry
+        - phase
+        - name: reference_frame_transformation
+          default: euler_to_spatial # or "spatial_to_euler" or null
+        - name: rotation # dict with keys "euler_angles_deg" list optional "keep_XY" bool, or "keep_euler" bool
+          default: null
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - rotation
+              file: rotation.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [CRC_file_path]
+                - [reference_frame_transformation]
+                - [specimen_symmetry]
+                - [phase]
+                - [rotation.json]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.json
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
+              output: orientations
+
+- name: generate_microstructure_seeds
+  outputs:
+    - microstructure_seeds
+  methods:
+    - name: random
+      inputs:
+        - size
+        - num_grains
+      implementations:
+        - name: damask
+          inputs:
+            - name: grid_size
+              default: null
+              ignore_dependency_from: ["generate_volume_element"]
+          outputs:
+            - microstructure_seeds
+          command_files:
+            positions: positions_<<inc>>.txt
+          commands:
+            - command: seeds_fromRandom
+              stdout: <<positions>>
+              stderr: stderr.log
+              options:
+                - [-N, num_grains]
+                - [-s, size]
+            - command: seeds_fromRandom
+              stdout: <<positions>>
+              stderr: stderr.log
+              options:
+                - [-N, num_grains]
+                - [-g, grid_size]
+                - [-s, size]
+          command_pathways:
+            - commands_idx: [0]
+            - condition: [grid_size]
+              commands_idx: [1]
+          output_map:
+            - files:
+                - name: <<positions>>
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
+                - name: phase_label
+              output: microstructure_seeds
+    - name: random_NEW
+      inputs:
+        - size
+        - num_grains
+      implementations:
+        - name: damask
+          inputs:
+            - phase_label
+            - name: grid_size
+              default: null
+              ignore_dependency_from: ["generate_volume_element"]
+            - name: orientation_coordinate_system
+              default: null
+          outputs:
+            - microstructure_seeds
+
+- name: load_microstructure
+  outputs:
+    - microstructure_image
+  methods:
+    - name: EBSD+DIC
+      inputs:
+        - DIC
+        - EBSD
+        - transform_type
+        - root_path
+        - name: scaling_factor
+          default: 1
+      implementations:
+        - name: DefDAP
+          input_map:
+            - inputs:
+                - DIC
+                - EBSD
+                - transform_type
+                - root_path
+                - scaling_factor
+              file: inputs.hdf5
+              save: false
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: microstructure_image
+
+- name: generate_volume_element
+  outputs:
+    - volume_element
+  methods:
+    - name: from_damask_input_files
+      inputs:
+        - geom_path[file=true]
+        - material_path[file=true]
+      implementations:
+        - name: damask
+    - name: extrusion
+      inputs:
+        - microstructure_image
+        - depth
+        - image_axes
+        - phase_label
+        - homog_label
+      implementations:
+        - name: damask
+          inputs:
+            - microstructure_image
+            - depth
+            - image_axes
+    - name: random_voronoi_OLD
+      notes: >
+        In this method we use the random orientations that already exist in
+        microstructure_seeds.
+      implementations:
+        - name: damask
+          inputs:
+            - name: microstructure_seeds
+            - name: size
+            - name: homog_label
+            - name: rescale_size
+              default: null
+            - name: rescale_grid
+              default: null
+            - name: canvas_grid
+              default: null
+          input_map:
+            - inputs:
+                - microstructure_seeds
+              file: orientation.seeds
+            - inputs:
+                - microstructure_seeds
+              file: orientation_coordinate_system.json
+            - inputs:
+                - microstructure_seeds
+              file: phase_label.txt
+            - inputs:
+                - homog_label
+              file: homog_label.txt
+          output_map:
+            - files:
+                - name: <<geom_file>>
+                  save: true
+                - name: orientation_coordinate_system.json
+                  save: true
+                - name: phase_label.txt
+                  save: true
+                - name: homog_label.txt
+                  save: true
+              options:
+                - name: model_coordinate_system
+                  default: null
+                - name: buffer_phase_label
+                  default: null
+              output: volume_element
+          command_files:
+            geom_file: volume_element_<<inc>>.geom
+          command_pathways:
+            - commands_idx: [0]
+            - condition: [rescale_grid, rescale_size]
+              commands_idx: [0, 1]
+            - condition: [rescale_grid, rescale_size, canvas_grid]
+              commands_idx: [0, 1, 2]
+            - condition: [canvas_grid]
+              commands_idx: [0, 2]
+          commands:
+            - command: geom_fromVoronoiTessellation
+              stdin: orientation.seeds
+              stdout: <<geom_file>>
+              stderr: stderr.log
+              options:
+                - [-s, size]
+            - command: geom_rescale
+              stdin: <<geom_file>>
+              stdout: <<geom_file>>
+              stderr: stderr.log
+              options:
+                - [-g, rescale_grid]
+                - [-s, rescale_size]
+            - command: geom_canvas
+              stdin: <<geom_file>>
+              stdout: <<geom_file>>
+              stderr: stderr.log
+              options:
+                - [-g, canvas_grid]
+    - name: random_voronoi_from_orientations_OLD
+      notes: >
+        In this method we replace the orientations in microstructure_seeds
+        with orientations computed from a previous task.
+      implementations:
+        - name: damask
+          inputs:
+            - name: microstructure_seeds
+            - name: orientations
+            - name: size
+            - name: homog_label
+            - name: rescale_size
+              default: null
+            - name: rescale_grid
+              default: null
+            - name: canvas_grid
+              default: null
+          input_map:
+            - inputs:
+                - microstructure_seeds
+                - orientations
+              file: orientation.seeds
+            - inputs:
+                - orientations
+              file: orientation_coordinate_system.json
+            - inputs:
+                - microstructure_seeds
+              file: phase_label.txt
+            - inputs:
+                - homog_label
+              file: homog_label.txt
+          output_map:
+            - files:
+                - name: <<geom_file>>
+                  save: true
+                - name: orientation_coordinate_system.json
+                  save: true
+                - name: phase_label.txt
+                  save: true
+                - name: homog_label.txt
+                  save: true
+              options:
+                - name: model_coordinate_system
+                  default: null
+                - name: buffer_phase_label
+                  default: null
+              output: volume_element
+          command_files:
+            geom_file: volume_element_<<inc>>.geom
+          command_pathways:
+            - commands_idx: [0]
+            - condition: [rescale_grid, rescale_size]
+              commands_idx: [0, 1]
+            - condition: [rescale_grid, rescale_size, canvas_grid]
+              commands_idx: [0, 1, 2]
+          commands:
+            - command: geom_fromVoronoiTessellation
+              stdin: orientation.seeds
+              stdout: <<geom_file>>
+              stderr: stderr.log
+              options:
+                - [-s, size]
+            - command: geom_rescale
+              stdin: <<geom_file>>
+              stdout: <<geom_file>>
+              stderr: stderr.log
+              options:
+                - [-g, rescale_grid]
+                - [-s, rescale_size]
+            - command: geom_canvas
+              stdin: <<geom_file>>
+              stdout: <<geom_file>>
+              stderr: stderr.log
+              options:
+                - [-g, canvas_grid]
+    - name: random_voronoi
+      notes: >
+        In this method we use the random orientations that already exist in
+        microstructure_seeds (using DAMASK Python package functions).
+      implementations:
+        - name: damask
+          inputs:
+            - name: microstructure_seeds
+            - name: grid_size
+            - name: homog_label
+            - name: scale_morphology
+              default: null
+            - name: scale_update_size
+              default: true
+            - name: buffer_phase_size
+              default: null
+            - name: buffer_phase_label
+              default: null
+        - name: neper
+          inputs:
+            - name: num_grains
+            - name: grid_size
+            - name: buffer_phase_size
+              default: null
+          commands:
+            - command: <<executable>> -T
+              options:
+                - [-n, num_grains]
+                - [-format, tesr]
+                - [-tesrformat, ascii]
+                - [-tesrsize, grid_size]
+                - [-o, volume_element.tesr]
+                - [-oridescriptor, "euler-bunge:passive"]
+                - [-periodicity, all]
+            - command: <<executable>> -T
+              options:
+                - [-n, num_grains]
+                - [-format, tesr]
+                - [-tesrformat, ascii]
+                - [-tesrsize, grid_size]
+                - [-o, volume_element.tesr]
+                - [-oridescriptor, "euler-bunge:passive"]
+                - [-periodicity, all]
+                - [-transform, buffer_phase_size]
+          command_pathways:
+            - commands_idx: [0]
+            - commands_idx: [1]
+              condition: [buffer_phase_size]
+          output_map:
+            - output: volume_element
+              files:
+                - name: volume_element.tesr
+                  save: true
+              options:
+                - homog_label
+                - phase_label
+                - buffer_phase_label
+    - name: random_voronoi_from_orientations
+      notes: >
+        In this method we replace the orientations in microstructure_seeds
+        with orientations computed from a previous task (using DAMASK Python package
+        functions).
+      inputs:
+        - name: microstructure_seeds
+        - name: grid_size
+        - name: homog_label
+        - name: scale_morphology
+          default: null
+        - name: scale_update_size
+          default: true
+        - name: buffer_phase_size
+          default: null
+        - name: buffer_phase_label
+          default: null
+        - name: orientations
+      implementations:
+        - name: damask
+
+- name: visualise_volume_element
+  inputs:
+    - volume_element
+  methods:
+    - name: VTK
+      outputs:
+        - __file__VTR_file
+      implementations:
+        - name: damask
+          input_map:
+            - inputs:
+                - volume_element
+              file: geom.geom
+              save: true
+
+- name: visualise_volume_element_response
+  inputs:
+    - volume_element_response
+  methods:
+    - name: VTK
+      outputs:
+        - __file__VTR_file
+      implementations:
+        - name: damask
+          input_map:
+            - inputs:
+                - volume_element_response
+              file: geom.geom
+          commands:
+            - command: geom_check
+              parameters: [geom.geom]
+              stderr: stderr.log
+
+- name: simulate_volume_element_loading
+  inputs:
+    - name: volume_element
+    - name: load_case
+    - name: homogenization_schemes
+    - name: texture_alignment_method
+      default: axes_keyword
+    - name: single_crystal_parameters
+      default: null
+    - name: phases
+    - name: numerics
+      default: null
+    - name: single_crystal_parameter_perturbation
+      default: null
+  outputs:
+    - volume_element_response
+  methods:
+    - name: CP_FFT
+      implementations:
+        - name: damask
+          input_map:
+            - inputs:
+                - homogenization_schemes
+                - volume_element
+                - single_crystal_parameters
+                - single_crystal_parameter_perturbation
+                - phases
+                - texture_alignment_method
+              file: material.yaml
+              save: true
+            - inputs:
+                - numerics
+              file: numerics.yaml
+              save: true
+            - inputs:
+                - volume_element
+              file: geom.geom
+              save: true
+            - inputs:
+                - load_case
+              file: load.load
+              save: true
+          commands:
+            - command: <<executable>>
+              parallel_mode: MPI
+              options:
+                - [--load, load.load]
+                - [--geom, geom.geom]
+              stdout: stdout.log
+              stderr: stderr.log
+          output_map:
+            - files:
+                - name: geom_load.hdf5
+                  save: false
+              output: volume_element_response
+              options:
+                - name: operations
+                  default: null
+                - name: incremental_data
+                - name: visualise
+                  default: null
+          archive_excludes: ["geom_load.hdf5", "*.spectralOut"]
