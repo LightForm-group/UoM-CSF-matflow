@@ -28,7 +28,7 @@ PACKAGES_VERSIONED=(
     "damask-parse==0.2.10"\
     "formable"\
     "matflow-damask==0.1.17"\
-    "matflow-formable"\
+    "matflow-formable==0.1.8"\
     "matflow-defdap"\
     "matflow-mtex"\
     "matflow-neper"\
