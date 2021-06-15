@@ -245,7 +245,7 @@
           inputs:
             - name: orientation_coordinate_system
               default: null
-              ignore_dependency_from: ['generate_microstructure_seeds']
+              ignore_dependency_from: ["generate_microstructure_seeds"]
 
 - name: generate_microstructure_seeds
   outputs:
@@ -264,7 +264,7 @@
               ignore_dependency_from: ["generate_volume_element"]
             - name: orientation_coordinate_system
               default: null
-              ignore_dependency_from: ['sample_texture']
+              ignore_dependency_from: ["sample_texture"]
           outputs:
             - microstructure_seeds
 
@@ -309,9 +309,9 @@
         - name: DefDAP
           input_map:
             - inputs:
-              - EBSD
-              - root_path
-              - scaling_factor
+                - EBSD
+                - root_path
+                - scaling_factor
               file: inputs.hdf5
               save: false
           commands:
@@ -427,11 +427,11 @@
   methods:
     - name: add_buffer_zones
       inputs:
-        - buffer_sizes    # size of buffer on each face [-x, +x, -y, +y, -z, +z]
-        - phase_ids       # phase of each buffer. Relative so 1 is the first new phase and so on
-        - phase_labels    # labels of the new phases
-        - homog_label     # label of the homog type
-        - name: order     # order to add the zones, default [x, y, z]
+        - buffer_sizes # size of buffer on each face [-x, +x, -y, +y, -z, +z]
+        - phase_ids # phase of each buffer. Relative so 1 is the first new phase and so on
+        - phase_labels # labels of the new phases
+        - homog_label # label of the homog type
+        - name: order # order to add the zones, default [x, y, z]
           default: null
       implementations:
         - name: damask
@@ -465,7 +465,7 @@
               parameters: [geom.geom]
               stderr: stderr.log
     - name: texture_pole_figure
-      inputs: 
+      inputs:
         - crystal_symmetry
         - pole_figure_directions
       implementations:
@@ -634,10 +634,10 @@
     - orientations
     - load_case
     - name: phases
-      ignore_dependency_from: ['simulate_volume_element_loading']
+      ignore_dependency_from: ["simulate_volume_element_loading"]
     - name: numerics
       default: null
-      ignore_dependency_from: ['simulate_volume_element_loading']
+      ignore_dependency_from: ["simulate_volume_element_loading"]
   outputs:
     - orientations_response
   methods:
@@ -667,7 +667,7 @@
               stdout: stdout.log
               stderr: stderr.log
           output_map:
-            - files: 
+            - files:
                 - name: geom_load.hdf5
                   save: false
               output: orientations_response
@@ -680,7 +680,7 @@
                   default: null
                 - name: phase_data
                   default: null
-          archive_excludes: ['geom_load.hdf5', '*.spectralOut']
+          archive_excludes: ["geom_load.hdf5", "*.spectralOut"]
 
 - name: simulate_volume_element_loading
   inputs:
@@ -692,10 +692,10 @@
     - name: single_crystal_parameters
       default: null
     - name: phases
-      ignore_dependency_from: ['simulate_orientations_loading']
+      ignore_dependency_from: ["simulate_orientations_loading"]
     - name: numerics
       default: null
-      ignore_dependency_from: ['simulate_orientations_loading']
+      ignore_dependency_from: ["simulate_orientations_loading"]
     - name: single_crystal_parameter_perturbation
       default: null
   outputs:
