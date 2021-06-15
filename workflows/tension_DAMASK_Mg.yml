@@ -75,7 +75,7 @@ tasks:
         # Extract the grain-averaged orientations at initial and final increments
         - field_name: O
           increments:
-            - values: [0, -1]            
+            - values: [0, -1]
       visualise: # Generate VTR files for increments: [10, 12, 14, 16, 18, 20]
         fields: [F, F_p, P, sigma_vM, O, IPFcolor_(0 0 1)]
         increments:
@@ -97,10 +97,10 @@ tasks:
           c/a: 1.62350 # from Tromans 2011, Elastic Anisotropy of HCP Metal Crystals and Polycrystals
           mechanical:
             output:
-              - F       # deformation gradient (total)
-              - P       # stress (piola-kirchoff)
-              - F_p     # deformation gradient (plastic part)
-              - O       # orientations (as quaternions)
+              - F # deformation gradient (total)
+              - P # stress (piola-kirchoff)
+              - F_p # deformation gradient (plastic part)
+              - O # orientations (as quaternions)
             elastic:
               type: Hooke
               C_11: 59.3e9
@@ -113,13 +113,13 @@ tasks:
               output:
                 - gamma_sl # slip volume fraction
                 - gamma_tw # twinning volume fraction
-                - xi_sl    # slip resistance
-                - xi_tw    # twinning resistance
-              N_sl:       [3, 3, 0, 6, 0, 6]                                # Number of slip systems to include - basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)
-              xi_0_sl:    [10.0e6, 55.0e6, 0, 60.0e6, 0.0, 60.0e6]          # basal  prism  prism pyr(a) pyr(c+a) pyr(c+a) 
-              xi_inf_sl:  [40.0e6, 135.0e6, 0, 150.0e6, 0.0, 150.0e6]       # basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)            
-              N_tw:       [6, 0, 0, 6]                                      # Number of twin systems to include - tensile 1, compressive 1, tensile 2, compressive 2
-              xi_0_tw:    [40e6, 0.0, 0.0, 60.0e6]                          # tensile 1, compressive 1, tensile 2, compressive 2
+                - xi_sl # slip resistance
+                - xi_tw # twinning resistance
+              N_sl: [3, 3, 0, 6, 0, 6] # Number of slip systems to include - basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)
+              xi_0_sl: [10.0e6, 55.0e6, 0, 60.0e6, 0.0, 60.0e6] # basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)
+              xi_inf_sl: [40.0e6, 135.0e6, 0, 150.0e6, 0.0, 150.0e6] # basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)
+              N_tw: [6, 0, 0, 6] # Number of twin systems to include - tensile 1, compressive 1, tensile 2, compressive 2
+              xi_0_tw: [40e6, 0.0, 0.0, 60.0e6] # tensile 1, compressive 1, tensile 2, compressive 2
               a_sl: 2.25
               dot_gamma_0_sl: 0.001
               dot_gamma_0_tw: 0.001
@@ -134,7 +134,104 @@ tasks:
               h_0_tw_tw: 50.0e6
               h_0_tw_sl: 150.0e6
               f_sat_sl_tw: 10.0
-              h_sl_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-              h_tw_tw: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-              h_sl_tw: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-              h_tw_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+              h_sl_sl:
+                [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                ]
+              h_tw_tw:
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+              h_sl_tw:
+                [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                ]
+              h_tw_sl:
+                [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                ]
