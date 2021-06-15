@@ -51,6 +51,8 @@ tasks:
         - name: add_strain
           args: {F: F_p, t: V, m: 0}
           opts: {add_Mises: true}
+        - name: add_IPF_color
+          args: { l: [0, 0, 1] }          
       phase_data:
         - field_name: sigma_vM
           phase_name: Al
@@ -66,9 +68,22 @@ tasks:
           transforms: [mean_along_axes: 1]
           increments:
             - step: 10
-      visualise:
-        increments: [0, -1] # Generate a VTK file for the initial and final increments
-        labels: ['F', 'P', 'sigma_vM']          
+      field_data:
+        # Extract the voxel orientations at initial and final increments
+        - field_name: O
+          increments:
+            - values: [0, -1]
+      grain_data:
+        # Extract the grain-averaged orientations at initial and final increments
+        - field_name: O
+          increments:
+            - values: [0, -1]
+      visualise: # Generate VTR files for increments: [10, 12, 14, 16, 18, 20]
+        fields: [F, F_p, P, sigma_vM, O, IPFcolor_(0 0 1)]
+        increments:
+          - start: 10
+            stop: 20
+            step: 2        
     base:
       homogenization_schemes:
         SX:
@@ -79,7 +94,7 @@ tasks:
         Al:
           lattice: cF
           mechanical:
-            output: [F, P, F_p]
+            output: [F, P, F_p, O]
             elastic:
               type: Hooke
               C_11: 106.75e9
