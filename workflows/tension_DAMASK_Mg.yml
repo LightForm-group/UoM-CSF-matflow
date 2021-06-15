@@ -5,7 +5,6 @@ run_options:
   l: short
 
 tasks:
-
   - name: generate_microstructure_seeds
     method: random
     software: damask
@@ -43,14 +42,16 @@ tasks:
     output_map_options:
       operations:
         - name: add_stress_Cauchy
-          args: {P: P, F: F}
-          opts: {add_Mises: true}
+          args: { P: P, F: F }
+          opts: { add_Mises: true }
         - name: add_strain
-          args: {F: F, t: V, m: 0}
-          opts: {add_Mises: true}          
+          args: { F: F, t: V, m: 0 }
+          opts: { add_Mises: true }
         - name: add_strain
-          args: {F: F_p, t: V, m: 0}
-          opts: {add_Mises: true}
+          args: { F: F_p, t: V, m: 0 }
+          opts: { add_Mises: true }
+        - name: add_IPF_color
+          args: { l: [0, 0, 1] }
       phase_data:
         - field_name: sigma_vM
           phase_name: Mg
@@ -66,9 +67,22 @@ tasks:
           transforms: [mean_along_axes: 1]
           increments:
             - step: 10
-      visualise:
-        increments: [0, -1] # Generate a VTK file for the initial and final increments
-        labels: ['F', 'P', 'sigma_vM']          
+      field_data:
+        # Extract the voxel orientations at initial and final increments
+        - field_name: O
+          increments:
+            - values: [0, -1]
+      grain_data:
+        # Extract the grain-averaged orientations at initial and final increments
+        - field_name: O
+          increments:
+            - values: [0, -1]            
+      visualise: # Generate VTR files for increments: [10, 12, 14, 16, 18, 20]
+        fields: [F, F_p, P, sigma_vM, O, IPFcolor_(0 0 1)]
+        increments:
+          - start: 10
+            stop: 20
+            step: 2
     base:
       homogenization_schemes:
         SX:
@@ -77,11 +91,11 @@ tasks:
           N_constituents: 1
       numerics:
         grid:
-          maxCutBack: 8            
+          maxCutBack: 8
       phases:
         Mg:
-          lattice: hP            
-          c/a: 1.62350                                      # from Tromans 2011, Elastic Anisotropy of HCP Metal Crystals and Polycrystals
+          lattice: hP
+          c/a: 1.62350 # from Tromans 2011, Elastic Anisotropy of HCP Metal Crystals and Polycrystals
           mechanical:
             output:
               - F       # deformation gradient (total)
@@ -101,7 +115,7 @@ tasks:
                 - gamma_sl # slip volume fraction
                 - gamma_tw # twinning volume fraction
                 - xi_sl    # slip resistance
-                - xi_tw    # twinning resistance          
+                - xi_tw    # twinning resistance
               N_sl:       [3, 3, 0, 6, 0, 6]                                # Number of slip systems to include - basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)
               xi_0_sl:    [10.0e6, 55.0e6, 0, 60.0e6, 0.0, 60.0e6]          # basal  prism  prism pyr(a) pyr(c+a) pyr(c+a) 
               xi_inf_sl:  [40.0e6, 135.0e6, 0, 150.0e6, 0.0, 150.0e6]       # basal  prism  prism pyr(a) pyr(c+a) pyr(c+a)            
