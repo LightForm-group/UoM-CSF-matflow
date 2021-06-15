@@ -10,14 +10,13 @@ import:
       workflow: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/completed_workflows/generate_RVE_2021-04-13-100535
       # --- Additional options ---
       # context:        # (string) optionally specify which context this comes from in the source workflow
-      # task_idx:       # (int) optionally specify the task index from which to import the parameter. If give, `context` is ignored.      
+      # task_idx:       # (int) optionally specify the task index from which to import the parameter. If give, `context` is ignored.
       # iteration:      # (int) optionally specify which iteration to use (default is final iteration, -1) in the source workflow
       # elements:       # (list of int) optionally specify which subset of elements to use (default is all elements) in the source workflow
     # as:               # (string) optionally rename the parameter for use in this workflow (default is no name change)
     # context:          # (string) optionally use a different context for the parameter in this workflow
 
 tasks:
-
   - name: generate_load_case
     method: uniaxial
     software: formable
@@ -36,14 +35,14 @@ tasks:
     output_map_options:
       operations:
         - name: add_stress_Cauchy
-          args: {P: P, F: F}
-          opts: {add_Mises: true}
+          args: { P: P, F: F }
+          opts: { add_Mises: true }
         - name: add_strain
-          args: {F: F, t: V, m: 0}
-          opts: {add_Mises: true}          
+          args: { F: F, t: V, m: 0 }
+          opts: { add_Mises: true }
         - name: add_strain
-          args: {F: F_p, t: V, m: 0}
-          opts: {add_Mises: true}
+          args: { F: F_p, t: V, m: 0 }
+          opts: { add_Mises: true }
       volume_data:
         - out_name: vol_avg_equivalent_stress
           field_name: sigma_vM
@@ -54,7 +53,7 @@ tasks:
         - out_name: vol_avg_equivalent_plastic_strain
           field_name: epsilon_V^0(F_p)_+vM
           transforms: [mean_along_axes: 1]
-          increments: 
+          increments:
             - step: 10 # E.g. extract data every 10th increment.
     base:
       homogenization_schemes:
