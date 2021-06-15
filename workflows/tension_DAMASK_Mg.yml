@@ -38,7 +38,6 @@ tasks:
     software: DAMASK
     run_options:
       num_cores: 4
-      l: short
     output_map_options:
       operations:
         - name: add_stress_Cauchy
