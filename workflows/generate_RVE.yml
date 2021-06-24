@@ -12,7 +12,6 @@ tasks:
       size: [1, 1, 1]
       grid_size: [16, 16, 16]
       num_grains: 100
-    output_map_options:
       phase_label: Al      
 
   - name: generate_volume_element
