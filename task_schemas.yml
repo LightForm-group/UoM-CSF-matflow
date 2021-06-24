@@ -553,6 +553,8 @@
           inputs:
             - name: target_strain_rates
               default: null
+            - name: strain_rate_modes # F_rate (default), L or L_approx
+              default: null 
             - directions # xy, xz or yz
           input_map:
             - inputs:
@@ -561,6 +563,7 @@
                 - target_strains
                 - target_strain_rates
                 - dump_frequency
+                - strain_rate_modes
                 - directions
               file: inputs.hdf5
               save: false
