@@ -79,13 +79,17 @@ tasks:
             - values: [10, 20, 30]
         - field_name: sigma
           increments:
-            - values: [10, 20, 30]
+            - start: 10
+              stop: 30
+              step: 10
         - field_name: O
           increments:
             - values: [10, 20, 30]
         - field_name: u_n
           increments:
             - values: [10, 20, 30]
+        - field_name: grain     # Grain mapping
+        - field_name: phase     # Phase mapping
       # Use to extract grain averaged data
       grain_data:
         - field_name: epsilon_U^2(F)
