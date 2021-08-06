@@ -536,11 +536,11 @@
             - inputs:
                 - total_times
                 - num_increments
-                - target_strains
-                - target_strain_rates
-                - dump_frequency
                 - directions
+                - target_strain_rates
+                - target_strains
                 - rotations
+                - dump_frequency
               file: inputs.hdf5
               save: false
           commands:
@@ -554,17 +554,20 @@
       implementations:
         - name: formable
           inputs:
+            - directions # xy, xz or yz
             - name: target_strain_rates
               default: null
-            - directions # xy, xz or yz
+            - name: rotations
+              default: null
           input_map:
             - inputs:
                 - total_times
                 - num_increments
-                - target_strains
-                - target_strain_rates
-                - dump_frequency
                 - directions
+                - target_strain_rates
+                - target_strains
+                - dump_frequency
+                - rotations
               file: inputs.hdf5
               save: false
           commands:
@@ -578,17 +581,50 @@
       implementations:
         - name: formable
           inputs:
+            - directions # xy, xz or yz
             - name: target_strain_rates
               default: null
-            - directions # xy, xz or yz
+            - name: rotations
+              default: null
+            - name: strain_rate_modes
+              default: null
           input_map:
             - inputs:
                 - total_times
                 - num_increments
-                - target_strains
-                - target_strain_rates
-                - dump_frequency
                 - directions
+                - target_strain_rates
+                - target_strains
+                - rotations
+                - strain_rate_modes
+                - dump_frequency
+              file: inputs.hdf5
+              save: false
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: load_case
+    - name: planar_2D
+      implementations:
+        - name: formable
+          inputs:
+            - normal_directions
+            - name: rotations
+              default: null
+            - name: target_strain_rates
+              default: null
+          input_map:
+            - inputs:
+                - total_times
+                - num_increments
+                - normal_directions
+                - target_strain_rates
+                - target_strains
+                - rotations
+                - dump_frequency
               file: inputs.hdf5
               save: false
           commands:
@@ -602,17 +638,20 @@
       implementations:
         - name: formable
           inputs:
+            - normal_directions # x, y, or z (i.e. load in yz, xz or xy planes)
             - name: target_strain_rates
               default: null
-            - normal_directions # x, y, or z (i.e. load in yz, xz or xy planes)
+            - name: rotations
+              default: null
           input_map:
             - inputs:
                 - total_times
                 - num_increments
-                - target_strains
-                - target_strain_rates
-                - dump_frequency
                 - normal_directions
+                - target_strain_rates
+                - target_strains
+                - rotations
+                - dump_frequency
               file: inputs.hdf5
               save: false
           commands:
