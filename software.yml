@@ -32,12 +32,12 @@ DAMASK:
       module load mpi/intel-18.0/openmpi/4.1.0
       module load tools/gcc/cmake/3.13.2
       module load apps/binapps/anaconda3/2020.07
-      export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.0
+      export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.2
       export PETSC_ARCH=mkl-opt
       export DAMASK_ROOT=/mnt/eps01-rds/jf01-home01/shared/DAMASK-v3a3
       export HDF5_USE_FILE_LOCKING=FALSE
-      source $DAMASK_ROOT/env/DAMASK.sh
       export OMP_NUM_THREADS=1
+      source $DAMASK_ROOT/env/DAMASK.sh
       PATH=$PETSC_DIR/$PETSC_ARCH/bin:$PATH
       LD_LIBRARY_PATH=$PETSC_DIR/$PETSC_ARCH/lib:$LD_LIBRARY_PATH
       source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_v3a3_env
@@ -49,12 +49,12 @@ DAMASK:
         module load mpi/intel-18.0/openmpi/4.1.0
         module load tools/gcc/cmake/3.13.2
         module load apps/binapps/anaconda3/2020.07
-        export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.0
+        export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.2
         export PETSC_ARCH=mkl-opt
         export DAMASK_ROOT=/mnt/eps01-rds/jf01-home01/shared/DAMASK-v3a3
         export HDF5_USE_FILE_LOCKING=FALSE
-        source $DAMASK_ROOT/env/DAMASK.sh
         export OMP_NUM_THREADS=1
+        source $DAMASK_ROOT/env/DAMASK.sh
         PATH=$PETSC_DIR/$PETSC_ARCH/bin:$PATH
         LD_LIBRARY_PATH=$PETSC_DIR/$PETSC_ARCH/lib:$LD_LIBRARY_PATH
         source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_v3a3_env
@@ -65,12 +65,12 @@ DAMASK:
         module load mpi/intel-18.0/openmpi/4.1.0
         module load tools/gcc/cmake/3.13.2
         module load apps/binapps/anaconda3/2020.07
-        export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.0
+        export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.2
         export PETSC_ARCH=mkl-opt
         export DAMASK_ROOT=/mnt/eps01-rds/jf01-home01/shared/DAMASK-v3a3
         export HDF5_USE_FILE_LOCKING=FALSE
-        source $DAMASK_ROOT/env/DAMASK.sh
         export OMP_NUM_THREADS=1
+        source $DAMASK_ROOT/env/DAMASK.sh
         PATH=$PETSC_DIR/$PETSC_ARCH/bin:$PATH
         LD_LIBRARY_PATH=$PETSC_DIR/$PETSC_ARCH/lib:$LD_LIBRARY_PATH
         source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_v3a3_env
