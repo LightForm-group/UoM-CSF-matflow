@@ -246,6 +246,14 @@
             - name: orientation_coordinate_system
               default: null
               ignore_dependency_from: ["generate_microstructure_seeds"]
+            - name: orientations_use_max_precision
+              default: false
+              ignore_dependency_from:
+                [
+                  "generate_microstructure_seeds",
+                  "generate_volume_element",
+                  "simulate_volume_element_loading",
+                ]
 
 - name: generate_microstructure_seeds
   outputs:
@@ -265,6 +273,14 @@
             - name: orientation_coordinate_system
               default: null
               ignore_dependency_from: ["sample_texture"]
+            - name: orientations_use_max_precision
+              default: false
+              ignore_dependency_from:
+                [
+                  "generate_volume_element",
+                  "sample_texture",
+                  "simulate_volume_element_loading",
+                ]
           outputs:
             - microstructure_seeds
 
@@ -359,6 +375,14 @@
               default: null
             - name: buffer_phase_label
               default: null
+            - name: orientations_use_max_precision
+              default: false
+              ignore_dependency_from:
+                [
+                  "generate_microstructure_seeds",
+                  "sample_texture",
+                  "simulate_volume_element_loading",
+                ]
         - name: neper
           inputs:
             - name: num_grains
@@ -407,6 +431,7 @@
         - name: microstructure_seeds
         - name: grid_size
         - name: homog_label
+        - name: orientations
         - name: scale_morphology
           default: null
         - name: scale_update_size
@@ -415,7 +440,14 @@
           default: null
         - name: buffer_phase_label
           default: null
-        - name: orientations
+        - name: orientations_use_max_precision
+          default: false
+          ignore_dependency_from:
+            [
+              "generate_microstructure_seeds",
+              "sample_texture",
+              "simulate_volume_element_loading",
+            ]
       implementations:
         - name: damask
 
@@ -693,6 +725,20 @@
       ignore_dependency_from: ["simulate_orientations_loading"]
     - name: single_crystal_parameter_perturbation
       default: null
+    - name: orientations_use_max_precision
+      default:
+        true # This will normalise and format the quaternions in the material file
+        # using maximum avaiable machine precision. We can set this to false
+        # once we use a newer version of DAMASK where the quaternion
+        # normalisation tolerance was relaxed. (Where this parameter is true in other
+        # tasks, it will modify the quaternion precision as saved within the orientations/
+        # volume element parameter.)
+      ignore_dependency_from:
+        [
+          "generate_microstructure_seeds",
+          "sample_texture",
+          "generate_volume_element",
+        ]
   outputs:
     - volume_element_response
   methods:
@@ -707,6 +753,7 @@
                 - single_crystal_parameter_perturbation
                 - phases
                 - texture_alignment_method
+                - orientations_use_max_precision
               file: material.yaml
               save: true
             - inputs:
