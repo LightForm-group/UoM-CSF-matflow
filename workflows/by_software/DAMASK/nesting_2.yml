@@ -2,7 +2,6 @@
 # nested elements (like that produced by a loop).
 
 name: nesting_example_2
-stats: false
 run_options:
   l: short
 tasks:
