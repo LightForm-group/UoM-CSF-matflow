@@ -527,7 +527,7 @@
       implementations:
         - name: formable
           inputs:
-            - directions # x, y or z
+            - directions # List of: a single characters: "x", "y" or "z"
             - name: target_strain_rates
               default: null
             - name: rotations
@@ -554,7 +554,9 @@
       implementations:
         - name: formable
           inputs:
-            - directions # xy, xz or yz
+            - directions
+            # List of: a string of two characters, ij, where {i,j} ∈ {"x","y","z"},
+            # corresponding to the two loading directions
             - name: target_strain_rates
               default: null
             - name: rotations
@@ -581,13 +583,19 @@
       implementations:
         - name: formable
           inputs:
-            - directions # xy, xz or yz
+            - directions
+            # List of: a string of two characters, ij, where {i,j} ∈ {"x","y","z"}. The
+            # first character, i, corresponds to the loading direction and the second, j,
+            # corresponds to the zero-strain direction. Zero stress will be specified on
+            # the remaining direction.
             - name: target_strain_rates
               default: null
             - name: rotations
               default: null
             - name: strain_rate_modes
               default: null
+              # List of: one of "F_rate", "L", "L_approx". If not specified, default is
+              # "F_rate". Use "L_approx" for specifying non-mixed boundary conditions.
           input_map:
             - inputs:
                 - total_times
@@ -612,6 +620,8 @@
         - name: formable
           inputs:
             - normal_directions
+              # List of: a single character, "x", "y" or "z", representing the loading
+              # plane normal direction.
             - name: rotations
               default: null
             - name: target_strain_rates
@@ -638,7 +648,9 @@
       implementations:
         - name: formable
           inputs:
-            - normal_directions # x, y, or z (i.e. load in yz, xz or xy planes)
+            - normal_directions
+            # List of: a single character, "x", "y" or "z", representing the loading plane
+            # normal direction.x, y, or z (i.e. load in yz, xz or xy planes)
             - name: target_strain_rates
               default: null
             - name: rotations
