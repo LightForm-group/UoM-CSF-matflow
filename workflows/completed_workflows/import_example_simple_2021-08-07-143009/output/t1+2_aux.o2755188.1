@@ -1,0 +1,41 @@
+matflow.cli.process_task
+Loading matflow config from /mnt/iusers01/cr01/mbdxqap3/.matflow/config.yml
+Loading task schemas from 1 file(s)...OK!
+Loading software definitions from 1 file(s)...OK!
+Loading extensions...
+  "neper"...(software: "neper") from matflow_neper (version 0.1.3)
+  "mtex"...(software: "mtex") from matflow_mtex (version 0.1.7)
+  "formable"...(software: "formable") from matflow_formable (version 0.1.10)
+  "demo"...(software: "dummy_software") from matflow_demo_extension (version 0.1.3)
+  "defdap"...(software: "defdap") from matflow_defdap (version 0.1.5)
+  "damask"...(software: "damask") from matflow_damask (version 0.1.18)
+  "abaqus"...(software: "abaqus") from matflow_abaqus (version 0.1.1)
+  "dream3d"...Failed.
+Validating task schemas against loaded extensions...OK! 41/44 schemas are valid.
+The following schemas are invalid:
+  ('generate_volume_element', 'from_damask_input_files', 'damask'): No function mapper function found. 
+  ('visualise_volume_element_response', 'VTK', 'damask'): No input map function found for input map that generates file "geom.geom". 
+  ('simulate_deformation', 'FE', 'abaqus'): No input map function found for input map that generates file "inputs.inp". 
+
+Loading hpcflow config from /mnt/iusers01/cr01/mbdxqap3/.matflow/.hpcflow/config.yml.
+matflow.cli.prepare_task
+Loading matflow config from /mnt/iusers01/cr01/mbdxqap3/.matflow/config.yml
+Loading task schemas from 1 file(s)...OK!
+Loading software definitions from 1 file(s)...OK!
+Loading extensions...
+  "neper"...(software: "neper") from matflow_neper (version 0.1.3)
+  "mtex"...(software: "mtex") from matflow_mtex (version 0.1.7)
+  "formable"...(software: "formable") from matflow_formable (version 0.1.10)
+  "demo"...(software: "dummy_software") from matflow_demo_extension (version 0.1.3)
+  "defdap"...(software: "defdap") from matflow_defdap (version 0.1.5)
+  "damask"...(software: "damask") from matflow_damask (version 0.1.18)
+  "abaqus"...(software: "abaqus") from matflow_abaqus (version 0.1.1)
+  "dream3d"...Failed.
+Validating task schemas against loaded extensions...OK! 41/44 schemas are valid.
+The following schemas are invalid:
+  ('generate_volume_element', 'from_damask_input_files', 'damask'): No function mapper function found. 
+  ('visualise_volume_element_response', 'VTK', 'damask'): No input map function found for input map that generates file "geom.geom". 
+  ('simulate_deformation', 'FE', 'abaqus'): No input map function found for input map that generates file "inputs.inp". 
+
+Some (97/100) quaternions are not normalised to within `np.longdouble` resolution (1e-18); they will be normalised.
+Some (97/100) quaternions are not normalised to within `np.longdouble` resolution (1e-18); they will be normalised.

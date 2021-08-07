@@ -5,13 +5,13 @@ from pathlib import Path
 
 
 def main(
+    target_strain_rates,
     total_times,
-    target_strains,
-    directions,
-    dump_frequency,
     num_increments,
     rotations,
-    target_strain_rates,
+    dump_frequency,
+    directions,
+    target_strains,
 ):
     load_case = get_load_case_uniaxial(
         total_times,
