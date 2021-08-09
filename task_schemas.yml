@@ -483,19 +483,6 @@
     - volume_element_response
     - increment
   methods:
-    - name: VTK
-      outputs:
-        - __file__VTR_file
-      implementations:
-        - name: damask
-          input_map:
-            - inputs:
-                - volume_element_response
-              file: geom.geom
-          commands:
-            - command: geom_check
-              parameters: [geom.geom]
-              stderr: stderr.log
     - name: texture_pole_figure
       inputs:
         - crystal_symmetry
