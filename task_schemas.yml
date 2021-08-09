@@ -1277,3 +1277,19 @@
               options:
                 - [--infile1, t6b_m1_infile_1]
                 - [--infile2, t6b_m1_infile_1]
+
+- name: dummy_task_make_file
+  outputs: []
+  inputs:
+    - name: size_MB
+    - name: path
+      default: dummy.file
+  methods:
+    - name: method_1
+      implementations:
+        - name: dummy_software
+          commands:
+            - command: <<executable>> dummy makeFile
+              options:
+                - [--size-MB, size_MB]
+                - [path]
