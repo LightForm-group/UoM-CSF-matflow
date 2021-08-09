@@ -12,6 +12,7 @@ module load tools/env/proxy2
 PACKAGES=(
     "matflow"\
     "damask-parse"\
+    "damask==v3.0.0a3.post2"\
     "formable"\
     "matflow-damask"\
     "matflow-formable"\
