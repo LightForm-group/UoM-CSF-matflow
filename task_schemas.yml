@@ -958,7 +958,47 @@
                   save: false
               output: levenberg_marquardt_fitter
 
-- name: simulate_deformation
+- name: generate_MK_model
+  outputs:
+    - FE_input_data
+  inputs:
+    - sample_size
+    - inhomogeneity_factor
+    - L_groove
+    - L_slope
+    - material_angle
+    - groove_angle
+    - elastic_modulus
+    - poisson_ratio
+    - density
+    - name: law
+      default: null
+    - name: fitted_yield_functions
+      default: null
+    - name: yield_point_criterion
+      default: null
+    - path_plastic_table[file=true]
+    - mesh_size
+    - name: bulk_parameters
+      default: [0.06, 1.2]
+    - elem_type
+    - strain_rate
+    - total_time
+    - displacment_BC # [U_left, U_right, U_top, U_bottom]
+    - name: time_step # [initial, min, max]
+      default: [0, 0, 0]
+    - name: max_plastic_strain
+      default: 0.0
+    - name: Nb_el_thickness
+      default: 1
+    - name: num_interval
+      default: null
+  methods:
+    - name: default
+      implementations:
+        - name: abaqus
+
+- name: simulate_MK_deformation
   methods:
     - name: FE
       outputs:
@@ -966,20 +1006,22 @@
       implementations:
         - name: Abaqus
           inputs:
-            - material_models
-            - specimen_parts
-            - steps
+            - FE_input_data
             - memory
+            - extraction_file_path[file=True,save=True]
             - name: do_datacheck
               default: null
           input_map:
             - inputs:
-                - material_models
-                - specimen_parts
-                - steps
+                - FE_input_data
               file: inputs.inp
+          output_map:
+            - files:
+                - name: results_num_all.dat
+                  save: true
+              output: model_response
           command_pathways:
-            - commands_idx: [0]
+            - commands_idx: [0, 2]
             - commands_idx: [1]
               condition: [do_datacheck]
           commands:
@@ -991,6 +1033,7 @@
                 - [scratch=$HOME/scratch]
                 - [memory]
                 - [interactive]
+                - [double]
             - command: . $ABAQUS_HOME/liccheck.sh; <<executable>>
               options:
                 - [datacheck]
@@ -1000,6 +1043,29 @@
                 - [scratch=$HOME/scratch]
                 - [memory]
                 - [interactive]
+                - [double]
+            - command: <<executable>> python
+              options:
+                - [extraction_file_path]
+                - [interactive]
+
+- name: find_forming_limit_curve
+  outputs:
+    - forming_limit_curve
+  inputs:
+    - model_response[alias=all_model_responses,group=all_model_responses]
+  methods:
+    - name: strain_rate_ratio
+      implementations:
+        - name: abaqus
+          inputs:
+            - strain_rate_ratio_threshold
+            - name: displacment_BC
+              group: all_model_responses
+              alias: all_displacement_BCs
+            - name: groove_angle
+              group: all_model_responses
+              alias: all_groove_angles
 
 - name: visualise_orientations
   methods:
