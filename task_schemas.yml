@@ -342,6 +342,15 @@
   outputs:
     - volume_element
   methods:
+    - name: dual_phase_ti_alpha_colony
+      implementations:
+        - name: damask
+          inputs:
+            - name: grid_size
+            - name: alpha_particle_axes_ratio # e.g. x-y-z dimension ratio: [4, 2, 1]
+            - name: alpha_particle_centres # list of (list of length three) of length equal to number of alpha particles
+            - name: alpha_orientation # orientation of all alpha particles
+            - name: beta_orientation # orientation of single beta matrix
     - name: from_damask_input_files
       inputs:
         - geom_path[file=true]
