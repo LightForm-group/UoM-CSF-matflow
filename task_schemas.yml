@@ -72,11 +72,11 @@
     - ODF
   inputs:
     - specimen_symmetry
-    - phase
   methods:
     - name: from_CTF_file
       inputs:
         - CTF_file_path[file=True]
+        - phase
       implementations:
         - name: mtex
           commands:
@@ -97,6 +97,7 @@
       inputs:
         - CRC_file_path[file=True]
         - CPR_file_path[file=True]
+        - phase
       implementations:
         - name: mtex
           commands:
@@ -113,6 +114,69 @@
                 - name: orientation_coordinate_system
                   default: null
               output: ODF
+
+    - name: from_volume_element_response
+      inputs:
+        - volume_element_response
+        - inc_spec
+        - crystal_symmetry
+        - harmonic_degree
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - volume_element_response
+                - inc_spec
+              file: orientations.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [orientations.json]
+                - [crystal_symmetry]
+                - [specimen_symmetry]
+                - [harmonic_degree]
+          output_map:
+            - files:
+                - name: ODF.txt
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
+              output: ODF
+
+
+- name: estimate_Fourier_ODF
+  outputs:
+    - Fourier_ODF
+  inputs:
+    - crystal_symmetry
+    - specimen_symmetry
+    - harmonic_degree
+  methods:
+    - name: from_volume_element_response
+      inputs:
+        - volume_element_response
+        - inc_spec
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - volume_element_response
+                - inc_spec
+              file: orientations.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [orientations.json]
+                - [crystal_symmetry]
+                - [specimen_symmetry]
+                - [harmonic_degree]
+          output_map:
+            - files:
+                - name: fourier_ODF.txt
+                  save: true
+              output: Fourier_ODF
+
 
 - name: sample_texture
   inputs:
