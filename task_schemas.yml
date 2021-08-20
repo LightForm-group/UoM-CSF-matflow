@@ -637,10 +637,14 @@
     - orientations
     - load_case
     - name: phases
-      ignore_dependency_from: ["simulate_volume_element_loading"]
+      ignore_dependency_from:
+        - simulate_volume_element_loading
+        - simulate_orientations_loading
     - name: numerics
       default: null
-      ignore_dependency_from: ["simulate_volume_element_loading"]
+      ignore_dependency_from:
+        - simulate_volume_element_loading
+        - simulate_orientations_loading
   outputs:
     - orientations_response
   methods:
@@ -684,6 +688,42 @@
                 - name: phase_data
                   default: null
           archive_excludes: ["geom_load.hdf5", "*.spectralOut"]
+    - name: self_consistent
+      implementations:
+        - name: VPSC
+          inputs:
+            - name: control
+              default: null
+          input_map:
+            - inputs:
+                - control
+                - phases
+                - load_case
+                - numerics
+              file: vpsc7.in
+              save: true
+            - inputs:
+                - phases
+              file: phase_name.sx
+              save: true
+            - inputs:
+                - orientations
+                - phases
+              file: phase_name.tex
+              save: true
+            - inputs:
+                - load_case
+              file: part_i.proc
+              save: true
+          commands:
+            - command: <<executable>>
+              stdout: stdout.log
+              stderr: stderr.log
+          output_map:
+            - files:
+                - name: STR_STR.OUT
+                  save: false
+              output: orientations_response
 
 - name: simulate_volume_element_loading
   inputs:
