@@ -1,0 +1,25 @@
+name: generate_RVE
+
+run_options:
+  l: short
+
+tasks:
+
+  - name: generate_microstructure_seeds
+    method: random
+    software: damask
+    base:
+      size: [1, 1, 1]
+      grid_size: [16, 16, 16]
+      num_grains: 100
+      phase_label: Al      
+
+  - name: generate_volume_element
+    method: random_voronoi
+    software: damask
+    base:
+      homog_label: SX
+
+  - name: visualise_volume_element
+    method: VTK
+    software: damask

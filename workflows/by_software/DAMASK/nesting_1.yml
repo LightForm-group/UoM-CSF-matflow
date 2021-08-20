@@ -2,7 +2,6 @@
 # elements, where each element has a different "grid_size" and "num_grains".
 
 name: nesting_example_1
-stats: false
 run_options:
   l: short
 tasks:
@@ -22,4 +21,4 @@ tasks:
         nest_idx: 0
         vals:
           - 100
-          - 200      
+          - 200

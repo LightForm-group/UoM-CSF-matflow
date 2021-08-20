@@ -13,7 +13,6 @@ tasks:
     software: damask
     base:
       size: [1, 1, 1]
-      grid_size: [32, 32, 32]
       num_grains: 2000
       phase_label: Al
 
@@ -21,6 +20,7 @@ tasks:
     method: random_voronoi
     software: damask
     base:
+      grid_size: [32, 32, 32]
       homog_label: SX
       scale_morphology: [1.5, 1, 1]
 

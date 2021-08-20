@@ -310,6 +310,14 @@
             - name: orientation_coordinate_system
               default: null
               ignore_dependency_from: ["generate_microstructure_seeds"]
+            - name: orientations_use_max_precision
+              default: false
+              ignore_dependency_from:
+                [
+                  "generate_microstructure_seeds",
+                  "generate_volume_element",
+                  "simulate_volume_element_loading",
+                ]
 
 - name: generate_microstructure_seeds
   outputs:
@@ -326,9 +334,19 @@
             - name: grid_size
               default: null
               ignore_dependency_from: ["generate_volume_element"]
+            - name: RNG_seed
+              default: null
             - name: orientation_coordinate_system
               default: null
               ignore_dependency_from: ["sample_texture"]
+            - name: orientations_use_max_precision
+              default: false
+              ignore_dependency_from:
+                [
+                  "generate_volume_element",
+                  "sample_texture",
+                  "simulate_volume_element_loading",
+                ]
           outputs:
             - microstructure_seeds
 
@@ -390,6 +408,15 @@
   outputs:
     - volume_element
   methods:
+    - name: dual_phase_ti_alpha_colony
+      implementations:
+        - name: damask
+          inputs:
+            - name: grid_size
+            - name: alpha_particle_axes_ratio # e.g. x-y-z dimension ratio: [4, 2, 1]
+            - name: alpha_particle_centres # list of (list of length three) of length equal to number of alpha particles
+            - name: alpha_orientation # orientation of all alpha particles
+            - name: beta_orientation # orientation of single beta matrix
     - name: from_damask_input_files
       inputs:
         - geom_path[file=true]
@@ -423,6 +450,14 @@
               default: null
             - name: buffer_phase_label
               default: null
+            - name: orientations_use_max_precision
+              default: false
+              ignore_dependency_from:
+                [
+                  "generate_microstructure_seeds",
+                  "sample_texture",
+                  "simulate_volume_element_loading",
+                ]
         - name: neper
           inputs:
             - name: num_grains
@@ -471,6 +506,7 @@
         - name: microstructure_seeds
         - name: grid_size
         - name: homog_label
+        - name: orientations
         - name: scale_morphology
           default: null
         - name: scale_update_size
@@ -479,7 +515,14 @@
           default: null
         - name: buffer_phase_label
           default: null
-        - name: orientations
+        - name: orientations_use_max_precision
+          default: false
+          ignore_dependency_from:
+            [
+              "generate_microstructure_seeds",
+              "sample_texture",
+              "simulate_volume_element_loading",
+            ]
       implementations:
         - name: damask
 
@@ -515,19 +558,6 @@
     - volume_element_response
     - increment
   methods:
-    - name: VTK
-      outputs:
-        - __file__VTR_file
-      implementations:
-        - name: damask
-          input_map:
-            - inputs:
-                - volume_element_response
-              file: geom.geom
-          commands:
-            - command: geom_check
-              parameters: [geom.geom]
-              stderr: stderr.log
     - name: texture_pole_figure
       inputs:
         - crystal_symmetry
@@ -555,16 +585,11 @@
     - name: dump_frequency
       default: null
   methods:
-    - name: from_damask_load_file
-      inputs:
-        - load_case_path[file=true]
-      implementations:
-        - name: damask
     - name: uniaxial
       implementations:
         - name: formable
           inputs:
-            - directions # x, y or z
+            - directions # List of: a single characters: "x", "y" or "z"
             - name: target_strain_rates
               default: null
             - name: rotations
@@ -573,11 +598,11 @@
             - inputs:
                 - total_times
                 - num_increments
-                - target_strains
-                - target_strain_rates
-                - dump_frequency
                 - directions
+                - target_strain_rates
+                - target_strains
                 - rotations
+                - dump_frequency
               file: inputs.hdf5
               save: false
           commands:
@@ -591,17 +616,22 @@
       implementations:
         - name: formable
           inputs:
+            - directions
+            # List of: a string of two characters, ij, where {i,j} ∈ {"x","y","z"},
+            # corresponding to the two loading directions
             - name: target_strain_rates
               default: null
-            - directions # xy, xz or yz
+            - name: rotations
+              default: null
           input_map:
             - inputs:
                 - total_times
                 - num_increments
-                - target_strains
-                - target_strain_rates
-                - dump_frequency
                 - directions
+                - target_strain_rates
+                - target_strains
+                - dump_frequency
+                - rotations
               file: inputs.hdf5
               save: false
           commands:
@@ -615,20 +645,58 @@
       implementations:
         - name: formable
           inputs:
+            - directions
+            # List of: a string of two characters, ij, where {i,j} ∈ {"x","y","z"}. The
+            # first character, i, corresponds to the loading direction and the second, j,
+            # corresponds to the zero-strain direction. Zero stress will be specified on
+            # the remaining direction.
             - name: target_strain_rates
               default: null
-            - name: strain_rate_modes # F_rate (default), L or L_approx
-              default: null 
-            - directions # xy, xz or yz
+            - name: rotations
+              default: null
+            - name: strain_rate_modes
+              default: null
+              # List of: one of "F_rate", "L", "L_approx". If not specified, default is
+              # "F_rate". Use "L_approx" for specifying non-mixed boundary conditions.
           input_map:
             - inputs:
                 - total_times
                 - num_increments
-                - target_strains
-                - target_strain_rates
-                - dump_frequency
-                - strain_rate_modes
                 - directions
+                - target_strain_rates
+                - target_strains
+                - rotations
+                - strain_rate_modes
+                - dump_frequency
+              file: inputs.hdf5
+              save: false
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: load_case
+    - name: planar_2D
+      implementations:
+        - name: formable
+          inputs:
+            - normal_directions
+              # List of: a single character, "x", "y" or "z", representing the loading
+              # plane normal direction.
+            - name: rotations
+              default: null
+            - name: target_strain_rates
+              default: null
+          input_map:
+            - inputs:
+                - total_times
+                - num_increments
+                - normal_directions
+                - target_strain_rates
+                - target_strains
+                - rotations
+                - dump_frequency
               file: inputs.hdf5
               save: false
           commands:
@@ -642,17 +710,22 @@
       implementations:
         - name: formable
           inputs:
+            - normal_directions
+            # List of: a single character, "x", "y" or "z", representing the loading plane
+            # normal direction.x, y, or z (i.e. load in yz, xz or xy planes)
             - name: target_strain_rates
               default: null
-            - normal_directions # x, y, or z (i.e. load in yz, xz or xy planes)
+            - name: rotations
+              default: null
           input_map:
             - inputs:
                 - total_times
                 - num_increments
-                - target_strains
-                - target_strain_rates
-                - dump_frequency
                 - normal_directions
+                - target_strain_rates
+                - target_strains
+                - rotations
+                - dump_frequency
               file: inputs.hdf5
               save: false
           commands:
@@ -805,6 +878,20 @@
       ignore_dependency_from: ["simulate_orientations_loading"]
     - name: single_crystal_parameter_perturbation
       default: null
+    - name: orientations_use_max_precision
+      default:
+        true # This will normalise and format the quaternions in the material file
+        # using maximum avaiable machine precision. We can set this to false
+        # once we use a newer version of DAMASK where the quaternion
+        # normalisation tolerance was relaxed. (Where this parameter is true in other
+        # tasks, it will modify the quaternion precision as saved within the orientations/
+        # volume element parameter.)
+      ignore_dependency_from:
+        [
+          "generate_microstructure_seeds",
+          "sample_texture",
+          "generate_volume_element",
+        ]
   outputs:
     - volume_element_response
   methods:
@@ -819,6 +906,7 @@
                 - single_crystal_parameter_perturbation
                 - phases
                 - texture_alignment_method
+                - orientations_use_max_precision
               file: material.yaml
               save: true
             - inputs:
@@ -985,7 +1073,47 @@
                   save: false
               output: levenberg_marquardt_fitter
 
-- name: simulate_deformation
+- name: generate_MK_model
+  outputs:
+    - FE_input_data
+  inputs:
+    - sample_size
+    - inhomogeneity_factor
+    - L_groove
+    - L_slope
+    - material_angle
+    - groove_angle
+    - elastic_modulus
+    - poisson_ratio
+    - density
+    - name: law
+      default: null
+    - name: fitted_yield_functions
+      default: null
+    - name: yield_point_criterion
+      default: null
+    - path_plastic_table[file=true]
+    - mesh_size
+    - name: bulk_parameters
+      default: [0.06, 1.2]
+    - elem_type
+    - strain_rate
+    - total_time
+    - displacment_BC # [U_left, U_right, U_top, U_bottom]
+    - name: time_step # [initial, min, max]
+      default: [0, 0, 0]
+    - name: max_plastic_strain
+      default: 0.0
+    - name: Nb_el_thickness
+      default: 1
+    - name: num_interval
+      default: null
+  methods:
+    - name: default
+      implementations:
+        - name: abaqus
+
+- name: simulate_MK_deformation
   methods:
     - name: FE
       outputs:
@@ -993,20 +1121,22 @@
       implementations:
         - name: Abaqus
           inputs:
-            - material_models
-            - specimen_parts
-            - steps
+            - FE_input_data
             - memory
+            - extraction_file_path[file=True,save=True]
             - name: do_datacheck
               default: null
           input_map:
             - inputs:
-                - material_models
-                - specimen_parts
-                - steps
+                - FE_input_data
               file: inputs.inp
+          output_map:
+            - files:
+                - name: results_num_all.dat
+                  save: true
+              output: model_response
           command_pathways:
-            - commands_idx: [0]
+            - commands_idx: [0, 2]
             - commands_idx: [1]
               condition: [do_datacheck]
           commands:
@@ -1018,6 +1148,7 @@
                 - [scratch=$HOME/scratch]
                 - [memory]
                 - [interactive]
+                - [double]
             - command: . $ABAQUS_HOME/liccheck.sh; <<executable>>
               options:
                 - [datacheck]
@@ -1027,6 +1158,29 @@
                 - [scratch=$HOME/scratch]
                 - [memory]
                 - [interactive]
+                - [double]
+            - command: <<executable>> python
+              options:
+                - [extraction_file_path]
+                - [interactive]
+
+- name: find_forming_limit_curve
+  outputs:
+    - forming_limit_curve
+  inputs:
+    - model_response[alias=all_model_responses,group=all_model_responses]
+  methods:
+    - name: strain_rate_ratio
+      implementations:
+        - name: abaqus
+          inputs:
+            - strain_rate_ratio_threshold
+            - name: displacment_BC
+              group: all_model_responses
+              alias: all_displacement_BCs
+            - name: groove_angle
+              group: all_model_responses
+              alias: all_groove_angles
 
 - name: visualise_orientations
   methods:
@@ -1304,3 +1458,19 @@
               options:
                 - [--infile1, t6b_m1_infile_1]
                 - [--infile2, t6b_m1_infile_1]
+
+- name: dummy_task_make_file
+  outputs: []
+  inputs:
+    - name: size_MB
+    - name: path
+      default: dummy.file
+  methods:
+    - name: method_1
+      implementations:
+        - name: dummy_software
+          commands:
+            - command: <<executable>> dummy makeFile
+              options:
+                - [--size-MB, size_MB]
+                - [path]

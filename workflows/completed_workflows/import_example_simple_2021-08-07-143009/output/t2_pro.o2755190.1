@@ -1,0 +1,41 @@
+matflow.cli.process_task
+Loading matflow config from /mnt/iusers01/cr01/mbdxqap3/.matflow/config.yml
+Loading task schemas from 1 file(s)...OK!
+Loading software definitions from 1 file(s)...OK!
+Loading extensions...
+  "neper"...(software: "neper") from matflow_neper (version 0.1.3)
+  "mtex"...(software: "mtex") from matflow_mtex (version 0.1.7)
+  "formable"...(software: "formable") from matflow_formable (version 0.1.10)
+  "demo"...(software: "dummy_software") from matflow_demo_extension (version 0.1.3)
+  "defdap"...(software: "defdap") from matflow_defdap (version 0.1.5)
+  "damask"...(software: "damask") from matflow_damask (version 0.1.18)
+  "abaqus"...(software: "abaqus") from matflow_abaqus (version 0.1.1)
+  "dream3d"...Failed.
+Validating task schemas against loaded extensions...OK! 41/44 schemas are valid.
+The following schemas are invalid:
+  ('generate_volume_element', 'from_damask_input_files', 'damask'): No function mapper function found. 
+  ('visualise_volume_element_response', 'VTK', 'damask'): No input map function found for input map that generates file "geom.geom". 
+  ('simulate_deformation', 'FE', 'abaqus'): No input map function found for input map that generates file "inputs.inp". 
+
+Loading hpcflow config from /mnt/iusers01/cr01/mbdxqap3/.matflow/.hpcflow/config.yml.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 0 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 10 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 20 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 30 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 40 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 50 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 60 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 70 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 80 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 90 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 100 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 110 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 120 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 130 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 140 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 150 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 160 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 170 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 180 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 190 in output data.
+Could not find field 'epsilon_V^0(F_p)_+vM' for increment 200 in output data.
