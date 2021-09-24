@@ -75,6 +75,7 @@ tasks:
           - [1, 0, 0, 0]
           - [1, 0, 0, 0]
           - [1, 0, 0, 0]
+        quat_component_ordering: scalar-vector
 
   # Example 5: Extruding from a 2D microstructure (e.g. from EBSD/DIC data). Note, the
   # `microstructure_image` parameter will typically come from another task (e.g.

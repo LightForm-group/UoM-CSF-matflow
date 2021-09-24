@@ -7,7 +7,7 @@ import:
   - parameter: volume_element
     from:
       # (specify either the full path to HDF5 file, or the parent directory:)
-      workflow: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/completed_workflows/generate_RVE_2021-08-07-141435
+      workflow: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/completed_workflows/generate_RVE_2021-09-23-084754
       # --- Additional options ---
       # context:        # (string) optionally specify which context this comes from in the source workflow
       # task_idx:       # (int) optionally specify the task index from which to import the parameter. If give, `context` is ignored.
