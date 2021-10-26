@@ -1,0 +1,157 @@
+name: Dream3D_RVE_simulation
+
+# archive: dropbox
+run_options:
+  l: short
+
+tasks:
+  - name: generate_volume_element
+    method: from_statistics
+    software: Dream3D
+    base:
+      grid_size: [32, 32, 64]
+      size: [1, 1, 2]
+      phase_statistics:
+        - type: primary
+          name: Al
+          crystal_structure: cubic
+          volume_fraction: 0.80 # `volume_fraction` for all phases must sum to 1!
+          size_distribution:
+            ESD_mean: 0.3 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.1
+            num_bins: 10 # Specify either `num_bins` or `bin_step_size`
+
+        - type: precipitate
+          name: precipitate
+          crystal_structure: cubic
+          volume_fraction: 0.20
+          size_distribution:
+            ESD_mean: 0.1 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.01
+            num_bins: 10 # Specify either `num_bins` or `bin_step_size`
+          number_fraction_on_boundary: 0.5 # required for `type: precipitate`
+          radial_distribution_function: # required for `type: precipitate`
+            min_distance: 10
+            max_distance: 160
+            num_bins: 100
+            box_size: [100, 100, 100]
+
+  - name: visualise_volume_element
+    method: VTK
+    software: damask
+
+  - name: generate_load_case
+    method: uniaxial
+    software: formable
+    base:
+      total_times: [10]
+      num_increments: [200]
+      target_strain_rates: [1.0e-3]
+      directions: [z]
+
+  - name: simulate_volume_element_loading
+    method: CP_FFT
+    software: DAMASK
+    run_options:
+      num_cores: 8
+      l: short # remove short option when simulating larger RVEs!
+    output_map_options:
+      operations:
+        - name: add_stress_Cauchy
+          args: { P: P, F: F }
+          opts: { add_Mises: true }
+        - name: add_strain
+          args: { F: F, t: V, m: 0 }
+          opts: { add_Mises: true }
+        - name: add_strain
+          args: { F: F_p, t: V, m: 0 }
+          opts: { add_Mises: true }
+        - name: add_IPF_color
+          args: { l: [0, 0, 1] }
+      volume_data: # e.g. for extracting volume-averaged quantities:
+        - field_name: sigma_vM
+          out_name: volume_averaged_equivalent_stress
+          transforms: [mean_along_axes: 1]
+        - field_name: epsilon_V^0(F)_vM
+          out_name: volume_averaged_equivalent_strain
+          transforms: [mean_along_axes: 1]
+      phase_data: # extract data for individual phases:
+        - field_name: sigma_vM
+          phase_name: Al
+          out_name: volume_averaged_equivalent_stress_Al
+          transforms: [mean_along_axes: 1]
+        - field_name: epsilon_V^0(F)_vM
+          phase_name: Al
+          out_name: volume_averaged_equivalent_strain_Al
+          transforms: [mean_along_axes: 1]
+        - field_name: epsilon_V^0(F_p)_vM
+          phase_name: Al
+          out_name: volume_averaged_equivalent_plastic_strain_Al
+          transforms: [mean_along_axes: 1]
+          increments:
+            - step: 10
+      field_data: # e.g. extract the voxel orientations at initial and final increments
+        - field_name: phase
+        - field_name: O
+          increments:
+            - values: [0, -1]
+      grain_data: # e.g. extract the grain-averaged orientations at initial and final increments
+        - field_name: O
+          increments:
+            - values: [0, -1]
+      visualise: # Generate VTR files every 10 increments (separate files for each phase)
+        - fields: [F, F_p, P, sigma_vM, O, IPFcolor_(0 0 1)]
+          phases: Al
+          increments:
+            - step: 10
+        - fields: [F, F_p, P, sigma_vM, O, IPFcolor_(0 0 1)]
+          phases: precipitate
+          increments:
+            - step: 10
+    base:
+      homogenization_schemes:
+        SX:
+          mechanical:
+            type: pass
+          N_constituents: 1
+      phases:
+        Al:
+          lattice: cF
+          mechanical:
+            output: [F, P, F_p, O]
+            elastic:
+              type: Hooke
+              C_11: 106.75e9
+              C_12: 60.41e9
+              C_44: 28.34e9
+            plastic:
+              type: phenopowerlaw
+              output: [xi_sl]
+              N_sl: [12]
+              n_sl: 20
+              a_sl: 2.25
+              dot_gamma_0_sl: 0.001
+              h_0_sl_sl: 573e6
+              h_sl_sl: [1, 1, 1.4, 1.4, 1.4, 1.4]
+              xi_0_sl: [22e6]
+              xi_inf_sl: [129e6]
+        precipitate: # you should change the precipitate material parameters to something more suitable!
+          lattice: cF
+          mechanical:
+            output: [F, P, F_p, O]
+            elastic:
+              type: Hooke
+              C_11: 106.75e9
+              C_12: 60.41e9
+              C_44: 28.34e9
+            plastic:
+              type: phenopowerlaw
+              output: [xi_sl]
+              N_sl: [12]
+              n_sl: 20
+              a_sl: 2.25
+              dot_gamma_0_sl: 0.001
+              h_0_sl_sl: 573e6
+              h_sl_sl: [1, 1, 1.4, 1.4, 1.4, 1.4]
+              xi_0_sl: [22e6]
+              xi_inf_sl: [129e6]
