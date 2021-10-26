@@ -368,6 +368,43 @@
         - homog_label
       implementations:
         - name: damask
+    - name: from_statistics
+      implementations:
+        - name: Dream3D
+          inputs:
+            - grid_size
+            - name: resolution # specify either resolution or size
+              default: null
+            - name: size # specify either resolution or size
+              default: null
+            - name: origin
+              default: null
+            - name: periodic
+              default: true
+            - name: phase_statistics
+            - name: orientations
+              default: null
+          input_map:
+            - inputs:
+                - grid_size
+                - resolution
+                - size
+                - origin
+                - periodic
+                - phase_statistics
+                - orientations
+              file: pipeline.json
+          output_map:
+            - output: volume_element
+              files:
+                - name: pipeline.dream3d
+                  save: false
+          commands:
+            - command: <<executable>>
+              options:
+                - [-p, "`pwd`/pipeline.json"] # seems to require absolute path!
+              stderr: stderr.log
+              stdout: stdout.log
     - name: random_voronoi
       notes: >
         In this method we use the random orientations that already exist in
