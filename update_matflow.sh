@@ -20,6 +20,7 @@ PACKAGES=(
     "matflow-mtex"\
     "matflow-neper"\
     "matflow-demo-extension"\
+    "matflow-dream3d"\
 )
 PACKAGES_GREP=$(printf "\|%s" "${PACKAGES[@]}")
 PACKAGES_GREP=${PACKAGES_GREP:2}
