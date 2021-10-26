@@ -5,8 +5,7 @@
 name: generate_volume_element_examples
 
 tasks:
-
-  # The first task is to provide seed positions for some of the  generate volume element
+  # The first task is to provide seed positions for some of the generate volume element
   # tasks below.
   - name: generate_microstructure_seeds
     method: random
@@ -21,7 +20,7 @@ tasks:
   # Generate volume element task examples
   # --------------------------------------------------------------------------------------
 
-  # Example 1: Use the random orientations previously generated within the 
+  # Example 1: Use the random orientations previously generated within the
   # microstructure_seeds parameter:
   - name: generate_volume_element
     method: random_voronoi
@@ -40,9 +39,9 @@ tasks:
     context: example_2
     base:
       homog_label: SX
-      scale_morphology: [1.5, 1, 1]     # optional
-      buffer_phase_size: [8, 0, 0]      # optional, this is voxels to add to one face
-      buffer_phase_label: Air           # optional, required if buffer_phase_size set
+      scale_morphology: [1.5, 1, 1] # optional
+      buffer_phase_size: [8, 0, 0] # optional, this is voxels to add to one face
+      buffer_phase_label: Air # optional, required if buffer_phase_size set
 
   # Example 3: Using Neper - grain seed positions are also generated randomly using Neper
   # so `microstructure_seeds` from the previous task are not required.
@@ -53,11 +52,11 @@ tasks:
     base:
       num_grains: 3
       grid_size: [16, 16, 16]
-      buffer_phase_size: [4, 0, 0]      # optional, this is voxel to add per face (4 top and 4 bottom)
+      buffer_phase_size: [4, 0, 0] # optional, this is voxel to add per face (4 top and 4 bottom)
     output_map_options:
       homog_label: SX
       phase_label: Al
-      buffer_phase_label: Air           # required if `buffer_phase_size` specified
+      buffer_phase_label: Air # required if `buffer_phase_size` specified
 
   # Example 4: Do not use orientations from `microstructure_seeds`; specify orientations
   # for each grain manually here:
@@ -87,27 +86,29 @@ tasks:
     context: example_5
     base:
       depth: 10
-      image_axes: ['x', 'y']
+      image_axes: ["x", "y"]
       homog_label: SX
       phase_label: Al
       microstructure_image:
-        grains: [
-          [0, 0, 0, 1, 1, 1],
-          [0, 0, 0, 1, 1, 1],
-          [0, 1, 1, 1, 1, 1],
-          [1, 1, 1, 1, 1, 1],
-          [0, 0, 1, 1, 1, 0],
-          [0, 0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0, 0],
-        ]
+        grains:
+          [
+            [0, 0, 0, 1, 1, 1],
+            [0, 0, 0, 1, 1, 1],
+            [0, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [0, 0, 1, 1, 1, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+          ]
         orientations:
           type: euler
-          unit_cell_alignment: {'x': 'a', 'y': 'b', 'z': 'c'}
+          unit_cell_alignment: { "x": "a", "y": "b", "z": "c" }
           euler_degrees: true
-          euler_angles: [
-            [39.18268407, 148.66440189, 255.56965614],
-            [342.14544064, 135.6297025 , 257.25726621],
-          ]
+          euler_angles:
+            [
+              [39.18268407, 148.66440189, 255.56965614],
+              [342.14544064, 135.6297025, 257.25726621],
+            ]
   # Example 6: a dual phase "micro-scale" RVE of three alpha ellipsoid particles within
   # a single beta grain:
   - name: generate_volume_element
@@ -125,9 +126,9 @@ tasks:
       beta_orientation: [0.4103, 0.0964, -0.7325, -0.5347]
 
   # --------------------------------------------------------------------------------------
-  
+
   # The final task is to visualise all of the generated volume elements
-  
+
   - name: visualise_volume_element
     method: VTK
     software: damask
