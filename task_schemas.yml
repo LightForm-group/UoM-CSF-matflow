@@ -550,18 +550,70 @@
                 - [pole_figure_directions]
 
 - name: generate_load_case
-  inputs:
-    - total_times
-    - num_increments
-    - name: target_strains
-      default: null
-    - name: dump_frequency
-      default: null
   methods:
+    - name: mixed
+      implementations:
+        - name: formable
+          inputs:
+            - name: load_case_specs # list of dict with a `type` which must be another 
+                                    # `generate_load_case` method (e.g. uniaxial,
+                                    # biaxial), and all remaining keys are those expected
+                                    # given the specified method.
+          input_map:
+            - inputs:
+                - load_case_specs
+              file: inputs.hdf5
+              save: false
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: load_case
+    - name: cyclic_uniaxial
+      implementations:
+        - name: formable
+          inputs: 
+            - name: max_stresses # List of: maximum stress in Pa
+            - name: min_stresses # List of: minimum stress in Pa
+            - name: cycle_frequencies # List of: cycle frequencies in Hz
+            - name: num_increments_per_cycle
+            - name: num_cycles
+            - name: directions # List of: a single characters: "x", "y" or "z"
+            - name: waveforms # List of str: only supported currently is "sine"
+              default: null
+            - name: dump_frequency
+              default: null
+          input_map:
+            - inputs:
+                - max_stresses
+                - min_stresses
+                - cycle_frequencies
+                - num_increments_per_cycle
+                - num_cycles
+                - directions
+                - waveforms
+                - dump_frequency
+              file: inputs.hdf5
+              save: false
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: load_case
     - name: uniaxial
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - name: target_strains
+              default: null
+            - name: dump_frequency
+              default: null
             - directions # List of: a single characters: "x", "y" or "z"
             - name: target_strain_rates
               default: null
@@ -589,6 +641,12 @@
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - name: target_strains
+              default: null
+            - name: dump_frequency
+              default: null
             - directions
             # List of: a string of two characters, ij, where {i,j} ∈ {"x","y","z"},
             # corresponding to the two loading directions
@@ -618,6 +676,12 @@
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - name: target_strains
+              default: null
+            - name: dump_frequency
+              default: null
             - directions
             # List of: a string of two characters, ij, where {i,j} ∈ {"x","y","z"}. The
             # first character, i, corresponds to the loading direction and the second, j,
@@ -654,6 +718,12 @@
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - name: target_strains
+              default: null
+            - name: dump_frequency
+              default: null
             - normal_directions
               # List of: a single character, "x", "y" or "z", representing the loading
               # plane normal direction.
@@ -683,6 +753,12 @@
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - name: target_strains
+              default: null
+            - name: dump_frequency
+              default: null
             - normal_directions
             # List of: a single character, "x", "y" or "z", representing the loading plane
             # normal direction.x, y, or z (i.e. load in yz, xz or xy planes)
@@ -712,6 +788,12 @@
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - name: target_strains
+              default: null
+            - name: dump_frequency
+              default: null          
             - name: rotation
               default: false
             - name: rotation_max_angle
