@@ -67,6 +67,7 @@ tasks:
           increments:
             - step: 10
       field_data:
+        - field_name: phase
         # Extract the voxel orientations at initial and final increments
         - field_name: O
           increments:
@@ -77,7 +78,7 @@ tasks:
           increments:
             - values: [0, -1]
       visualise: # Generate VTR files for increments: [10, 12, 14, 16, 18, 20]
-        fields: [F, F_p, P, sigma_vM, O, IPFcolor_(0 0 1)]
+        fields: [F, F_p, P, sigma_vM, O, IPFcolor_(0 0 1), phase]
         increments:
           - start: 10
             stop: 20
