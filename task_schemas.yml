@@ -555,10 +555,11 @@
       implementations:
         - name: formable
           inputs:
-            - name: load_case_specs # list of dict with a `type` which must be another 
-                                    # `generate_load_case` method (e.g. uniaxial,
-                                    # biaxial), and all remaining keys are those expected
-                                    # given the specified method.
+            - name:
+                load_case_specs # list of dict with a `type` which must be another
+                # `generate_load_case` method (e.g. uniaxial,
+                # biaxial), and all remaining keys are those expected
+                # given the specified method.
           input_map:
             - inputs:
                 - load_case_specs
@@ -574,7 +575,7 @@
     - name: cyclic_uniaxial
       implementations:
         - name: formable
-          inputs: 
+          inputs:
             - name: max_stresses # List of: maximum stress in Pa
             - name: min_stresses # List of: minimum stress in Pa
             - name: cycle_frequencies # List of: cycle frequencies in Hz
@@ -793,7 +794,7 @@
             - name: target_strains
               default: null
             - name: dump_frequency
-              default: null          
+              default: null
             - name: rotation
               default: false
             - name: rotation_max_angle
