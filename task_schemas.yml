@@ -417,6 +417,40 @@
   outputs:
     - volume_element
   methods:
+    - name: single_voxel_grains
+      implementations:
+        - name: damask
+          inputs:
+            - name: grid_size
+            - name: size
+            - name: homog_label
+            - name: phase_label
+            - name: orientations
+            - name: scale_morphology
+              default: null
+            - name: scale_update_size
+              default: true
+            - name: buffer_phase_size
+              default: null
+            - name: buffer_phase_label
+              default: null
+            - name: orientations_use_max_precision
+              default: false
+              ignore_dependency_from:
+                [
+                  "generate_microstructure_seeds",
+                  "sample_texture",
+                  "simulate_volume_element_loading",
+                ]
+    - name: particle_RVE
+      implementations:
+        - name: damask
+          inputs:
+            - name: microstructure_seeds
+            - name: grid_size
+            - name: homog_label
+            - name: particle_distributions
+            - name: particles
     - name: dual_phase_ti_alpha_colony
       implementations:
         - name: damask
@@ -428,8 +462,12 @@
             - name: beta_orientation # orientation of single beta matrix
     - name: from_damask_input_files
       inputs:
-        - geom_path[file=true]
-        - material_path[file=true]
+        - name: geom_path
+          file: true
+        - name: material_path
+          file: true
+        - name: orientations
+          default: null
       implementations:
         - name: damask
     - name: extrusion
