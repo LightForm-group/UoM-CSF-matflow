@@ -28,10 +28,10 @@ tasks:
     method: uniaxial
     software: formable
     base:
-      total_times:         [     6,     44,   1725,   1725]
-      num_increments:      [    20,     75,     50,     25]
+      total_times: [6, 44, 1725, 1725]
+      num_increments: [20, 75, 50, 25]
       target_strain_rates: [1.0e-4, 1.0e-4, 1.0e-4, 1.0e-4]
-      directions:          [     x,      x,      x,      x]
+      directions: [x, x, x, x]
 
   - name: get_tensile_test
     method: from_CSV
@@ -39,7 +39,7 @@ tasks:
     base:
       CSV_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/example_data/surfalex_tensile_test_data.csv
       CSV_arguments:
-        delimiter: ','
+        delimiter: ","
         skip_rows: 0
         header_row: 1
       eng_strain_col_index: 0
@@ -57,11 +57,11 @@ tasks:
     output_map_options:
       operations:
         - name: add_stress_Cauchy
-          args: {P: P, F: F}
-          opts: {add_Mises: true}
+          args: { P: P, F: F }
+          opts: { add_Mises: true }
         - name: add_strain
-          args: {F: F, t: V, m: 0}
-          opts: {add_Mises: true}
+          args: { F: F, t: V, m: 0 }
+          opts: { add_Mises: true }
       volume_data:
         - out_name: vol_avg_equivalent_stress
           field_name: sigma_vM
@@ -113,7 +113,7 @@ tasks:
       single_crystal_parameter_optimisation:
         group_by: []
         nest: True
- 
+
   - name: optimise_single_crystal_parameters
     method: levenberg_marquardt
     software: formable
