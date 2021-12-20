@@ -5,7 +5,6 @@
 name: sample_texture_examples
 
 tasks:
-
   # --------------------------------------------------------------------------------------
   # Sample texture examples
   # --------------------------------------------------------------------------------------
@@ -18,7 +17,7 @@ tasks:
     base:
       CTF_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/example_data/RD-TD Data.ctf
       specimen_symmetry: orthorhombic
-      phase: Aluminium  # the phase name to be sampled, as labelled within the CTF file
+      phase: Aluminium # the phase name to be sampled, as labelled within the CTF file
       num_orientations: 1000
       reference_frame_transformation: euler_to_spatial # default is "euler_to_spatial", also allowed are: "spatial_to_euler" and null
 
@@ -46,16 +45,16 @@ tasks:
       specimen_symmetry: orthorhombic
       ODF_components:
         - type: unimodal
-          component_fraction: 1.0               # component fractions must sum to 1!
+          component_fraction: 1.0 # component fractions must sum to 1!
           modal_orientation_HKL: [0, 0, 1] # such that ori * (HKL) = 001
           modal_orientation_UVW: [1, 0, 0] # such that ori * [UVW] = 100
           halfwidth: 5
     output_map_options:
-      orientation_coordinate_system:  # for all sample_texture methods, we can optionally label the axes as RD/TD/ND
+      orientation_coordinate_system: # for all sample_texture methods, we can optionally label the axes as RD/TD/ND
         x: RD
         y: TD
         z: ND
-  
+
   # Example 4: Sample orientations from a mixed model ODF (unimodal + uniform). Currently
   # supported components are: unimodal, uniform and fibre.
   - name: sample_texture
@@ -68,12 +67,12 @@ tasks:
       specimen_symmetry: orthorhombic
       ODF_components:
         - type: unimodal
-          component_fraction: 0.7               # component fractions must sum to 1!
+          component_fraction: 0.7 # component fractions must sum to 1!
           modal_orientation_HKL: [0, 0, 1]
           modal_orientation_UVW: [1, 0, 0]
-          halfwidth: 5          
+          halfwidth: 5
         - type: uniform
-          component_fraction: 0.3               # component fractions must sum to 1!
+          component_fraction: 0.3 # component fractions must sum to 1!
 
   # Example 5: Sample orientations from a model fibre ODF:
   - name: sample_texture
@@ -87,11 +86,11 @@ tasks:
       ODF_components:
         - type: fibre
           mtexfibre: beta
-          component_fraction: 1.0               # component fractions must sum to 1!
+          component_fraction: 1.0 # component fractions must sum to 1!
           halfwidth: 5
 
   # --------------------------------------------------------------------------------------
-  
+
   # The final tasks are to visualise all of the generated orientations
 
   - name: visualise_orientations
@@ -102,7 +101,7 @@ tasks:
       crystal_symmetry: cubic
       pole_figure_directions:
         - [0, 0, 1]
-        - [1, 0, 1]        
+        - [1, 0, 1]
         - [1, 1, 1]
 
   - name: visualise_orientations
