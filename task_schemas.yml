@@ -601,25 +601,40 @@
 - name: visualise_volume_element_response
   inputs:
     - volume_element_response
-    - increment
+    - increments
   methods:
     - name: texture_pole_figure
       inputs:
-        - crystal_symmetry
+        - crystal_symmetries
         - pole_figure_directions
+        - name: phases
+          default: null # first phase only by default
+          ignore_dependency_from: ["simulate_volume_element_loading"]
+        - name: use_contours
+          default: true
+        - name: increments # final increment by default
+          default: null
+        - name: orientation_coordinate_system
+          default: null
+        - name: IPF_reference_direction
+          default: z
       implementations:
         - name: mtex
           input_map:
             - inputs:
                 - volume_element_response
-                - increment
+                - increments
+                - crystal_symmetries
+                - phases
+                - orientation_coordinate_system
               file: orientations.json
           commands:
             - command: <<executable>>
               options:
                 - [orientations.json]
-                - [crystal_symmetry]
                 - [pole_figure_directions]
+                - [use_contours]
+                - [IPF_reference_direction]
 
 - name: generate_load_case
   methods:
@@ -1277,18 +1292,24 @@
         - orientations
         - crystal_symmetry
         - pole_figure_directions
+        - name: use_contours
+          default: true
+        - name: IPF_reference_direction
+          default: z
       implementations:
         - name: mtex
           input_map:
             - inputs:
                 - orientations
+                - crystal_symmetry
               file: orientations.json
           commands:
             - command: <<executable>>
               options:
                 - [orientations.json]
-                - [crystal_symmetry]
                 - [pole_figure_directions]
+                - [use_contours]
+                - [IPF_reference_direction]
 
 - name: dummy_task_1
   outputs:
