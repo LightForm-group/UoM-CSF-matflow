@@ -67,12 +67,9 @@ tasks:
           transforms: [mean_along_axes: 1]
           increments:
             - step: 10
-      field_data:
+      field_data: # `phase` and `O` field data are required if we want to later plot pole figures from the deformed RVE
         - field_name: phase
-        # Extract the voxel orientations at initial and final increments        
         - field_name: O
-          increments:
-            - values: [0, -1]
       grain_data:
         # Extract the grain-averaged orientations at initial and final increments
         - field_name: O
