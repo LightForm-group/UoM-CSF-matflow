@@ -1,6 +1,7 @@
 # Example parametrisations of `sample_texture` tasks.
 
-# The `sample_texture` task outputs an `orientations` parameter.
+# The `sample_texture` task randomly samples N orientations from a generated ODF and
+# outputs an `orientations` parameter.
 
 name: sample_texture_examples
 
@@ -34,7 +35,7 @@ tasks:
       num_orientations: 1000
       reference_frame_transformation: euler_to_spatial # default is "euler_to_spatial", also allowed are: "spatial_to_euler" and null
 
-  # Example 3: Sample orientations from a model unimodal ODF:
+  # Example 3: Sample orientations from a model unimodal ODF, using modal plane/direction:
   - name: sample_texture
     method: from_model_ODF
     software: mtex
@@ -55,12 +56,32 @@ tasks:
         y: TD
         z: ND
 
-  # Example 4: Sample orientations from a mixed model ODF (unimodal + uniform). Currently
-  # supported components are: unimodal, uniform and fibre.
+  # Example 4: Sample orientations from a model unimodal ODF, using an Euler angle:
   - name: sample_texture
     method: from_model_ODF
     software: mtex
     context: example_4
+    base:
+      num_orientations: 1000
+      crystal_symmetry: hexagonal
+      specimen_symmetry: orthorhombic
+      ODF_components:
+        - type: unimodal
+          component_fraction: 1.0 # component fractions must sum to 1!
+          modal_orientation_euler: [0, 0, 30] # in Bunge/degrees/MTEX hex alignment (y//b)
+          halfwidth: 5
+    output_map_options:
+      orientation_coordinate_system: # for all sample_texture methods, we can optionally label the axes as RD/TD/ND
+        x: RD
+        y: TD
+        z: ND
+
+  # Example 5: Sample orientations from a mixed model ODF (unimodal + uniform). Currently
+  # supported components are: unimodal, uniform and fibre.
+  - name: sample_texture
+    method: from_model_ODF
+    software: mtex
+    context: example_5
     base:
       num_orientations: 1000
       crystal_symmetry: hexagonal
@@ -74,11 +95,11 @@ tasks:
         - type: uniform
           component_fraction: 0.3 # component fractions must sum to 1!
 
-  # Example 5: Sample orientations from a model fibre ODF:
+  # Example 6: Sample orientations from a model named-fibre ODF:
   - name: sample_texture
     method: from_model_ODF
     software: mtex
-    context: example_5
+    context: example_6
     base:
       num_orientations: 1000
       crystal_symmetry: cubic
@@ -89,6 +110,23 @@ tasks:
           component_fraction: 1.0 # component fractions must sum to 1!
           halfwidth: 5
 
+  # Example 7: Sample orientations from a model fibre ODF, defined by a crystal direction
+  # and parallel sample direction:
+  - name: sample_texture
+    method: from_model_ODF
+    software: mtex
+    context: example_7
+    base:
+      num_orientations: 1000
+      crystal_symmetry: cubic
+      specimen_symmetry: orthorhombic
+      ODF_components:
+        - type: fibre
+          fibre_crystal_dir: [1, 1, 1]
+          fibre_specimen_dir: "y"
+          component_fraction: 1.0 # component fractions must sum to 1!
+          halfwidth: 5
+
   # --------------------------------------------------------------------------------------
 
   # The final tasks are to visualise all of the generated orientations
@@ -96,21 +134,23 @@ tasks:
   - name: visualise_orientations
     method: pole_figure
     software: mtex
-    contexts: [example_1, example_2, example_5]
+    contexts: [example_1, example_2, example_6, example_7]
     base:
       crystal_symmetry: cubic
       pole_figure_directions:
         - [0, 0, 1]
         - [1, 0, 1]
         - [1, 1, 1]
+      use_contours: false
 
   - name: visualise_orientations
     method: pole_figure
     software: mtex
-    contexts: [example_3, example_4]
+    contexts: [example_3, example_4, example_5]
     base:
       crystal_symmetry: hexagonal
       pole_figure_directions:
         - [0, 0, 0, 1]
         - [1, 0, -1, 0]
         - [1, 1, -2, 0]
+      use_contours: true
