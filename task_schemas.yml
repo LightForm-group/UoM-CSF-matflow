@@ -346,7 +346,8 @@
               default: null
             - name: orientation_coordinate_system
               default: null
-              ignore_dependency_from: ["sample_texture"]
+              ignore_dependency_from:
+                ["sample_texture", "visualise_volume_element_response"]
             - name: orientations_use_max_precision
               default: false
               ignore_dependency_from:
