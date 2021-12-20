@@ -1114,6 +1114,8 @@
               default: null
             - name: stress_units
               default: Pa
+            - name: plastic_range
+              default: null
           input_map:
             - inputs:
                 - CSV_file_path
@@ -1123,6 +1125,7 @@
                 - true_stress_col_index
                 - true_strain_col_index
                 - stress_units
+                - plastic_range
               file: inputs.hdf5
               save: false
           commands:
