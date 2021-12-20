@@ -255,6 +255,78 @@
                   "simulate_volume_element_loading",
                 ]
 
+- name: sample_orientations
+  inputs:
+    - num_orientations
+  outputs:
+    - orientations
+  methods:
+    - name: from_CTF_file
+      inputs:
+        - CTF_file_path[file=True,save=True]
+        - specimen_symmetry
+        - phase
+        - name: reference_frame_transformation
+          default: euler_to_spatial # or "spatial_to_euler" or null
+        - name: rotation # dict with keys "euler_angles_deg" list optional "keep_XY" bool, or "keep_euler" bool
+          default: null
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - rotation
+              file: rotation.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [CTF_file_path]
+                - [reference_frame_transformation]
+                - [specimen_symmetry]
+                - [phase]
+                - [rotation.json]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.json
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
+              output: orientations
+    - name: from_CRC_file
+      inputs:
+        - CRC_file_path[file=True,save=False]
+        - CPR_file_path[file=True,save=True]
+        - specimen_symmetry
+        - phase
+        - name: reference_frame_transformation
+          default: euler_to_spatial # or "spatial_to_euler" or null
+        - name: rotation # dict with keys "euler_angles_deg" list optional "keep_XY" bool, or "keep_euler" bool
+          default: null
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - rotation
+              file: rotation.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [CRC_file_path]
+                - [reference_frame_transformation]
+                - [specimen_symmetry]
+                - [phase]
+                - [rotation.json]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.json
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
+              output: orientations
+
 - name: generate_microstructure_seeds
   outputs:
     - microstructure_seeds
