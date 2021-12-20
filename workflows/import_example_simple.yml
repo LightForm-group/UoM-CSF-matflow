@@ -55,6 +55,9 @@ tasks:
           transforms: [mean_along_axes: 1]
           increments:
             - step: 10 # E.g. extract data every 10th increment.
+      field_data: # `phase` and `O` field data are required if we want to later plot pole figures from the deformed RVE
+        - field_name: phase
+        - field_name: O
     base:
       homogenization_schemes:
         SX:
