@@ -148,7 +148,7 @@ tasks:
     context: example_7
     base:
       grid_size: [128, 128, 256]
-      size: [1, 1, 2]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
       phase_statistics:
         - type: primary
           name: Al
@@ -167,7 +167,7 @@ tasks:
     context: example_8
     base:
       grid_size: [128, 128, 256]
-      size: [1, 1, 2]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
       phase_statistics:
         - type: primary
           name: Al
@@ -188,7 +188,7 @@ tasks:
     context: example_9
     base:
       grid_size: [128, 128, 256]
-      size: [1, 1, 2]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
       phase_statistics:
         - type: primary
           name: Al
@@ -216,7 +216,7 @@ tasks:
     context: example_10
     base:
       grid_size: [128, 128, 256]
-      size: [1, 1, 2]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
       phase_statistics:
         - type: primary
           name: Al
@@ -247,7 +247,7 @@ tasks:
     context: example_11
     base:
       grid_size: [128, 128, 256]
-      size: [1, 1, 2]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
       phase_statistics:
         - type: primary
           name: Al
@@ -286,7 +286,7 @@ tasks:
     context: example_12
     base:
       grid_size: [128, 128, 256]
-      size: [1, 1, 2]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
       phase_statistics:
         - type: primary
           name: Al
@@ -321,7 +321,7 @@ tasks:
     context: example_13
     base:
       grid_size: [128, 128, 256]
-      size: [1, 1, 2]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
       phase_statistics:
         - type: primary
           name: Al
