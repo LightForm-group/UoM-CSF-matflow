@@ -960,6 +960,10 @@
     - name: numerics
       default: null
       ignore_dependency_from: ["simulate_volume_element_loading"]
+    - name: solver
+      default: null
+    - name: initial_conditions
+      default: null
   outputs:
     - orientations_response
   methods:
@@ -978,6 +982,8 @@
               save: true
             - inputs:
                 - load_case
+                - solver
+                - initial_conditions                
               file: load.yaml
               save: true
           commands:
@@ -1034,6 +1040,10 @@
           "sample_texture",
           "generate_volume_element",
         ]
+    - name: solver
+      default: null
+    - name: initial_conditions
+      default: null
   outputs:
     - volume_element_response
   methods:
@@ -1061,6 +1071,8 @@
               save: true
             - inputs:
                 - load_case
+                - solver
+                - initial_conditions
               file: load.yaml
               save: true
           commands:
