@@ -475,7 +475,10 @@
         - microstructure_image
         - depth
         - image_axes
-        - phase_label
+        - name: phase_label
+          default: null
+        - name: phase_label_mapping
+          default: null
         - homog_label
       implementations:
         - name: damask
