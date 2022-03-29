@@ -317,6 +317,7 @@
                   "generate_microstructure_seeds",
                   "generate_volume_element",
                   "simulate_volume_element_loading",
+                  "simulate_orientations_loading",
                 ]
 
 - name: generate_microstructure_seeds
@@ -346,6 +347,7 @@
                   "generate_volume_element",
                   "sample_texture",
                   "simulate_volume_element_loading",
+                  "simulate_orientations_loading",
                 ]
           outputs:
             - microstructure_seeds
@@ -469,6 +471,7 @@
                   "generate_microstructure_seeds",
                   "sample_texture",
                   "simulate_volume_element_loading",
+                  "simulate_orientations_loading",
                 ]
         - name: neper
           inputs:
@@ -534,6 +537,7 @@
               "generate_microstructure_seeds",
               "sample_texture",
               "simulate_volume_element_loading",
+              "simulate_orientations_loading",
             ]
       implementations:
         - name: damask
@@ -800,10 +804,21 @@
     - name: Taylor
       implementations:
         - name: damask
+          inputs:
+            - name: orientations_use_max_precision
+              default: true
+              ignore_dependency_from:
+                [
+                  "generate_microstructure_seeds",
+                  "sample_texture",
+                  "generate_volume_element",
+                  "simulate_volume_element_loading",
+                ]
           input_map:
             - inputs:
                 - orientations
                 - phases
+                - orientations_use_max_precision
               file: material.yaml
               save: true
             - inputs:
@@ -903,6 +918,7 @@
           "generate_microstructure_seeds",
           "sample_texture",
           "generate_volume_element",
+          "simulate_orientations_loading",
         ]
   outputs:
     - volume_element_response
