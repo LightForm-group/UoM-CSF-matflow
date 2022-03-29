@@ -350,6 +350,18 @@
           outputs:
             - microstructure_seeds
 
+- name: modify_microstructure_seeds
+  inputs:
+    - microstructure_seeds
+  outputs:
+    - microstructure_seeds
+  methods:
+    - name: scale
+      inputs:
+        - factor
+      implementations:
+        - name: damask
+
 - name: load_microstructure
   outputs:
     - microstructure_image
