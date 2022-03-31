@@ -8,7 +8,7 @@ formable:
     - num_cores: 1
       version_info:
         formable:
-          version: "0.1.17"
+          version: "0.1.19"
       sources_preparation:
         env: |
           module load apps/binapps/anaconda3/2019.07
@@ -89,7 +89,7 @@ DefDAP:
     - num_cores: 1
       version_info:
         defdap:
-          version: "0.93.2"
+          version: "0.93.4"
       sources_preparation:
         env: |
           module load apps/binapps/anaconda3/2019.07
@@ -142,3 +142,13 @@ abaqus:
       num_cores: [2, 32, 1]
       required_scheduler_options:
         pe: smp.pe
+
+Dream3D:
+  instances:
+    - num_cores: 1
+      env: |
+        PATH=$PATH:/mnt/eps01-rds/jf01-home01/shared/DREAM3D-6.5.141-Linux-x86_64/bin
+      executable: PipelineRunner
+      version_info:
+        Dream3D:
+          version: "6.5.141"

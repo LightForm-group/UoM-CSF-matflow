@@ -2,11 +2,13 @@
 
 # The `generate_volume_element` task outputs a `volume_element` parameter.
 
+# For the from_statistics/Dream3D tasks, see the Dream3D docs for the StatsGenerator filter
+# here: http://www.dream3d.io/Filters/SyntheticBuildingFilters/StatsGeneratorFilter/
+
 name: generate_volume_element_examples
 
 tasks:
-
-  # The first task is to provide seed positions for some of the  generate volume element
+  # The first task is to provide seed positions for some of the generate volume element
   # tasks below.
   - name: generate_microstructure_seeds
     method: random
@@ -17,11 +19,23 @@ tasks:
       num_grains: 3
       phase_label: Al
 
+  # The second task is to provide a set of orientations, sampled from EBSD data for some
+  # of the from_statistics/Dream3D tasks below.
+  - name: sample_texture
+    method: from_CTF_file
+    software: mtex
+    base:
+      CTF_file_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/example_data/RD-TD Data.ctf
+      specimen_symmetry: orthorhombic
+      phase: Aluminium # the phase name to be sampled, as labelled within the CTF file
+      num_orientations: 3
+      reference_frame_transformation: euler_to_spatial # default is "euler_to_spatial", also allowed are: "spatial_to_euler" and null
+
   # --------------------------------------------------------------------------------------
   # Generate volume element task examples
   # --------------------------------------------------------------------------------------
 
-  # Example 1: Use the random orientations previously generated within the 
+  # Example 1: Use the random orientations previously generated within the
   # microstructure_seeds parameter:
   - name: generate_volume_element
     method: random_voronoi
@@ -40,9 +54,9 @@ tasks:
     context: example_2
     base:
       homog_label: SX
-      scale_morphology: [1.5, 1, 1]     # optional
-      buffer_phase_size: [8, 0, 0]      # optional, this is voxels to add to one face
-      buffer_phase_label: Air           # optional, required if buffer_phase_size set
+      scale_morphology: [1.5, 1, 1] # optional
+      buffer_phase_size: [8, 0, 0] # optional, this is voxels to add to one face
+      buffer_phase_label: Air # optional, required if buffer_phase_size set
 
   # Example 3: Using Neper - grain seed positions are also generated randomly using Neper
   # so `microstructure_seeds` from the previous task are not required.
@@ -53,11 +67,11 @@ tasks:
     base:
       num_grains: 3
       grid_size: [16, 16, 16]
-      buffer_phase_size: [4, 0, 0]      # optional, this is voxel to add per face (4 top and 4 bottom)
+      buffer_phase_size: [4, 0, 0] # optional, this is voxel to add per face (4 top and 4 bottom)
     output_map_options:
       homog_label: SX
       phase_label: Al
-      buffer_phase_label: Air           # required if `buffer_phase_size` specified
+      buffer_phase_label: Air # required if `buffer_phase_size` specified
 
   # Example 4: Do not use orientations from `microstructure_seeds`; specify orientations
   # for each grain manually here:
@@ -75,6 +89,7 @@ tasks:
           - [1, 0, 0, 0]
           - [1, 0, 0, 0]
           - [1, 0, 0, 0]
+        quat_component_ordering: scalar-vector
 
   # Example 5: Extruding from a 2D microstructure (e.g. from EBSD/DIC data). Note, the
   # `microstructure_image` parameter will typically come from another task (e.g.
@@ -86,27 +101,29 @@ tasks:
     context: example_5
     base:
       depth: 10
-      image_axes: ['x', 'y']
+      image_axes: ["x", "y"]
       homog_label: SX
       phase_label: Al
       microstructure_image:
-        grains: [
-          [0, 0, 0, 1, 1, 1],
-          [0, 0, 0, 1, 1, 1],
-          [0, 1, 1, 1, 1, 1],
-          [1, 1, 1, 1, 1, 1],
-          [0, 0, 1, 1, 1, 0],
-          [0, 0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0, 0],
-        ]
+        grains:
+          [
+            [0, 0, 0, 1, 1, 1],
+            [0, 0, 0, 1, 1, 1],
+            [0, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [0, 0, 1, 1, 1, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+          ]
         orientations:
           type: euler
-          unit_cell_alignment: {'x': 'a', 'y': 'b', 'z': 'c'}
+          unit_cell_alignment: { "x": "a", "y": "b", "z": "c" }
           euler_degrees: true
-          euler_angles: [
-            [39.18268407, 148.66440189, 255.56965614],
-            [342.14544064, 135.6297025 , 257.25726621],
-          ]
+          euler_angles:
+            [
+              [39.18268407, 148.66440189, 255.56965614],
+              [342.14544064, 135.6297025, 257.25726621],
+            ]
   # Example 6: a dual phase "micro-scale" RVE of three alpha ellipsoid particles within
   # a single beta grain:
   - name: generate_volume_element
@@ -123,10 +140,229 @@ tasks:
       alpha_orientation: [0.6830, 0.1830, 0.6830, 0.1830]
       beta_orientation: [0.4103, 0.0964, -0.7325, -0.5347]
 
+  # Example 7: from_statistics/Dream3D - single phase, using ODF orientations from the
+  # `sample_texture` task:
+  - name: generate_volume_element
+    method: from_statistics
+    software: Dream3D
+    context: example_7
+    base:
+      grid_size: [128, 128, 256]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
+      phase_statistics:
+        - type: primary
+          name: Al
+          crystal_structure: cubic
+          volume_fraction: 1.00 # `volume_fraction` for all phases must sum to 1!
+          size_distribution:
+            ESD_mean: 0.3 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.1
+            num_bins: 10 # Specify either `num_bins` or `bin_step_size`
+
+  # Example 8: from_statistics/Dream3D - single phase, using ODF orientations from the
+  # `sample_texture` task, but specifying custom weights and spreads (sigma):
+  - name: generate_volume_element
+    method: from_statistics
+    software: Dream3D
+    context: example_8
+    base:
+      grid_size: [128, 128, 256]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
+      phase_statistics:
+        - type: primary
+          name: Al
+          crystal_structure: cubic
+          volume_fraction: 1.00 # `volume_fraction` for all phases must sum to 1!
+          size_distribution:
+            ESD_mean: 0.3 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.1
+            num_bins: 10 # Specify either `num_bins` or `bin_step_size`
+          ODF:
+            weights: [1000, 10_000, 100_000] # specify a list of length equal to `orientations` or a single number
+            sigmas: [1, 2, 4] # specify a list of length equal to `orientations` or a single number
+
+  # Example 9: from_statistics/Dream3D - single phase, specifying ODF orientations:
+  - name: generate_volume_element
+    method: from_statistics
+    software: Dream3D
+    context: example_9
+    base:
+      grid_size: [128, 128, 256]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
+      phase_statistics:
+        - type: primary
+          name: Al
+          crystal_structure: cubic
+          volume_fraction: 1.00 # `volume_fraction` for all phases must sum to 1!
+          size_distribution:
+            ESD_mean: 0.3 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.1
+            num_bins: 10 # Specify either `num_bins` or `bin_step_size`
+          ODF:
+            orientations:
+              type: euler
+              euler_degrees: true
+              unit_cell_alignment: { "x": "a" }
+              euler_angles: [[0, 90, 0], [30, 20, 5]]
+            weights: 400_000 # specify a list of length equal to `orientations` or a single number
+            sigmas: [4, 2] # specify a list of length equal to `orientations` or a single number
+
+  # Example 10: from_statistics/Dream3D - single phase, preset rolled statistics, using
+  # ODF orientations from the `sample_texture` task,and aligning grains along a given
+  # direction with axis_ODF:
+  - name: generate_volume_element
+    method: from_statistics
+    software: Dream3D
+    context: example_10
+    base:
+      grid_size: [128, 128, 256]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
+      phase_statistics:
+        - type: primary
+          name: Al
+          crystal_structure: cubic
+          volume_fraction: 1.00 # `volume_fraction` for all phases must sum to 1!
+          size_distribution:
+            ESD_mean: 0.3 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.1
+            num_bins: 10 # Specify either `num_bins` or `bin_step_size`
+          preset_statistics_model:
+            type: primary_rolled # | "primary_equiaxed" | "precipitate_rolled" | "precipitate_equiaxed"
+            A_axis_length: 4 # A >= B >= C
+            B_axis_length: 2
+            C_axis_length: 1
+          axis_ODF:
+            orientations:
+              type: euler
+              euler_angles: [[90, 90, 270]]
+              euler_degrees: true
+              unit_cell_alignment: { "x": "a" }
+
+  # Example 11: from_statistics/Dream3D - single phase, preset rolled statistics, and aligning
+  # grains along a given direction with axis_ODF, and using texture presets "cube" and "goss"
+  # in varying strengths:
+  - name: generate_volume_element
+    method: from_statistics
+    software: Dream3D
+    context: example_11
+    base:
+      grid_size: [128, 128, 256]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
+      phase_statistics:
+        - type: primary
+          name: Al
+          crystal_structure: cubic
+          volume_fraction: 1.00 # `volume_fraction` for all phases must sum to 1!
+          size_distribution:
+            ESD_mean: 0.3 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.1
+            num_bins: 10 # Specify either `num_bins` or `bin_step_size`
+          preset_statistics_model:
+            type: primary_rolled # | "primary_equiaxed" | "precipitate_rolled" | "precipitate_equiaxed"
+            A_axis_length: 4 # A >= B >= C
+            B_axis_length: 2
+            C_axis_length: 1
+          ODF:
+            presets:
+              - name: cube # | "goss" | "brass" | "copper" | "s" | "s1" | "s2" | "rc(rd1)" | "rc(rd2)" | "rc(nd1)" | "rc(nd2)" | "p" | "q" | "r"
+                weight: 100_000
+                sigma: 2
+              - name: goss
+                weight: 200_000
+                sigma: 1
+          axis_ODF:
+            orientations:
+              type: euler
+              euler_angles: [[90, 90, 270]] # aligns grains along z-direction
+              euler_degrees: true
+              unit_cell_alignment: { "x": "a" }
+
+  # Example 12: from_statistics/Dream3D - dual phase, using ODF orientations from the
+  # `sample_texture` task for the primary phase, spherical particles for precipitate phase
+  # with 20% volume fraction:
+  - name: generate_volume_element
+    method: from_statistics
+    software: Dream3D
+    context: example_12
+    base:
+      grid_size: [128, 128, 256]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
+      phase_statistics:
+        - type: primary
+          name: Al
+          crystal_structure: cubic
+          volume_fraction: 0.80 # `volume_fraction` for all phases must sum to 1!
+          size_distribution:
+            ESD_mean: 0.3 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.1
+            num_bins: 10 # Specify either `num_bins` or `bin_step_size`
+
+        - type: precipitate
+          name: precipitate
+          crystal_structure: cubic
+          volume_fraction: 0.20
+          size_distribution:
+            ESD_mean: 0.1 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.01
+            num_bins: 10 # Specify either `num_bins` or `bin_step_size`
+          number_fraction_on_boundary: 0.5 # required for `type: precipitate`
+          radial_distribution_function: # required for `type: precipitate`
+            min_distance: 10
+            max_distance: 160
+            num_bins: 100
+            box_size: [100, 100, 100]
+
+  # Example 13: from_statistics/Dream3D - dual phase, using ODF orientations from the
+  # `sample_texture` task for the primary phase, pancake particles for precipitate phase
+  # with 20% volume fraction with spread axis alignment along the z-direction:
+  - name: generate_volume_element
+    method: from_statistics
+    software: Dream3D
+    context: example_13
+    base:
+      grid_size: [128, 128, 256]
+      size: [1, 1, 2] # take care that size here does not equate to the resolution in Dream3D. Resolution = size/grid size. Dream3D may not be able to generate a RVE if resolution is too low.
+      phase_statistics:
+        - type: primary
+          name: Al
+          crystal_structure: cubic
+          volume_fraction: 0.80 # `volume_fraction` for all phases must sum to 1!
+          size_distribution:
+            ESD_mean: 0.3 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.1
+            num_bins: 10 # Specify either `num_bins` or `bin_step_size`
+
+        - type: precipitate
+          name: precipitate
+          crystal_structure: cubic
+          volume_fraction: 0.20
+          size_distribution:
+            ESD_mean: 0.1 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.01
+            num_bins: 10 # Specify either `num_bins` or `bin_step_size`
+          number_fraction_on_boundary: 0.5 # required for `type: precipitate`
+          radial_distribution_function: # required for `type: precipitate`
+            min_distance: 10
+            max_distance: 160
+            num_bins: 100
+            box_size: [100, 100, 100]
+          preset_statistics_model:
+            type: precipitate_rolled # | "primary_equiaxed" | "primary_rolled" | "precipitate_equiaxed"
+            A_axis_length: 4 # A >= B >= C
+            B_axis_length: 4
+            C_axis_length: 1
+          axis_ODF:
+            sigmas: 5 # with large spread of axis alignment
+            orientations:
+              type: euler
+              euler_angles: [[90, 90, 270]] # aligns grains along z-directiom
+              euler_degrees: true
+              unit_cell_alignment: { "x": "a" }
+
   # --------------------------------------------------------------------------------------
-  
+
   # The final task is to visualise all of the generated volume elements
-  
+
   - name: visualise_volume_element
     method: VTK
     software: damask
@@ -137,3 +373,10 @@ tasks:
       - example_4
       - example_5
       - example_6
+      - example_7
+      - example_8
+      - example_9
+      - example_10
+      - example_11
+      - example_12
+      - example_13

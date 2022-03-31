@@ -320,6 +320,78 @@
                   "simulate_orientations_loading",
                 ]
 
+- name: sample_orientations
+  inputs:
+    - num_orientations
+  outputs:
+    - orientations
+  methods:
+    - name: from_CTF_file
+      inputs:
+        - CTF_file_path[file=True,save=True]
+        - specimen_symmetry
+        - phase
+        - name: reference_frame_transformation
+          default: euler_to_spatial # or "spatial_to_euler" or null
+        - name: rotation # dict with keys "euler_angles_deg" list optional "keep_XY" bool, or "keep_euler" bool
+          default: null
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - rotation
+              file: rotation.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [CTF_file_path]
+                - [reference_frame_transformation]
+                - [specimen_symmetry]
+                - [phase]
+                - [rotation.json]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.json
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
+              output: orientations
+    - name: from_CRC_file
+      inputs:
+        - CRC_file_path[file=True,save=False]
+        - CPR_file_path[file=True,save=True]
+        - specimen_symmetry
+        - phase
+        - name: reference_frame_transformation
+          default: euler_to_spatial # or "spatial_to_euler" or null
+        - name: rotation # dict with keys "euler_angles_deg" list optional "keep_XY" bool, or "keep_euler" bool
+          default: null
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - rotation
+              file: rotation.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [CRC_file_path]
+                - [reference_frame_transformation]
+                - [specimen_symmetry]
+                - [phase]
+                - [rotation.json]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.json
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
+              output: orientations
+
 - name: generate_microstructure_seeds
   outputs:
     - microstructure_seeds
@@ -339,7 +411,8 @@
               default: null
             - name: orientation_coordinate_system
               default: null
-              ignore_dependency_from: ["sample_texture"]
+              ignore_dependency_from:
+                ["sample_texture", "visualise_volume_element_response"]
             - name: orientations_use_max_precision
               default: false
               ignore_dependency_from:
@@ -422,6 +495,40 @@
   outputs:
     - volume_element
   methods:
+    - name: single_voxel_grains
+      implementations:
+        - name: damask
+          inputs:
+            - name: grid_size
+            - name: size
+            - name: homog_label
+            - name: phase_label
+            - name: orientations
+            - name: scale_morphology
+              default: null
+            - name: scale_update_size
+              default: true
+            - name: buffer_phase_size
+              default: null
+            - name: buffer_phase_label
+              default: null
+            - name: orientations_use_max_precision
+              default: false
+              ignore_dependency_from:
+                [
+                  "generate_microstructure_seeds",
+                  "sample_texture",
+                  "simulate_volume_element_loading",
+                ]
+    - name: particle_RVE
+      implementations:
+        - name: damask
+          inputs:
+            - name: microstructure_seeds
+            - name: grid_size
+            - name: homog_label
+            - name: particle_distributions
+            - name: particles
     - name: dual_phase_ti_alpha_colony
       implementations:
         - name: damask
@@ -433,8 +540,12 @@
             - name: beta_orientation # orientation of single beta matrix
     - name: from_damask_input_files
       inputs:
-        - geom_path[file=true]
-        - material_path[file=true]
+        - name: geom_path
+          file: true
+        - name: material_path
+          file: true
+        - name: orientations
+          default: null
       implementations:
         - name: damask
     - name: extrusion
@@ -442,10 +553,50 @@
         - microstructure_image
         - depth
         - image_axes
-        - phase_label
+        - name: phase_label
+          default: null
+        - name: phase_label_mapping
+          default: null
         - homog_label
       implementations:
         - name: damask
+    - name: from_statistics
+      implementations:
+        - name: Dream3D
+          inputs:
+            - grid_size
+            - name: resolution # specify either resolution or size
+              default: null
+            - name: size # specify either resolution or size
+              default: null
+            - name: origin
+              default: null
+            - name: periodic
+              default: true
+            - name: phase_statistics
+            - name: orientations
+              default: null
+          input_map:
+            - inputs:
+                - grid_size
+                - resolution
+                - size
+                - origin
+                - periodic
+                - phase_statistics
+                - orientations
+              file: pipeline.json
+          output_map:
+            - output: volume_element
+              files:
+                - name: pipeline.dream3d
+                  save: false
+          commands:
+            - command: <<executable>>
+              options:
+                - [-p, "`pwd`/pipeline.json"] # seems to require absolute path!
+              stderr: stderr.log
+              stdout: stdout.log
     - name: random_voronoi
       notes: >
         In this method we use the random orientations that already exist in
@@ -572,39 +723,107 @@
 - name: visualise_volume_element_response
   inputs:
     - volume_element_response
-    - increment
+    - increments
   methods:
     - name: texture_pole_figure
       inputs:
-        - crystal_symmetry
+        - crystal_symmetries
         - pole_figure_directions
+        - name: phases
+          default: null # first phase only by default
+          ignore_dependency_from: ["simulate_volume_element_loading"]
+        - name: use_contours
+          default: true
+        - name: increments # final increment by default
+          default: null
+        - name: orientation_coordinate_system
+          default: null
+        - name: IPF_reference_direction
+          default: z
       implementations:
         - name: mtex
           input_map:
             - inputs:
                 - volume_element_response
-                - increment
+                - increments
+                - crystal_symmetries
+                - phases
+                - orientation_coordinate_system
               file: orientations.json
           commands:
             - command: <<executable>>
               options:
                 - [orientations.json]
-                - [crystal_symmetry]
                 - [pole_figure_directions]
+                - [use_contours]
+                - [IPF_reference_direction]
 
 - name: generate_load_case
-  inputs:
-    - total_times
-    - num_increments
-    - name: target_strains
-      default: null
-    - name: dump_frequency
-      default: null
   methods:
+    - name: mixed
+      implementations:
+        - name: formable
+          inputs:
+            - name:
+                load_case_specs # list of dict with a `type` which must be another
+                # `generate_load_case` method (e.g. uniaxial,
+                # biaxial), and all remaining keys are those expected
+                # given the specified method.
+          input_map:
+            - inputs:
+                - load_case_specs
+              file: inputs.hdf5
+              save: false
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: load_case
+    - name: cyclic_uniaxial
+      implementations:
+        - name: formable
+          inputs:
+            - name: max_stresses # List of: maximum stress in Pa
+            - name: min_stresses # List of: minimum stress in Pa
+            - name: cycle_frequencies # List of: cycle frequencies in Hz
+            - name: num_increments_per_cycle
+            - name: num_cycles
+            - name: directions # List of: a single characters: "x", "y" or "z"
+            - name: waveforms # List of str: only supported currently is "sine"
+              default: null
+            - name: dump_frequency
+              default: null
+          input_map:
+            - inputs:
+                - max_stresses
+                - min_stresses
+                - cycle_frequencies
+                - num_increments_per_cycle
+                - num_cycles
+                - directions
+                - waveforms
+                - dump_frequency
+              file: inputs.hdf5
+              save: false
+          commands:
+            - command: <<executable>> inputs.hdf5
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: load_case
     - name: uniaxial
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - name: target_strains
+              default: null
+            - name: dump_frequency
+              default: null
             - directions # List of: a single characters: "x", "y" or "z"
             - name: target_strain_rates
               default: null
@@ -632,6 +851,12 @@
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - name: target_strains
+              default: null
+            - name: dump_frequency
+              default: null
             - directions
             # List of: a string of two characters, ij, where {i,j} ∈ {"x","y","z"},
             # corresponding to the two loading directions
@@ -661,6 +886,12 @@
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - name: target_strains
+              default: null
+            - name: dump_frequency
+              default: null
             - directions
             # List of: a string of two characters, ij, where {i,j} ∈ {"x","y","z"}. The
             # first character, i, corresponds to the loading direction and the second, j,
@@ -697,6 +928,12 @@
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - name: target_strains
+              default: null
+            - name: dump_frequency
+              default: null
             - normal_directions
               # List of: a single character, "x", "y" or "z", representing the loading
               # plane normal direction.
@@ -726,6 +963,12 @@
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - name: target_strains
+              default: null
+            - name: dump_frequency
+              default: null
             - normal_directions
             # List of: a single character, "x", "y" or "z", representing the loading plane
             # normal direction.x, y, or z (i.e. load in yz, xz or xy planes)
@@ -755,6 +998,12 @@
       implementations:
         - name: formable
           inputs:
+            - total_times
+            - num_increments
+            - name: target_strains
+              default: null
+            - name: dump_frequency
+              default: null
             - name: rotation
               default: false
             - name: rotation_max_angle
@@ -792,16 +1041,21 @@
     - name: phases
       ignore_dependency_from:
         - simulate_volume_element_loading
-        - simulate_orientations_loading
+        - simulate_orientations_loading    # added to stop issues with running Taylor and VPSC sims in the same workflow
     - name: numerics
       default: null
       ignore_dependency_from:
         - simulate_volume_element_loading
-        - simulate_orientations_loading
+        - simulate_orientations_loading    # added to stop issues with running Taylor and VPSC sims in the same workflow
   outputs:
     - orientations_response
   methods:
     - name: Taylor
+      inputs:
+        - name: solver
+          default: null
+        - name: initial_conditions
+          default: null
       implementations:
         - name: damask
           inputs:
@@ -814,6 +1068,10 @@
                   "generate_volume_element",
                   "simulate_volume_element_loading",
                 ]
+            - name: solver
+              default: null
+            - name: initial_conditions
+              default: null
           input_map:
             - inputs:
                 - orientations
@@ -827,6 +1085,8 @@
               save: true
             - inputs:
                 - load_case
+                - solver
+                - initial_conditions                
               file: load.yaml
               save: true
           commands:
@@ -920,6 +1180,10 @@
           "generate_volume_element",
           "simulate_orientations_loading",
         ]
+    - name: solver
+      default: null
+    - name: initial_conditions
+      default: null
   outputs:
     - volume_element_response
   methods:
@@ -947,6 +1211,8 @@
               save: true
             - inputs:
                 - load_case
+                - solver
+                - initial_conditions
               file: load.yaml
               save: true
           commands:
@@ -1038,6 +1304,8 @@
               default: null
             - name: stress_units
               default: Pa
+            - name: plastic_range
+              default: null
           input_map:
             - inputs:
                 - CSV_file_path
@@ -1047,6 +1315,7 @@
                 - true_stress_col_index
                 - true_strain_col_index
                 - stress_units
+                - plastic_range
               file: inputs.hdf5
               save: false
           commands:
@@ -1217,18 +1486,24 @@
         - orientations
         - crystal_symmetry
         - pole_figure_directions
+        - name: use_contours
+          default: true
+        - name: IPF_reference_direction
+          default: z
       implementations:
         - name: mtex
           input_map:
             - inputs:
                 - orientations
+                - crystal_symmetry
               file: orientations.json
           commands:
             - command: <<executable>>
               options:
                 - [orientations.json]
-                - [crystal_symmetry]
                 - [pole_figure_directions]
+                - [use_contours]
+                - [IPF_reference_direction]
 
 - name: dummy_task_1
   outputs:
