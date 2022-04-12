@@ -1,0 +1,40 @@
+name: viz_deformed_texture_colour_bar_examples
+run_options:
+  l: short
+
+import:
+  - parameter: volume_element_response
+    from:
+      workflow: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/completed_workflows/tension_DAMASK_Al_2021-12-20-153700
+
+tasks:
+  - name: visualise_volume_element_response
+    method: texture_pole_figure
+    software: mtex
+    base:
+      phases: [Al] # if not specified, the first phase is used.
+      increments:
+        - step: 50
+      crystal_symmetries:
+        Al: cubic
+      pole_figure_directions:
+        - [1, 1, 1]
+        - [1, 1, 0]
+        - [1, 0, 0]
+      orientation_coordinate_system: # we can optionally label the axes as RD/TD/ND
+        x: RD
+        y: TD
+        z: ND
+      IPF_reference_direction: "y" # x, y, or z
+      use_contours: true
+    sequences:
+      - name: colourbar_limits
+        nest_idx: 0
+        vals:
+          - null
+          - [0, 5]
+      - name: use_one_colourbar
+        nest_idx: 1
+        vals:
+          - true
+          - false
