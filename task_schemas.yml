@@ -629,6 +629,12 @@
           default: null
       implementations:
         - name: damask
+    - name: spread_orientations
+      inputs:
+        - phase            # user inputs phase they would like to spread oris for
+        - max_spread_angle # user defines spread around chosen ori
+      implementations:
+        - name: damask 
 
 - name: visualise_volume_element
   inputs:
