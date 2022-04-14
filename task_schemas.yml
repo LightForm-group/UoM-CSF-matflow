@@ -677,6 +677,38 @@
                 - [pole_figure_directions]
                 - [use_contours]
                 - [IPF_reference_direction]
+    - name: texture_odf_section
+      inputs:
+        - crystal_symmetries
+        - pole_figure_directions
+        - name: phases
+          default: null # first phase only by default
+          ignore_dependency_from: ["simulate_volume_element_loading"]
+        - name: use_contours
+          default: true
+        - name: increments # final increment by default
+          default: null
+        - name: orientation_coordinate_system
+          default: null
+        - name: IPF_reference_direction
+          default: z
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - volume_element_response
+                - increments
+                - crystal_symmetries
+                - phases
+                - orientation_coordinate_system
+              file: orientations.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [orientations.json]
+                - [pole_figure_directions]
+                - [use_contours]
+                - [IPF_reference_direction]
 
 - name: generate_load_case
   methods:
