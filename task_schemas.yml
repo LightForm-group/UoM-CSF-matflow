@@ -641,8 +641,8 @@
         - name: damask
     - name: spread_orientations
       inputs:
-        - phase            # user inputs phase they would like to spread oris for
-        - max_spread_angle # user defines spread around chosen ori
+        - phase
+        - stddev_degrees
       implementations:
         - name: damask 
 
