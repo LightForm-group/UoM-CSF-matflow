@@ -8,7 +8,7 @@ formable:
     - num_cores: 1
       version_info:
         formable:
-          version: "0.1.17"
+          version: "0.1.19"
       sources_preparation:
         env: |
           module load apps/binapps/anaconda3/2019.07
@@ -32,7 +32,7 @@ DAMASK:
       module load mpi/intel-18.0/openmpi/4.1.0
       module load tools/gcc/cmake/3.13.2
       module load apps/binapps/anaconda3/2020.07
-      export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.0
+      export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.2
       export PETSC_ARCH=mkl-opt
       export DAMASK_ROOT=/mnt/eps01-rds/jf01-home01/shared/DAMASK-v3a3
       export HDF5_USE_FILE_LOCKING=FALSE
@@ -40,40 +40,16 @@ DAMASK:
       export OMP_NUM_THREADS=1
       PATH=$PETSC_DIR/$PETSC_ARCH/bin:$PATH
       LD_LIBRARY_PATH=$PETSC_DIR/$PETSC_ARCH/lib:$LD_LIBRARY_PATH
-      source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_v3a3_env
+      source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_v3a3_final_env
     executable: DAMASK_grid
     task_preparation:
       env: |
-        module purge
-        module load tools/env/proxy
-        module load mpi/intel-18.0/openmpi/4.1.0
-        module load tools/gcc/cmake/3.13.2
-        module load apps/binapps/anaconda3/2020.07
-        export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.0
-        export PETSC_ARCH=mkl-opt
-        export DAMASK_ROOT=/mnt/eps01-rds/jf01-home01/shared/DAMASK-v3a3
         export HDF5_USE_FILE_LOCKING=FALSE
-        source $DAMASK_ROOT/env/DAMASK.sh
         export OMP_NUM_THREADS=1
-        PATH=$PETSC_DIR/$PETSC_ARCH/bin:$PATH
-        LD_LIBRARY_PATH=$PETSC_DIR/$PETSC_ARCH/lib:$LD_LIBRARY_PATH
-        source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_v3a3_env
     task_processing:
       env: |
-        module purge
-        module load tools/env/proxy
-        module load mpi/intel-18.0/openmpi/4.1.0
-        module load tools/gcc/cmake/3.13.2
-        module load apps/binapps/anaconda3/2020.07
-        export PETSC_DIR=/mnt/eps01-rds/jf01-home01/shared/petsc-3.15.0
-        export PETSC_ARCH=mkl-opt
-        export DAMASK_ROOT=/mnt/eps01-rds/jf01-home01/shared/DAMASK-v3a3
         export HDF5_USE_FILE_LOCKING=FALSE
-        source $DAMASK_ROOT/env/DAMASK.sh
         export OMP_NUM_THREADS=1
-        PATH=$PETSC_DIR/$PETSC_ARCH/bin:$PATH
-        LD_LIBRARY_PATH=$PETSC_DIR/$PETSC_ARCH/lib:$LD_LIBRARY_PATH
-        source activate /mnt/eps01-rds/jf01-home01/shared/.conda/damask_v3a3_env
   instances:
     - num_cores: 1
     - num_cores: [2, 32, 1]
@@ -113,7 +89,7 @@ DefDAP:
     - num_cores: 1
       version_info:
         defdap:
-          version: "0.93.2"
+          version: "0.93.4"
       sources_preparation:
         env: |
           module load apps/binapps/anaconda3/2019.07
@@ -166,3 +142,13 @@ abaqus:
       num_cores: [2, 32, 1]
       required_scheduler_options:
         pe: smp.pe
+
+Dream3D:
+  instances:
+    - num_cores: 1
+      env: |
+        PATH=$PATH:/mnt/eps01-rds/jf01-home01/shared/DREAM3D-6.5.141-Linux-x86_64/bin
+      executable: PipelineRunner
+      version_info:
+        Dream3D:
+          version: "6.5.141"

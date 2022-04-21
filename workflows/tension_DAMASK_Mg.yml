@@ -66,18 +66,16 @@ tasks:
           transforms: [mean_along_axes: 1]
           increments:
             - step: 10
-      field_data:
-        # Extract the voxel orientations at initial and final increments
+      field_data: # `phase` and `O` field data are required if we want to later plot pole figures from the deformed RVE
+        - field_name: phase
         - field_name: O
-          increments:
-            - values: [0, -1]
       grain_data:
         # Extract the grain-averaged orientations at initial and final increments
         - field_name: O
           increments:
             - values: [0, -1]
       visualise: # Generate VTR files for increments: [10, 12, 14, 16, 18, 20]
-        fields: [F, F_p, P, sigma_vM, O, IPFcolor_(0 0 1)]
+        fields: [F, F_p, P, sigma_vM, O, IPFcolor_(0 0 1), phase]
         increments:
           - start: 10
             stop: 20

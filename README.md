@@ -78,3 +78,10 @@ We can get MatFlow to copy (a subset) of the workflow files to a Dropbox account
 
 The first time you submit a workflow that uses this archive location, you will be prompted to authorize hpcflow to connect to your Dropbox account.
 
+## Archive after workflow completion
+
+As of MatFlow v0.2.21, you can run an archive on a complete workflow like this: `matflow archive /path/to/workflow/directory dropbox`. In this case, we choose the archive named `dropbox` in our `config.yml` file. Any archive defined in the `config.yml` file can be chosen. File patterns will be excluded from the archive according to the `archive_excludes` patterns in the corresponding task schema definitions, plus any `archive_excludes` patterns included in the original workflow submission.
+
+## Metadata
+
+In general, you can associate arbitrary metadata with a workflow in the workflow YAML file by using the `metadata` key. Additionally, as of MatFlow v0.2.21, you can specify default metadata that should be applied to all generated workflows. Default metadata is merged with any metadata specified in the workflow YAML file; a metadata item specified in the workflow YAML file will overwrite the same key specified in `default_metadata`.

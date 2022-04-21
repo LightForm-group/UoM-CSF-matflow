@@ -7,7 +7,7 @@ import:
   - parameter: volume_element
     from:
       # (specify either the full path to HDF5 file, or the parent directory:)
-      workflow: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/completed_workflows/generate_RVE_2021-04-13-100535
+      workflow: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/completed_workflows/generate_RVE_2021-09-23-084754
       # --- Additional options ---
       # context:        # (string) optionally specify which context this comes from in the source workflow
       # task_idx:       # (int) optionally specify the task index from which to import the parameter. If give, `context` is ignored.
@@ -55,6 +55,9 @@ tasks:
           transforms: [mean_along_axes: 1]
           increments:
             - step: 10 # E.g. extract data every 10th increment.
+      field_data: # `phase` and `O` field data are required if we want to later plot pole figures from the deformed RVE
+        - field_name: phase
+        - field_name: O
     base:
       homogenization_schemes:
         SX:

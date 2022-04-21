@@ -12,6 +12,7 @@ module load tools/env/proxy2
 PACKAGES=(
     "matflow"\
     "damask-parse"\
+    "damask==v3.0.0a3.post2"\
     "formable"\
     "matflow-damask"\
     "matflow-formable"\
@@ -19,6 +20,7 @@ PACKAGES=(
     "matflow-mtex"\
     "matflow-neper"\
     "matflow-demo-extension"\
+    "matflow-dream3d"\
 )
 PACKAGES_GREP=$(printf "\|%s" "${PACKAGES[@]}")
 PACKAGES_GREP=${PACKAGES_GREP:2}

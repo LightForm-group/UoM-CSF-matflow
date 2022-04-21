@@ -1,0 +1,19 @@
+name: load_case_cyclic
+
+# archive: dropbox
+run_options:
+  l: short
+
+tasks:
+ 
+  - name: generate_load_case
+    method: cyclic_uniaxial
+    software: formable
+    base:
+      max_stresses: [+10.0e+6, +20.0e+6] # in Pa
+      min_stresses: [-10.0e+6, 0.0e+6] # in Pa
+      cycle_frequencies: [1, 1] # in Hz
+      num_increments_per_cycle: [100, 100]
+      num_cycles: [2, 1]
+      directions: ['x', 'y'] # x,y,z
+

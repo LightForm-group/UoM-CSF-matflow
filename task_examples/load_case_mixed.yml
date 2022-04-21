@@ -1,0 +1,26 @@
+name: load_case_mixed
+
+# archive: dropbox
+run_options:
+  l: short
+
+tasks:
+ 
+  - name: generate_load_case
+    method: mixed
+    software: formable
+    base:
+      load_case_specs:
+        
+        - type: uniaxial
+          total_times: [100]
+          num_increments: [800]
+          target_strain_rates: [1.5e-3]
+          directions: [x]
+
+        - type: plane_strain
+          total_times: [100]
+          num_increments: [800]
+          target_strain_rates: [2.5e-3]
+          directions: [xy]
+

@@ -25,10 +25,12 @@ tasks:
             unit_cell_alignment: {x: a}
             quaternions: [[+0.7071067811865475, 0, 0, -0.7071067811865475]]
             P: +1 # this quaternion should be changed in the material.yaml file to [+0.7071067811865475, 0, 0, +0.7071067811865475]
+            quat_component_ordering: scalar-vector
           - type: quat
             unit_cell_alignment: {x: a}
             quaternions: [[+0.7071067811865475, 0, 0, +0.7071067811865475]]
-            P: -1 # this quaternion should be the same in the material.yaml file          
+            P: -1 # this quaternion should be the same in the material.yaml file
+            quat_component_ordering: scalar-vector
 
   - name: generate_load_case
     method: uniaxial
