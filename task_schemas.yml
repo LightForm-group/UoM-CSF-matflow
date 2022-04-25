@@ -641,7 +641,7 @@
         - name: damask
     - name: spread_orientations
       inputs:
-        - phase
+        - phases
         - stddev_degrees
       implementations:
         - name: damask 
