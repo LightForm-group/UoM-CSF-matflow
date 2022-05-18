@@ -629,6 +629,22 @@
           default: null
       implementations:
         - name: damask
+    - name: new_orientations
+      inputs:
+        - volume_element_response
+      implementations:
+        - name: damask
+    - name: geometry
+      inputs:
+        - volume_element_response
+      implementations:
+        - name: damask
+    - name: spread_orientations
+      inputs:
+        - phases
+        - stddev_degrees
+      implementations:
+        - name: damask 
 
 - name: visualise_volume_element
   inputs:
@@ -646,6 +662,47 @@
     - increments
   methods:
     - name: texture_pole_figure
+      inputs:
+        - crystal_symmetries
+        - pole_figure_directions
+        - name: phases
+          default: null # first phase only by default
+          ignore_dependency_from: ["simulate_volume_element_loading"]
+        - name: use_contours
+          default: true
+        - name: increments # final increment by default
+          default: null
+        - name: orientation_coordinate_system
+          default: null
+        - name: IPF_reference_direction
+          default: z
+        - name: colourbar_limits
+          default: null
+        - name: use_one_colourbar
+          default: False
+      implementations:
+        - name: mtex
+          input_map:
+            - inputs:
+                - volume_element_response
+                - increments
+                - crystal_symmetries
+                - phases
+                - orientation_coordinate_system
+              file: orientations.json
+            - inputs:
+                - colourbar_limits
+                - use_one_colourbar
+              file: options.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [orientations.json]
+                - [pole_figure_directions]
+                - [use_contours]
+                - [IPF_reference_direction]
+                - [options.json]
+    - name: texture_odf_section
       inputs:
         - crystal_symmetries
         - pole_figure_directions
