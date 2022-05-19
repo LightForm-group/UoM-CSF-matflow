@@ -676,6 +676,10 @@
           default: null
         - name: IPF_reference_direction
           default: z
+        - name: colourbar_limits
+          default: null
+        - name: use_one_colourbar
+          default: False
       implementations:
         - name: mtex
           input_map:
@@ -686,6 +690,10 @@
                 - phases
                 - orientation_coordinate_system
               file: orientations.json
+            - inputs:
+                - colourbar_limits
+                - use_one_colourbar
+              file: options.json
           commands:
             - command: <<executable>>
               options:
@@ -693,6 +701,7 @@
                 - [pole_figure_directions]
                 - [use_contours]
                 - [IPF_reference_direction]
+                - [options.json]
     - name: texture_odf_section
       inputs:
         - crystal_symmetries
@@ -708,6 +717,10 @@
           default: null
         - name: IPF_reference_direction
           default: z
+        - name: colourbar_limits
+          default: null
+        - name: use_one_colourbar
+          default: False
       implementations:
         - name: mtex
           input_map:
@@ -718,6 +731,10 @@
                 - phases
                 - orientation_coordinate_system
               file: orientations.json
+            - inputs:
+                - colourbar_limits
+                - use_one_colourbar
+              file: options.json
           commands:
             - command: <<executable>>
               options:
@@ -725,6 +742,7 @@
                 - [pole_figure_directions]
                 - [use_contours]
                 - [IPF_reference_direction]
+                - [options.json]
 
 - name: generate_load_case
   methods:
@@ -1401,6 +1419,10 @@
           default: true
         - name: IPF_reference_direction
           default: z
+        - name: colourbar_limits
+          default: null
+        - name: use_one_colourbar
+          default: False
       implementations:
         - name: mtex
           input_map:
@@ -1408,6 +1430,10 @@
                 - orientations
                 - crystal_symmetry
               file: orientations.json
+            - inputs:
+                - colourbar_limits
+                - use_one_colourbar
+              file: options.json
           commands:
             - command: <<executable>>
               options:
@@ -1415,6 +1441,7 @@
                 - [pole_figure_directions]
                 - [use_contours]
                 - [IPF_reference_direction]
+                - [options.json]
 
 - name: dummy_task_1
   outputs:
