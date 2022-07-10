@@ -1,0 +1,51 @@
+name: grain_growth_random_voronoi
+run_options:
+  l: short
+
+# archive: dropbox
+tasks:  
+
+  - name: generate_phase_field_input
+    method: from_random_voronoi
+    software: cipher
+    base:
+      num_phases: 10
+      grid_size: [128, 128]
+      size: [128, 128]
+      materials:
+        - name: mat1
+          properties:
+            chemicalenergy: none
+            molarvolume: 1e-5
+            temperature0: 500.0
+      interfaces:
+        - materials: [mat1, mat1] 
+          properties:
+            energy:
+              e0: 5e+8
+            mobility:
+              m0: 1e-11
+      components: [ti]
+      outputs: [phaseid, matid, interfaceid]
+      solution_parameters:
+        abstol: 0.0001
+        amrinterval: 25
+        initblocksize: [1, 1]
+        initcoarsen: 6
+        initrefine: 7
+        interfacewidth: 4
+        interpolation: cubic
+        maxnrefine: 7
+        minnrefine: 0
+        outfile: out
+        outputfreq: 100
+        petscoptions: -ts_adapt_monitor -ts_rk_type 2a
+        random_seed: 1579993586
+        reltol: 0.0001
+        time: 1000
+
+  - name: simulate_grain_growth
+    method: phase_field
+    software: cipher
+    run_options:
+      num_cores: 8

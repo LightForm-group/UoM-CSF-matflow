@@ -1,0 +1,62 @@
+name: grain_growth_volume_element
+run_options:
+  l: short
+
+# archive: dropbox
+tasks:  
+  - name: generate_microstructure_seeds
+    method: random
+    software: damask
+    base:
+      size: [1, 1, 1]
+      num_grains: 2
+      phase_label: Al
+
+  - name: generate_volume_element
+    method: random_voronoi
+    software: damask
+    base:
+      grid_size: [4, 4, 2]
+      homog_label: SX
+
+  - name: generate_phase_field_input
+    method: from_volume_element
+    software: cipher
+    base:
+      materials:
+        - name: Al
+          properties:
+            chemicalenergy: none
+            molarvolume: 1e-5
+            temperature0: 500.0
+      interfaces:
+        - materials: [Al, Al] 
+          properties:
+            energy:
+              e0: 5e+8
+            mobility:
+              m0: 1e-11
+      components: [al]
+      outputs: [phaseid, matid, interfaceid]
+      solution_parameters:
+        abstol: 0.0001
+        amrinterval: 25
+        initblocksize: [2, 2, 1]
+        initcoarsen: 6
+        initrefine: 1
+        interfacewidth: 4
+        interpolation: cubic
+        maxnrefine: 7
+        minnrefine: 0
+        outfile: out
+        outputfreq: 100
+        petscoptions: -ts_adapt_monitor -ts_rk_type 2a
+        random_seed: 1579993586
+        reltol: 0.0001
+        time: 0.1
+
+  - name: simulate_grain_growth
+    method: phase_field
+    software: cipher
+    run_options:
+      num_cores: 8

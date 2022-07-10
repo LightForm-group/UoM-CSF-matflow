@@ -152,3 +152,30 @@ Dream3D:
       version_info:
         Dream3D:
           version: "6.5.141"
+
+cipher:
+  instance_defaults:
+    version_info:
+      cipher_parse:
+        version: '0.3.0'
+    sources_preparation:
+      env: |
+        module load apps/binapps/anaconda3/2020.07
+        source activate /mnt/eps01-rds/jf01-home01/shared/.conda/cipher_env/
+        export HDF5_USE_FILE_LOCKING=FALSE
+    executable: python <<sources_dir>>/<<script>>.py
+    env: |
+      module load apps/binapps/anaconda3/2020.07
+      source activate /mnt/eps01-rds/jf01-home01/shared/.conda/cipher_env/
+      export HDF5_USE_FILE_LOCKING=FALSE
+      export OMP_NUM_THREADS=1
+      source /mnt/iusers01/cr01/mbdxqap3/software/cipher_env.sh
+    task_preparation:
+      env: export HDF5_USE_FILE_LOCKING=FALSE
+    task_processing:
+      env: export HDF5_USE_FILE_LOCKING=FALSE
+  instances:
+    - num_cores: 1
+    - num_cores: [2, 32, 1]
+      required_scheduler_options:
+        pe: smp.pe

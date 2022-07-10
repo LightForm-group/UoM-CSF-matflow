@@ -1,0 +1,99 @@
+name: grain_growth_dream3D_volume_element
+run_options:
+  l: short
+
+# archive: dropbox
+tasks:  
+  - name: generate_volume_element
+    method: from_statistics
+    software: Dream3D
+    base:
+      grid_size: [32, 32, 32]
+      resolution: [0.4, 0.4, 0.4]
+      phase_statistics:
+        - type: primary
+          name: Al
+          crystal_structure: cubic
+          volume_fraction: 0.98 # `volume_fraction` for all phases must sum to 1!
+          size_distribution:
+            ESD_log_mean: 0.3 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.25
+            num_bins: 10 # Specify either `num_bins` or `bin_step_size`
+
+        - type: precipitate
+          name: precipitate
+          crystal_structure: cubic
+          volume_fraction: 0.02
+          size_distribution:
+            ESD_log_mean: 1.0 # Specify either `ESD_mean` or `ESD_log_mean`
+            ESD_log_stddev: 0.2
+            num_bins: 38 # Specify either `num_bins` or `bin_step_size`
+          number_fraction_on_boundary: 0.5 # required for `type: precipitate`
+          radial_distribution_function: # required for `type: precipitate`
+            min_distance: 10
+            max_distance: 80
+            num_bins: 50
+            box_size: [100, 100, 100]
+
+  - name: visualise_volume_element
+    method: VTK
+    software: damask
+
+  - name: generate_phase_field_input
+    method: from_volume_element
+    software: cipher
+    base:
+      materials:
+        - name: Al
+          properties:
+            chemicalenergy: none
+            molarvolume: 1e-5
+            temperature0: 500.0
+        - name: precipitate
+          properties:
+            chemicalenergy: none
+            molarvolume: 1e-5
+            temperature0: 500.0
+      interfaces:
+        - materials: [Al, Al] 
+          properties:
+            energy:
+              e0: 5e+8
+            mobility:
+              m0: 1e-11
+        - materials: [precipitate, precipitate] 
+          properties:
+            energy:
+              e0: 5e+8
+            mobility:
+              m0: 1e-11
+        - materials: [Al, precipitate] 
+          properties:
+            energy:
+              e0: 5e+8
+            mobility:
+              m0: 1e-11
+      components: [al]
+      outputs: [phaseid, matid, interfaceid]
+      solution_parameters:
+        abstol: 0.0001
+        amrinterval: 25
+        initblocksize: [2, 2, 2]
+        initcoarsen: 6
+        initrefine: 4
+        interfacewidth: 4
+        interpolation: cubic
+        maxnrefine: 7
+        minnrefine: 0
+        outfile: out
+        outputfreq: 50
+        petscoptions: -ts_adapt_monitor -ts_rk_type 2a
+        random_seed: 1579993586
+        reltol: 0.0001
+        time: 0.2
+
+  - name: simulate_grain_growth
+    method: phase_field
+    software: cipher
+    run_options:
+      num_cores: 16

@@ -1443,6 +1443,110 @@
                 - [IPF_reference_direction]
                 - [options.json]
 
+- name: generate_phase_field_input
+  outputs:
+    - phase_field_input
+  methods:
+    - name: from_random_voronoi
+      implementations:
+        - name: cipher
+          inputs:
+            - materials
+            - interfaces
+            - num_phases
+            - grid_size
+            - size
+            - components
+            - outputs
+            - solution_parameters
+            - name: random_seed
+              default: null
+          input_map:
+            - inputs:
+                - materials
+                - interfaces
+                - num_phases
+                - grid_size
+                - size
+                - components
+                - outputs
+                - solution_parameters
+                - random_seed
+              file: inputs.hdf5
+              save: false
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: phase_field_input
+          commands:
+            - command: <<executable>> inputs.hdf5
+    - name: from_volume_element
+      implementations:
+        - name: cipher
+          inputs: 
+            - volume_element
+            - materials
+            - interfaces
+            - components
+            - outputs
+            - solution_parameters
+            - name: phase_type_map
+              default: null
+            - name: size
+              default: null
+            - name: random_seed
+              default: null
+          input_map:
+            - inputs:
+                - volume_element
+                - materials
+                - interfaces
+                - phase_type_map
+                - size
+                - components
+                - outputs
+                - solution_parameters
+                - random_seed
+              file: inputs.hdf5
+              save: false
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: phase_field_input
+          commands:
+            - command: <<executable>> inputs.hdf5
+
+- name: simulate_grain_growth
+  outputs:
+    - phase_field_output
+  methods:
+    - name: phase_field
+      implementations:
+        - name: cipher
+          inputs:
+            - phase_field_input
+          input_map:
+            - inputs:
+                - phase_field_input
+              file: inputs.hdf5
+              save: false
+          output_map:
+            - files:
+                - name: post_proc_outputs.hdf5
+                  save: false
+              output: phase_field_output
+          commands:
+            - command: <<executable>> inputs.hdf5 # write cipher_input.yaml and post_processing.py
+            - command: cipher.exe
+              parallel_mode: MPI
+              options:
+                - [--config, cipher_input.yaml]
+              stdout: stdout.log
+              stderr: stderr.log
+            - command: python post_processing.py # parse outputs to outputs.hdf5
+
 - name: dummy_task_1
   outputs:
     - parameter_2
