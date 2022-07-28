@@ -254,6 +254,34 @@
                   "generate_volume_element",
                   "simulate_volume_element_loading",
                 ]
+    - name: from_ODF_mat
+      inputs:
+        - ODF
+      implementations:
+        - name: mtex
+          inputs:
+            - crystal_symmetry
+            - specimen_symmetry
+          input_map:
+            - inputs:
+                - ODF
+              file: ODF.mat
+            - inputs:
+                - ODF
+              file: orientation_coordinate_system.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [crystal_symmetry]
+                - [specimen_symmetry]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.txt
+                  save: true
+                - name: orientation_coordinate_system.json
+                  save: true
+              output: orientations
 
 - name: sample_orientations
   inputs:
