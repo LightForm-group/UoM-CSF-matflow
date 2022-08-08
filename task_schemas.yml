@@ -1220,6 +1220,7 @@
       default: null
   outputs:
     - volume_element_response
+    - perturbed_single_crystal_parameters
   methods:
     - name: CP_FFT
       implementations:
@@ -1258,6 +1259,11 @@
               stdout: stdout.log
               stderr: stderr.log
           output_map:
+            - files:
+                - name: single_crystal_parameters.json
+                  save: false
+              output: perturbed_single_crystal_parameters
+              options: []
             - files:
                 - name: geom_load.hdf5
                   save: false
