@@ -1,0 +1,53 @@
+name: dual_phase_orientations_random_voronoi
+
+run_options:
+  l: short
+
+# archive: dropbox
+
+tasks:  
+  
+  - name: generate_microstructure_seeds
+    method: random
+    software: damask
+    base:
+      size: [1, 1, 1]
+      grid_size: [16, 16, 16]
+      num_grains: 10
+      phase_labels: [Al, precipitate]
+  
+  - name: sample_texture
+    method: from_model_ODF
+    software: mtex
+    context: phase_1
+    base:
+      num_orientations: 1000
+      crystal_symmetry: hexagonal
+      specimen_symmetry: orthorhombic
+      ODF_components:
+        - type: unimodal
+          component_fraction: 1.0 # component fractions must sum to 1!
+          modal_orientation_HKL: [0, 0, 1] # such that ori * (HKL) = 001
+          modal_orientation_UVW: [1, 0, 0] # such that ori * [UVW] = 100
+          halfwidth: 5
+
+  - name: sample_texture
+    method: from_model_ODF
+    software: mtex
+    context: phase_2
+    base:
+      num_orientations: 1000
+      crystal_symmetry: hexagonal
+      specimen_symmetry: orthorhombic
+      ODF_components:
+        - type: unimodal
+          component_fraction: 1.0 # component fractions must sum to 1!
+          modal_orientation_HKL: [0, 0, 1] # such that ori * (HKL) = 001
+          modal_orientation_UVW: [1, 0, 0] # such that ori * [UVW] = 100
+          halfwidth: 5
+
+  - name: generate_volume_element
+    method: random_voronoi_from_dual_phase_orientations
+    software: damask
+    base:
+      homog_label: SX
