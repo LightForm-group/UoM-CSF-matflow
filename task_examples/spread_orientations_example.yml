@@ -1,0 +1,31 @@
+name: spread_orientations_example
+
+run_options:
+  l: short
+archive: dropbox
+
+tasks:
+  - name: generate_volume_element
+    method: from_damask_input_files
+    software: damask
+    base:
+      geom_path: dualphase_2x2x2.vtr
+      material_path: /mnt/eps01-rds/jf01-home01/shared/matflow/workflows/example_data/material.yaml
+      orientations:
+        type: quat
+        unit_cell_alignment:
+          y: b # Bernadetas oris use this convention
+        quaternions:
+          # beta
+          - [0.458256, 0.876444, -0.146053, -0.022722]
+          # alpha
+          - [0.56010, -0.74525, -0.174882, -0.316692]
+        quat_component_ordering: scalar-vector
+        P: -1
+
+  - name: modify_volume_element
+    method: spread_orientations
+    software: damask
+    base:
+      phases: [Ti-beta]
+      stddev_degrees: [0.01]

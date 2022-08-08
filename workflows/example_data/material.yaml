@@ -1,0 +1,20 @@
+phase:
+# overwritten in the workflow.yml file
+
+homogenization:
+# overwritten in the workflow.yml file
+
+material: # overwritten in the workflow.yml file
+- homogenization: SX
+  constituents:
+  - v: 1.0
+    O: [1.000000000000000, 0.000000000000000, 0.000000000000000, 0.0000000000000000]
+    phase: Ti-beta
+
+- homogenization: SX
+  constituents:
+  - v: 1.0
+    O: [1.000000000000000, 0.000000000000000, 0.000000000000000, 0.0000000000000000]
+    phase: Ti-alpha
+
+
