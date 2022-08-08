@@ -338,7 +338,12 @@
       implementations:
         - name: damask
           inputs:
-            - phase_label
+            - name: phase_label # specify either `phase_label` or `phase_labels`
+              default: null
+            - name: phase_labels # specify either `phase_label` or `phase_labels`
+              default: null
+            - name: phase_fractions
+              default: null
             - name: grid_size
               default: null
               ignore_dependency_from: ["generate_volume_element"]
@@ -519,6 +524,53 @@
                 - [-p, "`pwd`/pipeline.json"] # seems to require absolute path!
               stderr: stderr.log
               stdout: stdout.log
+    - name: from_statistics_dual_phase_orientations
+      implementations:
+        - name: Dream3D
+          inputs:
+            - grid_size
+            - name: resolution # specify either resolution or size
+              default: null
+            - name: size # specify either resolution or size
+              default: null
+            - name: origin
+              default: null
+            - name: periodic
+              default: true
+            - name: phase_statistics
+            - name: orientations
+              context: phase_1
+              alias: orientations_phase_1
+            - name: orientations
+              context: phase_2
+              alias: orientations_phase_2
+          input_map:
+            - inputs:
+                - grid_size
+                - resolution
+                - size
+                - origin
+                - periodic
+                - phase_statistics
+              file: pipeline.json
+          output_map:
+            - output: volume_element
+              inputs:
+                - name: phase_statistics # so we know which order the phases are in
+                - name: orientations_phase_1
+                - name: orientations_phase_2
+              options:
+                - name: RNG_seed
+                  default: null
+              files:
+                - name: pipeline.dream3d
+                  save: false
+          commands:
+            - command: <<executable>>
+              options:
+                - [-p, "`pwd`/pipeline.json"] # seems to require absolute path!
+              stderr: stderr.log
+              stdout: stdout.log              
     - name: random_voronoi
       notes: >
         In this method we use the random orientations that already exist in
@@ -612,6 +664,41 @@
             ]
       implementations:
         - name: damask
+    - name: random_voronoi_from_dual_phase_orientations
+      notes: >
+        In this method we replace the orientations in microstructure_seeds
+        with two sets of orientations computed from previous tasks. There must be two
+        phase labels defined in `microstructure_seeds`.
+      inputs:
+        - name: microstructure_seeds
+        - name: grid_size
+        - name: homog_label
+        - name: orientations
+          context: phase_1
+          alias: orientations_phase_1
+        - name: orientations
+          context: phase_2
+          alias: orientations_phase_2
+        - name: scale_morphology
+          default: null
+        - name: scale_update_size
+          default: true
+        - name: buffer_phase_size
+          default: null
+        - name: buffer_phase_label
+          default: null
+        - name: orientations_use_max_precision
+          default: false
+          ignore_dependency_from:
+            [
+              "generate_microstructure_seeds",
+              "sample_texture",
+              "simulate_volume_element_loading",
+            ]
+        - name: RNG_seed
+          default: null
+      implementations:
+        - name: damask
 
 - name: modify_volume_element
   inputs:
@@ -655,6 +742,24 @@
         - __file__VTR_file
       implementations:
         - name: damask
+    - name: Dream3D
+      outputs:
+        - file__Dream3D_file
+      implementations:
+        - name: Dream3D
+          input_map:
+            - inputs:
+                - volume_element
+              file: volume_element.txt
+            - inputs:
+                - volume_element
+              file: pipeline.json
+          commands:
+            - command: <<executable>>
+              options:
+                - [-p, "`pwd`/pipeline.json"] # seems to require absolute path!
+              stderr: stderr.log
+              stdout: stdout.log
 
 - name: visualise_volume_element_response
   inputs:
@@ -1497,6 +1602,8 @@
               default: null
             - name: random_seed
               default: null
+            - name: interface_energy_misorientation_expansion
+              default: null
           input_map:
             - inputs:
                 - volume_element
@@ -1508,6 +1615,7 @@
                 - outputs
                 - solution_parameters
                 - random_seed
+                - interface_energy_misorientation_expansion
               file: inputs.hdf5
               save: false
           output_map:
