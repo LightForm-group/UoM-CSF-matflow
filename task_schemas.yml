@@ -598,7 +598,7 @@
               options:
                 - [-p, "`pwd`/pipeline.json"] # seems to require absolute path!
               stderr: stderr.log
-              stdout: stdout.log              
+              stdout: stdout.log
     - name: random_voronoi
       notes: >
         In this method we use the random orientations that already exist in
@@ -759,7 +759,7 @@
         - phases
         - stddev_degrees
       implementations:
-        - name: damask 
+        - name: damask
 
 - name: visualise_volume_element
   inputs:
@@ -1185,7 +1185,7 @@
             - inputs:
                 - load_case
                 - solver
-                - initial_conditions                
+                - initial_conditions
               file: load.yaml
               save: true
           commands:
@@ -1623,7 +1623,7 @@
     - name: from_volume_element
       implementations:
         - name: cipher
-          inputs: 
+          inputs:
             - volume_element
             - materials
             - interfaces
