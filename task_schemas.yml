@@ -256,22 +256,17 @@
                 ]
     - name: from_ODF_mat
       inputs:
-        - ODF
+        - name: ODF_mat_path
+          file: true
       implementations:
         - name: mtex
           inputs:
             - crystal_symmetry
             - specimen_symmetry
-          input_map:
-            - inputs:
-                - ODF
-              file: ODF.mat
-            - inputs:
-                - ODF
-              file: orientation_coordinate_system.json
           commands:
             - command: <<executable>>
               options:
+                - [ODF_mat_path]
                 - [crystal_symmetry]
                 - [specimen_symmetry]
                 - [num_orientations]
@@ -279,8 +274,9 @@
             - files:
                 - name: orientations.txt
                   save: true
-                - name: orientation_coordinate_system.json
-                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
               output: orientations
 
 - name: sample_orientations
