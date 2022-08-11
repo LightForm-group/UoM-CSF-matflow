@@ -60,14 +60,14 @@ tasks:
           args: { P: P, F: F }
           opts: { add_Mises: true }
         - name: add_strain
-          args: { F: F, t: V, m: 0 }
+          args: { F: F, t: U, m: 0 }
           opts: { add_Mises: true }
       volume_data:
         - out_name: vol_avg_stress
           field_name: sigma
           transforms: [mean_along_axes: 1]
         - out_name: vol_avg_strain
-          field_name: epsilon_V^0(F)
+          field_name: epsilon_U^0(F)
           transforms: [mean_along_axes: 1]
     base:
       single_crystal_parameters:
