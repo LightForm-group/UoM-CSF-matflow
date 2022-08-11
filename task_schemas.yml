@@ -272,7 +272,7 @@
                 - [num_orientations]
           output_map:
             - files:
-                - name: orientations.txt
+                - name: orientations.json
                   save: true
               options:
                 - name: orientation_coordinate_system
