@@ -1652,14 +1652,16 @@
                   save: false
               output: phase_field_output
           commands:
-            - command: <<executable>> inputs.hdf5 # write cipher_input.yaml and post_processing.py
+            - command: <<executable>> inputs.hdf5 # write cipher_input.yaml, ParaView script and post_processing.py
             - command: cipher.exe
               parallel_mode: MPI
               options:
                 - [--config, cipher_input.yaml]
               stdout: stdout.log
               stderr: stderr.log
+            - command: module load apps/binapps/paraview/5.6.0; pvbatch vtu2vti.py
             - command: python post_processing.py # parse outputs to outputs.hdf5
+          archive_excludes: ["*.vtu"]
 
 - name: dummy_task_1
   outputs:
