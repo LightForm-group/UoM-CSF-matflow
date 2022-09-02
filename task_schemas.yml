@@ -609,6 +609,8 @@
                   "sample_texture",
                   "simulate_volume_element_loading",
                 ]
+            - name: periodic
+              default: true
         - name: neper
           inputs:
             - name: num_grains
@@ -674,6 +676,8 @@
               "sample_texture",
               "simulate_volume_element_loading",
             ]
+        - name: periodic
+          default: true
       implementations:
         - name: damask
     - name: random_voronoi_from_dual_phase_orientations
@@ -709,6 +713,8 @@
             ]
         - name: RNG_seed
           default: null
+        - name: periodic
+          default: true
       implementations:
         - name: damask
 
