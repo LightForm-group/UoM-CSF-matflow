@@ -503,7 +503,12 @@
             - name: phase_statistics
             - name: orientations
               default: null
+            - name: precipitates
+              default: null
           input_map:
+            - inputs:
+                - precipitates
+              file: precipitates.txt
             - inputs:
                 - grid_size
                 - resolution
@@ -512,6 +517,7 @@
                 - periodic
                 - phase_statistics
                 - orientations
+                - precipitates
               file: pipeline.json
           output_map:
             - output: volume_element
@@ -544,7 +550,12 @@
             - name: orientations
               context: phase_2
               alias: orientations_phase_2
+            - name: precipitates
+              default: null
           input_map:
+            - inputs:
+                - precipitates
+              file: precipitates.txt
             - inputs:
                 - grid_size
                 - resolution
@@ -552,6 +563,7 @@
                 - origin
                 - periodic
                 - phase_statistics
+                - precipitates
               file: pipeline.json
           output_map:
             - output: volume_element
