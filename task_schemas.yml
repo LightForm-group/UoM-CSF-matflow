@@ -1659,6 +1659,8 @@
         - name: cipher
           inputs:
             - phase_field_input
+            - name: max_viz_files
+              default: 2 # initial and final
           input_map:
             - inputs:
                 - phase_field_input
@@ -1670,7 +1672,7 @@
                   save: false
               output: phase_field_output
           commands:
-            - command: <<executable>> inputs.hdf5 # write cipher_input.yaml, ParaView script and post_processing.py
+            - command: sleep $[ ( $RANDOM % 10 )  + 1 ]s; <<executable>> inputs.hdf5 # sleep 1-10s; write cipher_input.yaml, ParaView script and post_processing.py
             - command: cipher.exe
               parallel_mode: MPI
               options:
@@ -1679,7 +1681,9 @@
               stderr: stderr.log
             - command: module load apps/binapps/paraview/5.6.0; pvbatch vtu2vti.py
             - command: python post_processing.py # parse outputs to outputs.hdf5
-          archive_excludes: ["*.vtu"]
+              options:
+                - [max_viz_files]
+          archive_excludes: ["*.viz.*"]
 
 - name: dummy_task_1
   outputs:
