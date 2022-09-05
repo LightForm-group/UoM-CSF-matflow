@@ -750,6 +750,11 @@
         - stddev_degrees
       implementations:
         - name: damask 
+    - name: grid_size
+      inputs:
+        - new_grid_size
+      implementations:
+        - name: damask
 
 - name: visualise_volume_element
   inputs:
