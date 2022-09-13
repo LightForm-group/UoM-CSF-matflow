@@ -1,0 +1,85 @@
+# Requires: fitted_yield_functions, path_plastic_table (for each strain path)
+# Generates: forming_limit_curve
+
+name: simulate_MK
+# archive: dropbox
+
+import:
+  - parameter: fitted_yield_functions
+    from:
+      workflow: /path/to/fit_yield_functions/workflow
+      elements: [0] # If multiple yield functions are fitted (e.g. Hill, Barlat), we must select a single element.
+
+run_options:
+  l: short
+
+tasks:
+  - name: generate_MK_model
+    method: default
+    software: abaqus
+    base:
+      sample_size: [20, 20, 1]
+      inhomogeneity_factor: 0.99
+      L_groove: 0.5
+      L_slope: 0.25
+      material_angle: 0
+      groove_angle: 0
+      elastic_modulus: 70000.0
+      poisson_ratio: 0.33
+      density: 2.7e-9
+      yield_point_criterion:
+        # must be one of the yield_point_criteria for which the yield function was fitted:
+        threshold: equivalent_plastic_strain
+        source: equivalent_plastic_strain
+        value: 0.00275
+      mesh_size: 1.0
+      elem_type: C3D8R
+      strain_rate: 35
+      total_time: 0.018
+      time_step: [0, 0, 0.0003]
+      max_plastic_strain: 0.0
+      Nb_el_thickness: 4
+      num_interval: 20
+    sequences:
+      - name: groove_angle
+        vals: [0, 15, 30, 60, 75, 90]
+        nest_idx: 0
+      - name: displacment_BC
+        vals: [
+            [-1.2, 1.2, "free", "free"], # uniaxial
+            [-.8, .8, 0.0, 0.0], # plane strain
+            [-0.5, 0.5, 0.125, -0.125], # biaxial 1
+            [-0.5, 0.5, 0.250, -0.250], # biaxial 2
+            [-0.5, 0.5, 0.375, -0.375], # biaxial 3
+            [-0.5, 0.5, 0.5, -0.5], # equi-biaxial
+          ]
+        nest_idx: 1
+      - name: path_plastic_table
+        vals:
+          - /path/to/plastic_tables/uniaxial.csv
+          - /path/to/plastic_tables/plane_strain.csv
+          - /path/to/plastic_tables/biaxial_1.csv
+          - /path/to/plastic_tables/biaxial_2.csv
+          - /path/to/plastic_tables/biaxial_3.csv
+          - /path/to/plastic_tables/equi_biaxial.csv
+        nest_idx: 1
+    groups:
+      all_model_responses:
+        group_by: []
+        nest: True
+
+  - name: simulate_MK_deformation
+    method: FE
+    software: abaqus
+    run_options:
+      num_cores: 12
+      l: mem256
+    base:
+      memory: 192 GB # i.e. num_cores * memory_per_core
+      extraction_file_path: /path/to/simulate_MK_abaqus_extraction.py
+
+  - name: find_forming_limit_curve
+    method: strain_rate_ratio
+    software: abaqus
+    base:
+      strain_rate_ratio_threshold: 10
