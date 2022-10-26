@@ -157,19 +157,19 @@ cipher:
   instance_defaults:
     version_info:
       cipher_parse:
-        version: '0.3.0'
+        version: '0.4.0'
     sources_preparation:
       env: |
         module load apps/binapps/anaconda3/2020.07
-        source activate /mnt/eps01-rds/jf01-home01/shared/.conda/cipher_env/
+        source activate /mnt/eps01-rds/jf01-home01/shared/.conda/cipher_parse_develop_env
         export HDF5_USE_FILE_LOCKING=FALSE
     executable: python <<sources_dir>>/<<script>>.py
     env: |
       module load apps/binapps/anaconda3/2020.07
-      source activate /mnt/eps01-rds/jf01-home01/shared/.conda/cipher_env/
+      source activate /mnt/eps01-rds/jf01-home01/shared/.conda/cipher_parse_develop_env
       export HDF5_USE_FILE_LOCKING=FALSE
       export OMP_NUM_THREADS=1
-      source /mnt/iusers01/jf01/mbdxqap3/software/cipher_env.sh
+      source /mnt/eps01-rds/jf01-home01/shared/software/cipher_env.sh
     task_preparation:
       env: export HDF5_USE_FILE_LOCKING=FALSE
     task_processing:
