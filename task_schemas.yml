@@ -1595,6 +1595,8 @@
             - solution_parameters
             - name: random_seed
               default: null
+            - name: is_periodic
+              default: false
           input_map:
             - inputs:
                 - materials
@@ -1606,7 +1608,11 @@
                 - outputs
                 - solution_parameters
                 - random_seed
+                - is_periodic
               file: inputs.hdf5
+              save: false
+            - inputs: []
+              file: generate_phase_field_input_from_random_voronoi.py
               save: false
           output_map:
             - files:
@@ -1614,7 +1620,7 @@
                   save: false
               output: phase_field_input
           commands:
-            - command: <<executable>> inputs.hdf5
+            - command: python generate_phase_field_input_from_random_voronoi.py inputs.hdf5
     - name: from_volume_element
       implementations:
         - name: cipher
@@ -1647,13 +1653,17 @@
                 - interface_energy_misorientation_expansion
               file: inputs.hdf5
               save: false
+            - inputs: []
+              file: generate_phase_field_input_from_volume_element.py
+              save: false              
           output_map:
             - files:
                 - name: outputs.hdf5
                   save: false
               output: phase_field_input
           commands:
-            - command: <<executable>> inputs.hdf5
+            - command: python generate_phase_field_input_from_volume_element.py inputs.hdf5
+
 
 - name: simulate_grain_growth
   outputs:
@@ -1671,21 +1681,30 @@
                 - phase_field_input
               file: inputs.hdf5
               save: false
+            - inputs:
+                - max_viz_files
+              file: cipher_output_parse_args.json
+              save: false
+            - inputs: []
+              file: cipher_output_parse.py
+              save: false
           output_map:
             - files:
                 - name: post_proc_outputs.hdf5
                   save: false
               output: phase_field_output
           commands:
-            - command: sleep $[ ( $RANDOM % 10 )  + 1 ]s; <<executable>> inputs.hdf5 # sleep 1-10s; write cipher_input.yaml, ParaView script and post_processing.py
-            - command: cipher.exe
+            - command: sleep $[ ( $RANDOM % 10 )  + 1 ]s
+            - command: >-
+                python -c "import hickle; from cipher_parse.cipher_input import CIPHERInput;
+                CIPHERInput.from_JSON(hickle.load('inputs.hdf5')['phase_field_input']).write_yaml('cipher_input.yaml')"            
+            - command: <<executable>>
               parallel_mode: MPI
               options:
                 - [--config, cipher_input.yaml]
               stdout: stdout.log
               stderr: stderr.log
-            - command: module load apps/binapps/paraview/5.6.0; pvbatch vtu2vti.py
-            - command: python post_processing.py # parse outputs to outputs.hdf5
+            - command: python cipher_output_parse.py
               options:
                 - [max_viz_files]
           archive_excludes: ["*.viz.*"]
