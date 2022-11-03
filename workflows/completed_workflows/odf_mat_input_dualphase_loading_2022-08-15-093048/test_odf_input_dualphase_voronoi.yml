@@ -1,0 +1,176 @@
+name: test_odf_input_dualphase_voronoi
+archive: dropbox
+run_options:
+  l: short
+
+tasks:
+  - name: generate_microstructure_seeds
+    method: random
+    software: damask
+    base:
+      size: [1, 1, 1]
+      grid_size: [2, 2, 2]
+      num_grains: 8
+      phase_labels: [Ti-alpha, Ti-beta]
+
+  - name: sample_texture
+    method: from_ODF_mat
+    software: mtex
+    context: phase_1
+    base:
+      ODF_mat_path: 2017_Ti-alpha_ODF.mat
+      num_orientations: 10
+      crystal_symmetry: hexagonal
+      specimen_symmetry: orthorhombic
+
+  - name: sample_texture
+    method: from_ODF_mat
+    software: mtex
+    context: phase_2
+    base:
+      ODF_mat_path: 2017_Ti-beta_ODF.mat
+      num_orientations: 10
+      crystal_symmetry: cubic
+      specimen_symmetry: orthorhombic
+
+  - name: generate_volume_element
+    method: random_voronoi_from_dual_phase_orientations
+    software: damask
+    base:
+      homog_label: SX
+
+  - name: generate_load_case
+    method: uniaxial
+    software: formable
+    base:
+      total_times: [0.1, 9.9]
+      num_increments: [100, 900]
+      target_strain_rates: [0.1, 0.1] # F_rate eng sr # L_approx true strain
+      dump_frequency: [1, 10]
+      directions: [x, x]
+      #strain_rate_modes: [F_rate]
+
+  - name: simulate_volume_element_loading
+    method: CP_FFT
+    software: DAMASK
+    run_options:
+      num_cores: 2
+      l: short
+
+    output_map_options:
+      operations:
+        - name: add_stress_Cauchy
+          args: { P: P, F: F }
+          opts: { add_Mises: true }
+        - name: add_strain
+          args: { F: F, t: V, m: 0 }
+          opts: { add_Mises: true }
+        - name: add_strain
+          args: { F: F_p, t: V, m: 0 }
+          opts: { }
+        - name: add_strain
+          args: {F: F_e, t: U, m: 2}
+          opts: { }
+        - name: add_strain
+          args: {F: F_e, t: V, m: 2}
+          opts: { }
+
+        - name: add_IPF_color
+          args: { l: [1, 0, 0] }
+
+      volume_data: # For global stress-strain
+        - field_name: sigma
+          transforms: [mean_along_axes: 1] # mean over VE
+          out_name: sigma
+        - field_name: epsilon_V^0(F)_vM
+          transforms: [mean_along_axes: 1] # mean over VE 
+          out_name: epsilon_V^0(F)_vM
+
+
+      phase_data: # For phase-specific data
+        - phase_name: Ti-alpha
+          field_name: O
+          out_name: Ti-alpha_orientations
+        - phase_name: Ti-alpha
+          field_name: gamma_sl
+          out_name: Ti-alpha_gamma_sl
+
+        - phase_name: Ti-beta
+          field_name: O
+          out_name: Ti-beta_orientations
+        - phase_name: Ti-beta
+          field_name: gamma_sl
+          out_name: Ti-beta_gamma_sl
+
+
+      field_data: # (required for microstrain curves)
+        - field_name: sigma
+        - field_name: phase
+        - field_name: epsilon_U^2(F_e)
+        - field_name: epsilon_V^2(F_e)
+        - field_name: F_p
+        - field_name: O
+
+      visualise:
+        fields:
+          - phase
+          - IPFcolor_(1 0 0)
+
+    base:
+      homogenization_schemes:
+        SX:
+          mechanical:
+            type: pass
+          N_constituents: 1
+
+      phases:
+
+        Ti-beta:
+          lattice: cI                                             # CS cubic
+          mechanical:
+            output: [F, F_e, F_p, P, L_p, O]
+            elastic:
+              type: Hooke                                         # S = C.E
+              C_11: 92.6e9  # purohit, 2021    
+              C_12: 82.5e9  # "
+              C_44: 43.5e9  # "
+
+            plastic:
+              N_sl: [12, 12]                                      # number of slip systems [{110}<111>, {112}<111>, {123}<111>?]
+              a_sl: 2                                             # hardening law exponent
+              atol_xi: 1                                          # ?
+              dot_gamma_0_sl: 0.001                               # initial shear rate
+              h_0_sl_sl: 1000e6                                   # initial hardening slsl interaction
+              h_sl_sl: [1, 1, 1.4, 1.4, 1.4, 1.4]                 # hardening/dependancy matrix
+              n_sl: 5 # (semiatin2001, Dunst1996, Lebensohn1997)  # stress exponent 1/m (m=strain rate sensistivity)
+              output: [gamma_sl, xi_sl]
+              xi_0_sl: [7.5e+6, 7.5e+6] # hot estimate          # CRSS initial
+              xi_inf_sl: [7.5e+6, 7.5e+6]  # hot estimate       # CRSS final
+              type: phenopowerlaw
+
+        Ti-alpha:
+          lattice: hP                                             # CS hexagonal
+          c/a: 1.587                                              # <c>/<a>
+          mechanical:
+            output: [F, P, F_p, O]
+            elastic:
+              type: Hooke                                         # S = C.E
+              C_11: 169e9      # Wielewski          # RT elasticity (GPa)
+              C_12: 89e9       # "
+              C_13: 62e9       # "
+              C_33: 180.7e9    # Fisher, 1964 
+              C_44: 43e9       # "
+              # C_55: 31.6e9      # "
+
+            plastic:
+              N_sl: [3, 3, 0, 0, 12]                              # number of slip systems [basal<a>,prism<a>,prism2,pyrm<c+a>]
+              a_sl: 2.0                                           # hardening law exponent
+              a_tol_xi: 1.0                                       # ?
+              dot_gamma_0_sl: 0.001                               # initial shear rate
+              h_sl_sl: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] # hardening/dependancy matrix
+              h_0_sl_sl: 200e6                                    # initial hardening slsl interaction
+              n_sl: 5 # (semiatin2001, Dunst1996, Lebensohn1997)  # stress exponent 1/m (m=strain rate sensitivity)
+              output: [gamma_sl, xi_sl]
+              xi_0_sl: [7.5e+6, 7.5e+6, 0, 0, 15e+6]  # hot estimate    # CRSS initial (MPa)
+              xi_inf_sl: [7.5e+6, 7.5e+6, 0, 0, 15e+6] # hot estimate   # CRSS hardened
+              type: phenopowerlaw

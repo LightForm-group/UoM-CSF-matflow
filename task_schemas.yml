@@ -254,6 +254,30 @@
                   "generate_volume_element",
                   "simulate_volume_element_loading",
                 ]
+    - name: from_ODF_mat
+      inputs:
+        - name: ODF_mat_path
+          file: true
+      implementations:
+        - name: mtex
+          inputs:
+            - crystal_symmetry
+            - specimen_symmetry
+          commands:
+            - command: <<executable>>
+              options:
+                - [ODF_mat_path]
+                - [crystal_symmetry]
+                - [specimen_symmetry]
+                - [num_orientations]
+          output_map:
+            - files:
+                - name: orientations.json
+                  save: true
+              options:
+                - name: orientation_coordinate_system
+                  default: null
+              output: orientations
 
 - name: sample_orientations
   inputs:
@@ -582,7 +606,7 @@
               options:
                 - [-p, "`pwd`/pipeline.json"] # seems to require absolute path!
               stderr: stderr.log
-              stdout: stdout.log              
+              stdout: stdout.log
     - name: random_voronoi
       notes: >
         In this method we use the random orientations that already exist in
@@ -1180,7 +1204,7 @@
             - inputs:
                 - load_case
                 - solver
-                - initial_conditions                
+                - initial_conditions
               file: load.yaml
               save: true
           commands:
@@ -1624,7 +1648,7 @@
     - name: from_volume_element
       implementations:
         - name: cipher
-          inputs: 
+          inputs:
             - volume_element
             - materials
             - interfaces

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<VTKFile type="RectilinearGrid" version="0.1" byte_order="LittleEndian" header_type="UInt32" compressor="vtkZLibDataCompressor">
+  <RectilinearGrid WholeExtent="0 2 0 2 0 2">
+  <Piece Extent="0 2 0 2 0 2">
+    <PointData>
+      <DataArray type="Float32" Name="u" NumberOfComponents="3" format="binary" RangeMin="0" RangeMax="0.2687566621455085">
+        AQAAAACAAABEAQAAZwAAAA==eF5NzbENgDAMRNFswhC0kIIJ2CNzMBADpPEEtwd9ahRZjr+rk/KVV0re9nxn7lbxVMZx9WhytxrbG0NjaGw189797mH5dmvusKLJ7VY2hsbQ2Gr8T8ESLMESLMESLMESLPUfOI5vRg==
+        <InformationKey name="L2_NORM_RANGE" location="vtkDataArray" length="2">
+          <Value index="0">
+            0
+          </Value>
+          <Value index="1">
+            0.26875666215
+          </Value>
+        </InformationKey>
+      </DataArray>
+    </PointData>
+    <CellData>
+      <DataArray type="UInt8" Name="phase/mechanical/IPFcolor_(1 0 0) / 8-bit RGB" NumberOfComponents="3" format="binary" RangeMin="278.1186797034676" RangeMax="409.17844518009497">
+        AQAAAACAAAAYAAAAIwAAAA==eF4BGADn/9X/aN4h//870cFF//97gf9duGr/If/5yc9yEKU=
+        <InformationKey name="L2_NORM_RANGE" location="vtkDataArray" length="2">
+          <Value index="0">
+            278.1186797
+          </Value>
+          <Value index="1">
+            409.17844518
+          </Value>
+        </InformationKey>
+      </DataArray>
+    </CellData>
+    <Coordinates>
+      <DataArray type="Float64" Name="x" format="binary" RangeMin="0" RangeMax="1">
+        AQAAAACAAAAYAAAAEQAAAA==eF5jYEAGD+wh9Ad7AA0uAk8=
+      </DataArray>
+      <DataArray type="Float64" Name="y" format="binary" RangeMin="0" RangeMax="1">
+        AQAAAACAAAAYAAAAEQAAAA==eF5jYEAGD+wh9Ad7AA0uAk8=
+      </DataArray>
+      <DataArray type="Float64" Name="z" format="binary" RangeMin="0" RangeMax="1">
+        AQAAAACAAAAYAAAAEQAAAA==eF5jYEAGD+wh9Ad7AA0uAk8=
+      </DataArray>
+    </Coordinates>
+  </Piece>
+  </RectilinearGrid>
+</VTKFile>

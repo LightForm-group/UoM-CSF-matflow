@@ -1,1 +1,0 @@
-The element data of the workflow.hdf5 file was edited to ensure the file was smaller than 100 MB (for GitHub upload). In particular, the `levenberg_marquardt_fitter` element data was removed for all but the final iteration. 

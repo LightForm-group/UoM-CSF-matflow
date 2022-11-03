@@ -1,0 +1,20 @@
+matflow.cli.process_task
+Loading matflow config from /mnt/iusers01/jf01/mbdxqap3/.matflow/config.yml
+Loading task schemas from 3 file(s)...OK!
+Loading software definitions from 2 file(s)...OK!
+Loading extensions...
+  "neper"...(software: "neper") from matflow_neper (version 0.1.3)
+  "mtex"...(software: "mtex") from matflow_mtex (version 0.1.10)
+  "formable"...(software: "formable") from matflow_formable (version 0.1.14)
+  "dream3d"...(software: "dream3d") from matflow_dream3d (version 0.1.1)
+  "demo"...(software: "dummy_software") from matflow_demo_extension (version 0.1.3)
+  "defdap"...(software: "defdap") from matflow_defdap (version 0.1.8)
+  "damask"...(software: "damask") from matflow_damask (version 0.1.27)
+  "abaqus"...(software: "abaqus") from matflow_abaqus (version 0.1.2)
+  "cipher"...(software: "cipher") from matflow_cipher (version 0.1.0)
+Validating task schemas against loaded extensions...OK! 64/66 schemas are valid.
+The following schemas are invalid:
+  ('generate_volume_element', 'particle_RVE', 'damask'): No function mapper function found. 
+  ('visualise_volume_element_response', 'texture_odf_section', 'mtex'): No input map function found for input map that generates file "orientations.json". No input map function found for input map that generates file "options.json". 
+
+Loading hpcflow config from /mnt/iusers01/jf01/mbdxqap3/.matflow/.hpcflow/config.yml.
