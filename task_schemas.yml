@@ -527,7 +527,12 @@
             - name: phase_statistics
             - name: orientations
               default: null
+            - name: precipitates
+              default: null
           input_map:
+            - inputs:
+                - precipitates
+              file: precipitates.txt
             - inputs:
                 - grid_size
                 - resolution
@@ -536,6 +541,7 @@
                 - periodic
                 - phase_statistics
                 - orientations
+                - precipitates
               file: pipeline.json
           output_map:
             - output: volume_element
@@ -568,7 +574,12 @@
             - name: orientations
               context: phase_2
               alias: orientations_phase_2
+            - name: precipitates
+              default: null
           input_map:
+            - inputs:
+                - precipitates
+              file: precipitates.txt
             - inputs:
                 - grid_size
                 - resolution
@@ -576,6 +587,7 @@
                 - origin
                 - periodic
                 - phase_statistics
+                - precipitates
               file: pipeline.json
           output_map:
             - output: volume_element
@@ -621,6 +633,8 @@
                   "sample_texture",
                   "simulate_volume_element_loading",
                 ]
+            - name: periodic
+              default: true
         - name: neper
           inputs:
             - name: num_grains
@@ -686,6 +700,8 @@
               "sample_texture",
               "simulate_volume_element_loading",
             ]
+        - name: periodic
+          default: true
       implementations:
         - name: damask
     - name: random_voronoi_from_dual_phase_orientations
@@ -721,6 +737,8 @@
             ]
         - name: RNG_seed
           default: null
+        - name: periodic
+          default: true
       implementations:
         - name: damask
 
@@ -754,6 +772,11 @@
       inputs:
         - phases
         - stddev_degrees
+      implementations:
+        - name: damask 
+    - name: grid_size
+      inputs:
+        - new_grid_size
       implementations:
         - name: damask
 
@@ -1596,6 +1619,8 @@
             - solution_parameters
             - name: random_seed
               default: null
+            - name: is_periodic
+              default: false
           input_map:
             - inputs:
                 - materials
@@ -1607,7 +1632,11 @@
                 - outputs
                 - solution_parameters
                 - random_seed
+                - is_periodic
               file: inputs.hdf5
+              save: false
+            - inputs: []
+              file: generate_phase_field_input_from_random_voronoi.py
               save: false
           output_map:
             - files:
@@ -1615,7 +1644,7 @@
                   save: false
               output: phase_field_input
           commands:
-            - command: <<executable>> inputs.hdf5
+            - command: python generate_phase_field_input_from_random_voronoi.py inputs.hdf5
     - name: from_volume_element
       implementations:
         - name: cipher
@@ -1648,13 +1677,17 @@
                 - interface_energy_misorientation_expansion
               file: inputs.hdf5
               save: false
+            - inputs: []
+              file: generate_phase_field_input_from_volume_element.py
+              save: false              
           output_map:
             - files:
                 - name: outputs.hdf5
                   save: false
               output: phase_field_input
           commands:
-            - command: <<executable>> inputs.hdf5
+            - command: python generate_phase_field_input_from_volume_element.py inputs.hdf5
+
 
 - name: simulate_grain_growth
   outputs:
@@ -1665,10 +1698,19 @@
         - name: cipher
           inputs:
             - phase_field_input
+            - name: max_viz_files
+              default: 2 # initial and final
           input_map:
             - inputs:
                 - phase_field_input
               file: inputs.hdf5
+              save: false
+            - inputs:
+                - max_viz_files
+              file: cipher_output_parse_args.json
+              save: false
+            - inputs: []
+              file: cipher_output_parse.py
               save: false
           output_map:
             - files:
@@ -1676,14 +1718,20 @@
                   save: false
               output: phase_field_output
           commands:
-            - command: <<executable>> inputs.hdf5 # write cipher_input.yaml and post_processing.py
-            - command: cipher.exe
+            - command: sleep $[ ( $RANDOM % 10 )  + 1 ]s
+            - command: >-
+                python -c "import hickle; from cipher_parse.cipher_input import CIPHERInput;
+                CIPHERInput.from_JSON(hickle.load('inputs.hdf5')['phase_field_input']).write_yaml('cipher_input.yaml')"            
+            - command: <<executable>>
               parallel_mode: MPI
               options:
                 - [--config, cipher_input.yaml]
               stdout: stdout.log
               stderr: stderr.log
-            - command: python post_processing.py # parse outputs to outputs.hdf5
+            - command: python cipher_output_parse.py
+              options:
+                - [max_viz_files]
+          archive_excludes: ["*.viz.*"]
 
 - name: dummy_task_1
   outputs:

@@ -65,10 +65,10 @@ tasks:
       operations:
         - name: add_stress_Cauchy
           args: { P: P, F: F }
-          opts: { add_Mises: true }
+          opts: { }
         - name: add_strain
           args: { F: F_p, t: U, m: 0 }
-          opts: { add_Mises: true }
+          opts: { }
       volume_data:
         - out_name: vol_avg_stress
           field_name: sigma
