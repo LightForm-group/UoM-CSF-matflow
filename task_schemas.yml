@@ -1785,7 +1785,7 @@
             - command: python cipher_output_parse.py
               options:
                 - [num_VTU_files]
-          archive_excludes: ["*.viz.*"]
+          archive_excludes: ["*.viz.*", "inputs.hdf5", "outputs.hdf5", "post_proc_outputs.hdf5"]
 
 - name: dummy_task_1
   outputs:
