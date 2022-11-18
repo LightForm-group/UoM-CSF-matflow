@@ -401,6 +401,8 @@
         - root_path
         - name: scaling_factor
           default: 1
+        - name: find_grains_algorithm
+          default: warp
       implementations:
         - name: DefDAP
           input_map:
@@ -410,6 +412,7 @@
                 - transform_type
                 - root_path
                 - scaling_factor
+                - find_grains_algorithm
               file: inputs.hdf5
               save: false
           commands:
@@ -1645,6 +1648,48 @@
               output: phase_field_input
           commands:
             - command: python generate_phase_field_input_from_random_voronoi.py inputs.hdf5
+    - name: from_random_voronoi_with_orientations
+      implementations:
+        - name: cipher
+          inputs:
+            - materials
+            - interfaces
+            - num_phases
+            - grid_size
+            - size
+            - components
+            - outputs
+            - solution_parameters
+            - orientations
+            - name: random_seed
+              default: null
+            - name: is_periodic
+              default: false
+          input_map:
+            - inputs:
+                - materials
+                - interfaces
+                - num_phases
+                - grid_size
+                - size
+                - components
+                - outputs
+                - solution_parameters
+                - orientations
+                - random_seed
+                - is_periodic
+              file: inputs.hdf5
+              save: false
+            - inputs: []
+              file: generate_phase_field_input_from_random_voronoi_orientations.py
+              save: false
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: phase_field_input
+          commands:
+            - command: python generate_phase_field_input_from_random_voronoi_orientations.py inputs.hdf5
     - name: from_volume_element
       implementations:
         - name: cipher
@@ -1679,7 +1724,7 @@
               save: false
             - inputs: []
               file: generate_phase_field_input_from_volume_element.py
-              save: false              
+              save: false
           output_map:
             - files:
                 - name: outputs.hdf5
@@ -1687,7 +1732,6 @@
               output: phase_field_input
           commands:
             - command: python generate_phase_field_input_from_volume_element.py inputs.hdf5
-
 
 - name: simulate_grain_growth
   outputs:
@@ -1698,15 +1742,30 @@
         - name: cipher
           inputs:
             - phase_field_input
-            - name: max_viz_files
-              default: 2 # initial and final
+            - name: num_VTU_files # how many VTU files to archive
+              default: 2 # i.e. initial and final
+            - name: derive_outputs # list of derived outputs to generate; available: ["num_voxels_per_phase"]
+              default: null
+            - name: save_outputs # list of outputs to save to MatFlow
+              default: null
+            - name: delete_VTIs # delete intermediate VTI files used to save data?
+              default: true
+            - name: delete_VTUs # delete original VTU outputs from CIPHER?
+              default: false
           input_map:
             - inputs:
                 - phase_field_input
               file: inputs.hdf5
               save: false
+            - inputs: []
+              file: write_cipher_input.py
+              save: false
             - inputs:
-                - max_viz_files
+                - num_VTU_files
+                - derive_outputs
+                - save_outputs
+                - delete_VTIs
+                - delete_VTUs
               file: cipher_output_parse_args.json
               save: false
             - inputs: []
@@ -1719,9 +1778,7 @@
               output: phase_field_output
           commands:
             - command: sleep $[ ( $RANDOM % 10 )  + 1 ]s
-            - command: >-
-                python -c "import hickle; from cipher_parse.cipher_input import CIPHERInput;
-                CIPHERInput.from_JSON(hickle.load('inputs.hdf5')['phase_field_input']).write_yaml('cipher_input.yaml')"            
+            - command: python write_cipher_input.py
             - command: <<executable>>
               parallel_mode: MPI
               options:
@@ -1730,8 +1787,8 @@
               stderr: stderr.log
             - command: python cipher_output_parse.py
               options:
-                - [max_viz_files]
-          archive_excludes: ["*.viz.*"]
+                - [num_VTU_files]
+          archive_excludes: ["*.viz.*", "inputs.hdf5", "outputs.hdf5", "post_proc_outputs.hdf5"]
 
 - name: dummy_task_1
   outputs:
