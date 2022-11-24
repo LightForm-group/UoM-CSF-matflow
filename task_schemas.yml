@@ -1665,6 +1665,8 @@
               default: null
             - name: is_periodic
               default: false
+            - name: interface_energy_misorientation_expansion
+              default: null
           input_map:
             - inputs:
                 - materials
@@ -1678,6 +1680,7 @@
                 - orientations
                 - random_seed
                 - is_periodic
+                - interface_energy_misorientation_expansion
               file: inputs.hdf5
               save: false
             - inputs: []
