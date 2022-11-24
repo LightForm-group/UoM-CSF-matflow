@@ -401,6 +401,8 @@
         - root_path
         - name: scaling_factor
           default: 1
+        - name: find_grains_algorithm
+          default: warp
       implementations:
         - name: DefDAP
           input_map:
@@ -410,6 +412,7 @@
                 - transform_type
                 - root_path
                 - scaling_factor
+                - find_grains_algorithm
               file: inputs.hdf5
               save: false
           commands:
