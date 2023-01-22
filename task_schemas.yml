@@ -1745,8 +1745,10 @@
         - name: cipher
           inputs:
             - phase_field_input
-            - name: num_VTU_files # how many VTU files to archive
+            - name: num_VTU_files # how many VTU files to archive; mutually exclusive with `VTU_files_time_interval`
               default: 2 # i.e. initial and final
+            - name: VTU_files_time_interval # time interval of VTU files to keep; mutually exclusive with `num_VTU_files`
+              default: null
             - name: derive_outputs # list of derived outputs to generate; available: ["num_voxels_per_phase"]
               default: null
             - name: save_outputs # list of outputs to save to MatFlow
@@ -1765,6 +1767,7 @@
               save: false
             - inputs:
                 - num_VTU_files
+                - VTU_files_time_interval
                 - derive_outputs
                 - save_outputs
                 - delete_VTIs
@@ -1789,8 +1792,6 @@
               stdout: stdout.log
               stderr: stderr.log
             - command: python cipher_output_parse.py
-              options:
-                - [num_VTU_files]
           archive_excludes: ["*.viz.*", "inputs.hdf5", "outputs.hdf5", "post_proc_outputs.hdf5"]
 
 - name: dummy_task_1
