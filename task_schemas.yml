@@ -502,6 +502,12 @@
           default: null
       implementations:
         - name: damask
+    - name: from_dream3d_pipeline
+      inputs:
+        - name: pipeline_path
+          file: true
+      implementations:
+        - name: Dream3D
     - name: extrusion
       inputs:
         - microstructure_image
