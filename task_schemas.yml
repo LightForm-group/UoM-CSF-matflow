@@ -1654,6 +1654,7 @@
               output: phase_field_input
           commands:
             - command: python generate_phase_field_input_from_random_voronoi.py inputs.hdf5
+
     - name: from_random_voronoi_with_orientations
       implementations:
         - name: cipher
@@ -1671,8 +1672,10 @@
               default: null
             - name: is_periodic
               default: false
-            - name: interface_energy_misorientation_expansion
+            - name: interface_binning
               default: null
+              # A dict that, if not None, is passed as keyword arguments to 
+              # `CIPHERInput.bin_interfaces_by_misorientation_angle`
           input_map:
             - inputs:
                 - materials
@@ -1686,7 +1689,7 @@
                 - orientations
                 - random_seed
                 - is_periodic
-                - interface_energy_misorientation_expansion
+                - interface_binning
               file: inputs.hdf5
               save: false
             - inputs: []
@@ -1699,6 +1702,53 @@
               output: phase_field_input
           commands:
             - command: python generate_phase_field_input_from_random_voronoi_orientations.py inputs.hdf5
+    
+    - name: from_random_voronoi_with_orientation_gradient
+      implementations:
+        - name: cipher
+          inputs:
+            - materials
+            - interfaces
+            - num_phases
+            - grid_size
+            - size
+            - components
+            - outputs
+            - solution_parameters
+            - orientation_gradient
+            - name: random_seed
+              default: null
+            - name: is_periodic
+              default: false
+            - name: interface_binning
+              default: null
+          input_map:
+            - inputs:
+                - materials
+                - interfaces
+                - num_phases
+                - grid_size
+                - size
+                - components
+                - outputs
+                - solution_parameters
+                - orientation_gradient
+                - random_seed
+                - is_periodic
+                - interface_binning
+              file: inputs.hdf5
+              save: false
+            - inputs: []
+              file: generate_phase_field_input_from_random_voronoi_orientations.py
+              save: false
+          output_map:
+            - files:
+                - name: outputs.hdf5
+                  save: false
+              output: phase_field_input
+          commands:
+            - command: python generate_phase_field_input_from_random_voronoi_orientations.py inputs.hdf5
+
     - name: from_volume_element
       implementations:
         - name: cipher
@@ -1713,10 +1763,15 @@
               default: null
             - name: size
               default: null
+              ignore_dependency_from: ["generate_volume_element"]
             - name: random_seed
               default: null
-            - name: interface_energy_misorientation_expansion
+            - name: interface_binning
               default: null
+              # A dict that, if not None, is passed as keyword arguments to 
+              # `CIPHERInput.bin_interfaces_by_misorientation_angle`              
+            - name: keep_3D
+              default: false              
           input_map:
             - inputs:
                 - volume_element
@@ -1728,7 +1783,8 @@
                 - outputs
                 - solution_parameters
                 - random_seed
-                - interface_energy_misorientation_expansion
+                - interface_binning
+                - keep_3D
               file: inputs.hdf5
               save: false
             - inputs: []
@@ -1763,12 +1819,15 @@
               default: true
             - name: delete_VTUs # delete original VTU outputs from CIPHER?
               default: false
+            - name: separate_mapping_files
+              default: false
           input_map:
             - inputs:
                 - phase_field_input
               file: inputs.hdf5
               save: false
-            - inputs: []
+            - inputs:
+                - separate_mapping_files
               file: write_cipher_input.py
               save: false
             - inputs:

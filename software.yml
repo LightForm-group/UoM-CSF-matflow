@@ -157,7 +157,7 @@ cipher:
   instance_defaults:
     version_info:
       cipher_parse:
-        version: '0.4.0'
+        version: '0.5.1a0'
     executable: cipher.exe
     env: |
       module load apps/binapps/anaconda3/2020.07
