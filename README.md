@@ -1,5 +1,7 @@
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LightForm-group/UoM-CSF-matflow/HEAD)
 
+## **These instructions refer to an old version of MatFlow. For the new version, please see this repo: https://github.com/hpcflow/matflow.**
+
 This repository contains information about running [MatFlow](https://github.com/LightForm-group/matflow) on the [Computational Shared Facility](http://ri.itservices.manchester.ac.uk/csf3/) (CSF) at the University of Manchester.
 
 Included are:
